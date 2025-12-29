@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanny.mapper.ToolMapper">
+    <insert id="insert_tool" parameterType="com.shanny.entity.Tool" useGeneratedKeys="true" keyProperty="id">
+        insert into shanny_blog.tools(content, create_time, href, image, published, tags, title, update_time)
+     values (#{content}, #{createTime}, #{href}, #{image}, #{published}, #{tags}, #{title}, #{updateTime})
+    </insert>
+    <update id="update_tool" parameterType="com.shanny.entity.Tool">
+        update shanny_blog.tools
+        <set>
+            <if test="content != null">content = #{content},</if>
+            <if test="href != null">href = #{href},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="published != null">published = #{published},</if>
+            <if test="tags != null">tags = #{tags, typeHandler=com.shanny.handler.LongListTypeHandler},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

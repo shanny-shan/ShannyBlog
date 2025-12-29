@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'DMSans';
+  src: url('../assets/fonts/DMSans/DMSans-Medium.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-Regular.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-Bold.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-Black.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-ExtraBold.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-ExtraLight.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-Light.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-SemiBold.ttf') format('truetype'),
+    url('../assets/fonts/DMSans/DMSans-Thin.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Urbanist';
+  src: url('../assets/fonts/Urbanist/Urbanist-Medium.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-Regular.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-Bold.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-Black.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-ExtraBold.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-ExtraLight.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-Light.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-SemiBold.ttf') format('truetype'),
+    url('../assets/fonts/Urbanist/Urbanist-Thin.ttf') format('truetype');
+}

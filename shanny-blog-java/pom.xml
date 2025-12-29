@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父组件基础配置 -->
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>3.4.0</version>
+    </parent>
+    <groupId>com.shanny</groupId>
+    <artifactId>shanny-blog-java</artifactId>
+    <packaging>pom</packaging>
+    <version>1.2</version>
+    <modules>
+        <module>blog-server</module>
+        <module>blog-pojo</module>
+        <module>blog-common</module>
+    </modules>
+    <!-- end -->
+
+    <properties>
+        <swagger.v3>2.2.19</swagger.v3>
+        <knife4j.openapi3>4.5.0</knife4j.openapi3>
+        <hibernate>6.5.2.Final</hibernate>
+        <mybatis.spring>3.0.4</mybatis.spring>
+        <mybatis>3.5.14</mybatis>
+        <springdoc>2.3.0</springdoc>
+        <jackson>2.17.0</jackson>
+        <jaxb.api>2.4.0-b180830.0359</jaxb.api>
+        <pagehelper>5.3.3</pagehelper>
+        <jwt>0.12.3</jwt>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- swagger配置 -->
+            <!-- https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core-jakarta</artifactId>
+                <version>${swagger.v3}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.openapi3}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+                <version>${springdoc}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+                <version>${jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb.api}</version>
+            </dependency>
+
+            <!-- 数据库配置 -->
+            <dependency>
+                <groupId>org.hibernate.orm</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.spring}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper}</version>
+            </dependency>
+
+            <!--Jwt配置-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

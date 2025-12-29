@@ -1,0 +1,52 @@
+/*
+  主题设置：https://daisyui.com/docs/themes/
+  颜色名称：https://daisyui.com/docs/colors/
+  工具类型：https://daisyui.com/docs/utilities/
+  布局排版：https://daisyui.com/docs/layout-and-typography/
+*/
+@import 'tailwindcss';
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: 'pink-light';
+  default: true;
+  --root-bg: #fff4f5; /* home background pink */
+  --color-base-100: #fff4f5; /* home background pink */
+  --color-base-200: #fff; /* white */
+  --color-base-300: #f8f2c6; /* yellow */
+  --color-base-content: #363853;
+  --color-primary: #ff6481; /* pink */
+  --color-primary-content: #fff;
+  --color-neutral: #ff6481;
+  --color-neutral-content: #fff;
+  --color-neutral-50: #eeeeee;
+  --color-accent: #ffbac7;
+}
+@plugin "daisyui/theme" {
+  name: 'dark';
+  default: false;
+  --color-neutral: #cccccc;
+  --color-neutral-50: #eeeeee;
+}
+/* 自定义主题样式 */
+[data-theme='pink-light'] {
+  .icon-steam {
+    color: #0b659a;
+  }
+  .icon-bilibili {
+    color: #fb7299;
+  }
+  .icon-website {
+    color: #8665f0;
+  }
+}
+[data-theme='dark'] {
+  .icon-steam {
+    color: #0b659a;
+  }
+  .icon-bilibili {
+    color: #fb7299;
+  }
+  .icon-website {
+    color: #8665f0;
+  }
+}

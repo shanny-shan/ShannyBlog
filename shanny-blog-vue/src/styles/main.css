@@ -1,0 +1,54 @@
+@import './theme.css';
+@import './fonts.css';
+::selection {
+  background-color: var(--color-base-300) !important;
+}
+html {
+  font-size: 16px !important;
+  font-family: 'Urbanist', sans-serif;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+/* size */
+.text-xxs {
+  font-size: 0.5rem;
+}
+/* hover */
+.hover-bg-primary:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+}
+/* active */
+.active-bg-primary:active {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-content) !important;
+}
+
+.btn-ghost {
+  background-color: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.search-modal {
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

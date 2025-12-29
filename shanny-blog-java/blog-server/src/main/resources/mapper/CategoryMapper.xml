@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanny.mapper.CategoryMapper">
+    <insert id="insert_category" parameterType="com.shanny.entity.Category" useGeneratedKeys="true" keyProperty="id">
+        insert into shanny_blog.categories( name, type, sort, name_en)
+        values (#{name}, #{type}, #{sort}, #{nameEn})
+    </insert>
+    <update id="updateById" parameterType="com.shanny.entity.Category">
+        update shanny_blog.categories
+        <set>
+            <if test="name != null">name = #{name}, </if>
+            <if test="sort != null">sort = #{sort}, </if>
+            <if test="nameEn != null">name_en = #{nameEn}, </if>
+            <if test="type != null">type = #{type}, </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

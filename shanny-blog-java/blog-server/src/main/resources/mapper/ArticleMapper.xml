@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shanny.mapper.ArticleMapper">
+    <insert id="insert_article" parameterType="com.shanny.entity.Article" useGeneratedKeys="true" keyProperty="id">
+        insert into shanny_blog.articles(category_id, content, memo, create_time, href, image, published, tags, timelines,
+                                         title, type, update_time, views)
+     values (#{categoryId}, #{content}, #{memo}, #{createTime}, #{href}, #{image}, #{published}, #{tags}, #{timelines},
+             #{title}, #{type}, #{updateTime}, #{views})
+    </insert>
+    <update id="update_article" parameterType="com.shanny.entity.Article">
+        update shanny_blog.articles
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="href != null">href = #{href},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="published != null">published = #{published},</if>
+            <if test="tags != null">tags = #{tags, typeHandler=com.shanny.handler.LongListTypeHandler},</if>
+            <if test="timelines != null">timelines = #{timelines},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="views != null">views = #{views},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
