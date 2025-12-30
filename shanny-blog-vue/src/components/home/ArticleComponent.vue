@@ -1,4 +1,5 @@
 <script setup>
+import { formatDateTime } from '@/utils/time'
 defineProps({
   index: {
     type: Number,
@@ -18,7 +19,7 @@ defineProps({
     }"
   >
     <figure class="w-full md:w-1/4">
-      <img src="@/assets/images/avatar.jpg" alt="Movie" class="md:rounded-xl" />
+      <img :src="item.image" alt="" class="md:rounded-xl" />
     </figure>
     <div
       class="card-body w-full p-3 md:p-5 md:w-3/4 flex flex-col justify-between"
@@ -30,16 +31,16 @@ defineProps({
             class="text-primary"
           />
           <span class="ml-1 text-xs font-light text-neutral">{{
-            item.date
+            formatDateTime(item.updateTime)
           }}</span>
         </div>
         <div class="hidden md:block ml-3">
           <font-awesome-icon icon="fa-solid fa-bell" class="text-primary" />
           <span class="ml-1 text-xs font-light text-neutral"
-            >{{ item.readCount }} Read</span
+            >{{ item.views }} Read</span
           >
         </div>
-        <div class="flex items-center ml-3">
+        <!-- <div class="flex items-center ml-3">
           <font-awesome-icon icon="fa-solid fa-award" class="text-primary" />
           <div class="flex items-center">
             <span class="ml-1 text-xs font-light text-neutral">Rating: </span>
@@ -55,26 +56,22 @@ defineProps({
               />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div>
         <h2 class="card-title text-2xl">{{ item.title }}</h2>
-        <p class="text-base mt-3">{{ item.content }}</p>
+        <p class="text-base mt-3 truncate">{{ item.content }}</p>
       </div>
       <div class="flex justify-between items-center">
         <div class="flex items-center">
-          <a class="flex items-center mr-3">
+          <a class="flex items-center mr-3" v-for="tag in item.tagList">
             <div aria-label="status" class="status status-primary"></div>
-            <span class="ml-1 text-xs">Vue</span>
-          </a>
-          <a class="flex items-center mr-3">
-            <div aria-label="status" class="status status-warning"></div>
-            <span class="ml-1 text-xs">CSS</span>
+            <span class="ml-1 text-xs">{{ tag }}</span>
           </a>
         </div>
         <div class="flex justify-end items-center">
           <img src="@/assets/images/avatar.jpg" class="w-5 rounded-full" />
-          <span class="ml-1 text-xs">{{ item.author }}</span>
+          <span class="ml-1 text-xs">Shanny</span>
         </div>
       </div>
     </div>

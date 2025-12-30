@@ -1,15 +1,27 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import DetailMessage from '@/components/common/DetailMessage.vue'
-
 import { useScrollStore } from '@/stores/modules/scroll'
 import { useRoute } from 'vue-router'
-const scrollStore = useScrollStore()
+import { useArticleStore } from '@/stores/modules/article'
+import { formatDateTime } from '@/utils/time'
+const articleStore = useArticleStore()
+
 const route = useRoute()
-const type = route.params.type
 const id = route.params.id
+const scrollStore = useScrollStore()
+const article = ref({})
+
+const getArticleDetail = async () => {
+  const res = await articleStore.getArticleByIds(id)
+  if(res.data.code.toLowerCase() == 'success'){
+    article.value = res.data.data
+  }
+}
+
 onMounted(() => {
   scrollStore.enableScrollListener()
+  getArticleDetail()
 })
 onUnmounted(() => {
   scrollStore.disableScrollListener()
@@ -32,7 +44,7 @@ onUnmounted(() => {
         class="w-full md:w-1/4 flex flex-col items-center md:items-start pr-0 md:pr-5"
         :class="scrollStore.isScrolled ? 'md:sticky md:top-35 md:left-0' : ''"
       >
-        <DetailMessage />
+        <DetailMessage :item="article" />
         <!-- <DetailTable /> -->
       </div>
       <div class="w-full md:w-3/4 pl-0 md:pl-5 mt-3 md:mt-0">
@@ -43,7 +55,7 @@ onUnmounted(() => {
               class="w-full flex flex-col items-center justify-center mt-3 md:mt-0"
             >
               <div class="font-bold text-2xl md:text-4xl text-center">
-                Far far away, behind the word mountains
+                {{ article.title }}
               </div>
               <div class="flex flex-row items-center mt-5">
                 <font-awesome-icon
@@ -52,60 +64,14 @@ onUnmounted(() => {
                 />
                 <div class="flex flex-row items-center ml-2 text-sm">
                   <span class="font-bold">Published:</span>
-                  <span class="ml-2">September 26, 2019</span>
+                  <span class="ml-2">{{ formatDateTime(article.createTime) }}</span>
                 </div>
               </div>
             </div>
           </div>
           <!-- 文章内容 -->
           <div class="mt-5 md:mt-10">
-            <div class="text-lg leading-10">
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts.<br />
-
-              Separated they live in Bookmarksgrove right at the coast of the
-              Semantics, a large language ocean.<br />
-
-              A small river named Duden flows by their place and supplies it
-              with the necessary regelialia. It is a paradisematic country, in
-              which roasted parts of sentences fly into your mouth.<br />
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts.<br />
-
-              Separated they live in Bookmarksgrove right at the coast of the
-              Semantics, a large language ocean.<br />
-
-              A small river named Duden flows by their place and supplies it
-              with the necessary regelialia. It is a paradisematic country, in
-              which roasted parts of sentences fly into your mouth.<br />
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts.<br />
-
-              Separated they live in Bookmarksgrove right at the coast of the
-              Semantics, a large language ocean.<br />
-
-              A small river named Duden flows by their place and supplies it
-              with the necessary regelialia. It is a paradisematic country, in
-              which roasted parts of sentences fly into your mouth.<br />
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts.<br />
-
-              Separated they live in Bookmarksgrove right at the coast of the
-              Semantics, a large language ocean.<br />
-
-              A small river named Duden flows by their place and supplies it
-              with the necessary regelialia. It is a paradisematic country, in
-              which roasted parts of sentences fly into your mouth.<br />
-              Far far away, behind the word mountains, far from the countries
-              Vokalia and Consonantia, there live the blind texts.<br />
-
-              Separated they live in Bookmarksgrove right at the coast of the
-              Semantics, a large language ocean.<br />
-
-              A small river named Duden flows by their place and supplies it
-              with the necessary regelialia. It is a paradisematic country, in
-              which roasted parts of sentences fly into your mouth.<br />
-            </div>
+            <div class="text-lg leading-10 break-words">{{ article.content }}</div>
           </div>
         </div>
       </div>

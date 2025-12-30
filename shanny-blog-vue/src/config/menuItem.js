@@ -23,11 +23,11 @@ export const menuItems = () => {
           title: translate('headerProject', languageStore.isEnglish),
           path: '/article/project',
         },
-        {
-          id: 'bug',
-          title: translate('headerBug', languageStore.isEnglish),
-          path: '/article/bug',
-        },
+        // {
+        //   id: 'bug',
+        //   title: translate('headerBug', languageStore.isEnglish),
+        //   path: '/article/bug',
+        // },
       ],
     },
     {
@@ -35,36 +35,36 @@ export const menuItems = () => {
       title: translate('headerTool', languageStore.isEnglish),
       path: '/tool',
     },
-    {
-      id: 'media',
-      title: translate('headerMedia', languageStore.isEnglish),
-      children: [
-        {
-          id: 'mediaBook',
-          title: translate('headerItemBook', languageStore.isEnglish),
-          path: '/media/book',
-        },
-        {
-          id: 'mediaPhoto',
-          title: translate('headerItemPhoto', languageStore.isEnglish),
-          path: '/media/photo',
-        },
-        {
-          id: 'mediaVideo',
-          title: translate('headerItemVideo', languageStore.isEnglish),
-          path: '/media/video',
-        },
-        {
-          id: 'mediaMusic',
-          title: translate('headerItemMusic', languageStore.isEnglish),
-          path: '/media/music',
-        },
-      ],
-    },
-    {
-      id: 'board',
-      title: translate('hederBoard', languageStore.isEnglish),
-      path: '/board',
-    },
+    // {
+    //   id: 'media',
+    //   title: translate('headerMedia', languageStore.isEnglish),
+    //   children: [
+    //     {
+    //       id: 'mediaBook',
+    //       title: translate('headerItemBook', languageStore.isEnglish),
+    //       path: '/media/book',
+    //     },
+    //     {
+    //       id: 'mediaPhoto',
+    //       title: translate('headerItemPhoto', languageStore.isEnglish),
+    //       path: '/media/photo',
+    //     },
+    //     {
+    //       id: 'mediaVideo',
+    //       title: translate('headerItemVideo', languageStore.isEnglish),
+    //       path: '/media/video',
+    //     },
+    //     {
+    //       id: 'mediaMusic',
+    //       title: translate('headerItemMusic', languageStore.isEnglish),
+    //       path: '/media/music',
+    //     },
+    //   ],
+    // },
+    // {
+    //   id: 'board',
+    //   title: translate('hederBoard', languageStore.isEnglish),
+    //   path: '/board',
+    // },
   ]
 }

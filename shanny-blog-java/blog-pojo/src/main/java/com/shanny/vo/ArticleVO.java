@@ -1,6 +1,7 @@
 package com.shanny.vo;
 
 import com.shanny.converter.LongListConverter;
+import com.shanny.entity.Category;
 import com.shanny.entity.Tag;
 import com.shanny.enums.CategoryEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,6 +32,7 @@ public class ArticleVO {
     private List<Tag> tagList;
     private CategoryEnum.CategoryType type;
     private Long categoryId;
+    private CategoryVO category;
     private List<Long> timelines;
     private Integer views;
     private Boolean published;

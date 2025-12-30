@@ -9,6 +9,7 @@ import com.shanny.entity.Tag;
 import com.shanny.enums.CategoryEnum;
 import com.shanny.mapper.AboutMapper;
 import com.shanny.mapper.ArticleMapper;
+import com.shanny.mapper.CategoryMapper;
 import com.shanny.mapper.TagMapper;
 import com.shanny.result.Result;
 import com.shanny.service.AboutService;
@@ -31,11 +32,13 @@ import static com.shanny.constant.ResultConstant.SELECT_SUCCESS;
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
     private final TagMapper tagMapper;
+    private final CategoryMapper categoryMapper;
 
     @Autowired
-    public ArticleServiceImpl(ArticleMapper articleMapper, TagMapper tagMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, TagMapper tagMapper, CategoryMapper categoryMapper) {
         this.articleMapper = articleMapper;
         this.tagMapper = tagMapper;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
@@ -57,6 +60,10 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleVO> articleVOList = articles.stream().map(article -> {
             ArticleVO vo = new ArticleVO();
             BeanUtils.copyProperties(article, vo);
+            Category category = categoryMapper.getById(article.getCategoryId());
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category, categoryVO);
+            vo.setCategory(categoryVO);
             return vo;
         }).toList();
         return Result.success(SELECT_SUCCESS, articleVOList);
@@ -77,8 +84,24 @@ public class ArticleServiceImpl implements ArticleService {
                     }
                 }
             }
+            Category category = categoryMapper.getById(article.getCategoryId());
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category, categoryVO);
+            vo.setCategory(categoryVO);
             return vo;
         }).toList();
         return Result.success(SELECT_SUCCESS, articleVOList);
+    }
+
+    @Override
+    public Result<ArticleVO> getArticleById(Long id) {
+        Article article = articleMapper.getById(id);
+        ArticleVO vo = new ArticleVO();
+        BeanUtils.copyProperties(article, vo);
+        Category category = categoryMapper.getById(article.getCategoryId());
+        CategoryVO categoryVO = new CategoryVO();
+        BeanUtils.copyProperties(category, categoryVO);
+        vo.setCategory(categoryVO);
+        return Result.success(SELECT_SUCCESS, vo);
     }
 }

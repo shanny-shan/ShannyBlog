@@ -16,4 +16,6 @@ public interface ArticleService {
     Result<List<ArticleVO>> getArticles();
 
     Result<List<ArticleVO>> getArticlesByType(CategoryEnum.CategoryType type);
+
+    Result<ArticleVO> getArticleById(Long id);
 }

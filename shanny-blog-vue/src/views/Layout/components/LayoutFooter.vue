@@ -1,5 +1,19 @@
 <script setup>
+import {ref, onMounted} from 'vue'
+import { useProjectInfoStore } from '@/stores/modules/project'
 const year = new Date().getFullYear()
+const month = new Date().getMonth() + 1
+const projectInfoStore = useProjectInfoStore()
+const projectInfo = ref({})
+const getProjectInfo = async () => {
+  const res = await projectInfoStore.getProjectInfos()
+  if(res.data.code.toLowerCase() === 'success'){
+    projectInfo.value = res.data.data
+  }
+}
+onMounted(() => {
+  getProjectInfo()
+})
 </script>
 <template>
   <footer
@@ -37,7 +51,9 @@ const year = new Date().getFullYear()
       </nav>
       <aside class="mt-3 md:mt-5">
         <p class="text-xs md:text-base">
-          Copyright © {{ year }} - All right reserved by ACME Industries Ltd
+          © 2025.9–{{ year }}.{{ month }} {{ projectInfo.owner || 'Shanny' }}
+          · {{projectInfo.name || 'ShannyBlog'}}
+          · v{{ projectInfo.version || '0.0.0' }}
         </p>
       </aside>
     </div>

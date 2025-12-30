@@ -27,7 +27,7 @@ public class ArticleController {
 
     @GetMapping("/all")
     @Operation(summary = "文章获取")
-    public Result<List<ArticleVO>> GetCategories() {
+    public Result<List<ArticleVO>> GetArticles() {
         try {
             return articleService.getArticles();
         } catch (Exception e) {
@@ -37,7 +37,7 @@ public class ArticleController {
 
     @GetMapping("/type")
     @Operation(summary = "文章获取")
-    public Result<List<ArticleVO>> GetCategories(CategoryEnum.CategoryType type) {
+    public Result<List<ArticleVO>> GetArticleByType(CategoryEnum.CategoryType type) {
         try {
             return articleService.getArticlesByType(type);
         } catch (Exception e) {
@@ -45,9 +45,19 @@ public class ArticleController {
         }
     }
 
+    @GetMapping("/id")
+    @Operation(summary = "文章获取")
+    public Result<ArticleVO> GetArticleById(Long id) {
+        try {
+            return articleService.getArticleById(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     @PostMapping("/add")
     @Operation(summary = "文章添加")
-    public Result<ArticleVO> AddAArticle(@RequestBody ArticleDTO articleDTO) {
+    public Result<ArticleVO> AddArticle(@RequestBody ArticleDTO articleDTO) {
         try {
             return articleService.addArticle(articleDTO);
         } catch (Exception e) {

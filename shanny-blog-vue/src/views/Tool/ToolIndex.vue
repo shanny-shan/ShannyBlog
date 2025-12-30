@@ -1,83 +1,34 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useScrollStore } from '@/stores/modules/scroll'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const type = route.params.type
+import { useToolStore } from '@/stores/modules/tool'
 import PaginationComponent from '@/components/common/PaginationComponent.vue'
 import CardImgComponent from '@/components/common/CardImgComponent.vue'
 const scrollStore = useScrollStore()
-const allItems = ref([
-  {
-    id: 1,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 2,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 3,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 4,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 5,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 6,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 7,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-  {
-    id: 8,
-    title: 'Tool',
-    content: 'Welcome, it’s great to have you here. We know that first',
-    tag: ['Life', 'Music', 'Art'],
-    href: 'https://www.baidu.com',
-  },
-])
+const toolStore = useToolStore()
+const toolList = ref([])
 const currentPage = ref(1) // 当前页码
 const itemsPerPage = ref(4) // 每页显示的条目数
 
+const getToolList = async () => {
+  const res = await toolStore.getTools()
+  console.log(res.data.data)
+  if(res.data.code.toLowerCase() === 'success'){
+    toolList.value = res.data.data
+  }
+}
+
+// pagination-------------------------------------------------------------------------------------
 // 计算总页数
 const totalPages = computed(() => {
-  return Math.ceil(allItems.value.length / itemsPerPage.value)
+  return Math.ceil(toolList.value.length / itemsPerPage.value)
 })
 
 // 计算当前页显示的条目
 const items = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value
   const endIndex = startIndex + itemsPerPage.value
-  return allItems.value.slice(startIndex, endIndex)
+  return toolList.value.slice(startIndex, endIndex)
 })
 // 处理页码变化事件
 const handlePageChange = (page) => {
@@ -87,6 +38,7 @@ const handlePageChange = (page) => {
 }
 onMounted(() => {
   scrollStore.enableScrollListener()
+  getToolList()
 })
 onUnmounted(() => {
   scrollStore.disableScrollListener()
@@ -102,7 +54,7 @@ onUnmounted(() => {
       class="flex flex-col md:flex-row md:flex-wrap md:justify-between items-center w-full mt-2 md:mt-10"
     >
       <div
-        v-for="(item, index) in items"
+        v-for="(item, index) in toolList"
         :key="index"
         class="w-full md:w-1/4 p-2"
       >
@@ -111,7 +63,7 @@ onUnmounted(() => {
         </a>
       </div>
     </div>
-    <div class="mt-2 md:mt-10">
+    <div class="mt-2 md:mt-10" v-if="toolList.length > 1">
       <PaginationComponent
         :current-page="currentPage"
         :total-pages="totalPages"

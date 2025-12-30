@@ -13,10 +13,8 @@ onMounted(async () => {
 <template>
   <div class="w-full">
     <TitleComponent title="About Me" />
-    <!-- 分为未登录时显示和已登录时显示 -->
     <div class="card bg-base-200 shadow-sm mt-3 md:mt-5 w-full">
       <div class="card-body">
-        m
         <div class="card-title flex items-center">
           <div class="avatar">
             <div class="w-18 rounded-full shadow-xl">

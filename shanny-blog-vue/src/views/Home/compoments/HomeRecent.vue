@@ -1,30 +1,25 @@
 <script setup>
-import { ref } from 'vue'
-import TitleComponent from '@/components/home/TitleComponent.vue'
+import { onMounted, ref } from 'vue'
 import RecentComponent from '@/components/home/RecentComponent.vue'
-const items = ref([
-  {
-    id: 1,
-    title: 'The spectacle before us was indeed sublime',
-    date: ' September 26, 2019',
-  },
-  {
-    id: 2,
-    title: 'Far far away, behind the word mountains',
-    date: 'August 15, 2019',
-  },
-  {
-    id: 3,
-    title: 'The meaning of health has evolved over time',
-    date: 'July 26, 2019',
-  },
-])
+import TitleComponent from '@/components/home/TitleComponent.vue'
+import { useArticleStore } from '@/stores/modules/article'
+const articleStore = useArticleStore()
+const articleList = ref([])
+const getArticleList = async () => {
+  const res = await articleStore.getArticles()
+  if(res.data.code.toLowerCase() === 'success'){
+    articleList.value = res.data.data
+  }
+}
+onMounted(() => {
+  getArticleList()
+})
 </script>
 <template>
   <div class="hidden md:block mt-5 md:mt-10 w-full">
     <TitleComponent title="Recent Posts" />
     <div class="mt-3 md:mt-5">
-      <div v-for="(item, index) in items" :key="index">
+      <div v-for="(item, index) in articleList" :key="index">
         <RecentComponent :item="item" :index="index" />
       </div>
     </div>

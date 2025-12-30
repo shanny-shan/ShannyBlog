@@ -1,5 +1,12 @@
 <script setup>
 import TitleComponent from '@/components/home/TitleComponent.vue'
+import { formatDateTime } from '@/utils/time'
+defineProps({
+  item: {
+    type: Object,
+    default: () => {},
+  }
+})
 </script>
 <template>
   <div class="w-full">
@@ -11,7 +18,7 @@ import TitleComponent from '@/components/home/TitleComponent.vue'
           <div class="ml-2 flex items-center">
             <span class="font-bold text-natural">Category:</span>
             <div class="hover:underline ml-2">
-              <a href="/" class="text-natural">Vue</a>
+              <a href="/" class="text-natural">{{ item?.category?.name }}</a>
             </div>
           </div>
         </div>
@@ -20,7 +27,7 @@ import TitleComponent from '@/components/home/TitleComponent.vue'
           <div class="ml-2 flex items-center">
             <span class="font-bold text-natural">Updated:</span>
             <div class="hover:underline ml-2">
-              <a href="/" class="text-natural">March 27,2024</a>
+              <a href="/" class="text-natural">{{ formatDateTime(item.updateTime) }}</a>
             </div>
           </div>
         </div>
@@ -38,11 +45,11 @@ import TitleComponent from '@/components/home/TitleComponent.vue'
           <div class="ml-2 flex items-center">
             <span class="font-bold text-natural">Read:</span>
             <div class="hover:underline ml-2">
-              <a href="/" class="text-natural">2</a>
+              <a href="/" class="text-natural">{{ item.views }}</a>
             </div>
           </div>
         </div>
-        <div class="flex justify-start items-center w-full mt-2">
+        <!-- <div class="flex justify-start items-center w-full mt-2">
           <font-awesome-icon icon="fa-solid fa-award" class="text-primary" />
           <div class="ml-2 flex items-center">
             <span class="font-bold text-natural">Rating:</span>
@@ -58,7 +65,7 @@ import TitleComponent from '@/components/home/TitleComponent.vue'
               />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

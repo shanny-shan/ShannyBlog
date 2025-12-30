@@ -33,3 +33,10 @@ shanny:
     user-secret-key: "shanny-blog&https://www.shanny.wang&ruanmengdashanny@gmail.com"
     user-ttl: 86400000
     user-token-name: "Authorization"
+
+app:
+  name: ShannyBlog
+  description: 个人博客系统
+  owner: Shanny
+  version: @project.version@
+  buildTime: @maven.build.timestamp@

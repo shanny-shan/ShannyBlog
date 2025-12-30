@@ -25,6 +25,12 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/account/login")
                 .excludePathPatterns("/account/register")
-                .excludePathPatterns("/about/show");
+                .excludePathPatterns("/about/show")
+                .excludePathPatterns("/article/all")
+                .excludePathPatterns("/article/type")
+                .excludePathPatterns("/article/id")
+                .excludePathPatterns("/category/all")
+                .excludePathPatterns("/tag/all")
+                .excludePathPatterns("/tool/all");
     }
 }

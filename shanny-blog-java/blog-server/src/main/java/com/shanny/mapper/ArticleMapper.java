@@ -21,4 +21,7 @@ public interface ArticleMapper {
 
     @Select("select * from shanny_blog.articles where type = #{type}")
     List<Article> getByType(CategoryEnum.CategoryType type);
+
+    @Select("select * from shanny_blog.articles where id = #{id}")
+    Article getById(Long id);
 }
