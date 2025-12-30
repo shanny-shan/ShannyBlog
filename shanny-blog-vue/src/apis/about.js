@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const getAbout = () => {
   return request({
-    url: '/about/get',
+    url: '/about/show',
     method: 'Get',
   })
 }

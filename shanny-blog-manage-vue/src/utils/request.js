@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router from '@/router'
 
-const baseURL = '/api'
+const baseURL = import.meta.env.VITE_BASE_API
 const token = localStorage.getItem('jwtToken')
 
 const instance = axios.create({

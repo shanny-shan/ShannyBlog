@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    blog:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url:  jdbc:mysql://rm-j6cn17b70mbf69u2luo.mysql.rds.aliyuncs.com:3306/shanny_blog
+      username: root
+      password: qwe123!!!
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+#knife4j配置
+knife4j:
+  #开启生产环境屏蔽
+  production: true
+  #是否启用登录认证
+  basic:
+    enable: true
+    username: shanny
+    password: 1234

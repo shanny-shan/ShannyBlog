@@ -32,7 +32,7 @@ public class ArticleVO {
     private CategoryEnum.CategoryType type;
     private Long categoryId;
     private List<Long> timelines;
-    private Integer views = 0;
+    private Integer views;
     private Boolean published;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
