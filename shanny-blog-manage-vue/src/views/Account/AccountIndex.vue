@@ -14,7 +14,7 @@ const login = async (userId, password) => {
     toast.success(`Wecome ${userId}!`)
     localStorage.setItem('jwtToken', res.data.data.token)
     setTimeout(() => {
-      window.location.href = '/'
+      window.location.href = '/manage/'
     }, 2000)
   } else {
     toast.error(res.data.msg)
