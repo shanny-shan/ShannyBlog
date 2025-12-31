@@ -19,3 +19,11 @@ sudo nginx -t
 sudo systemctl reload nginx
 查看状态
 systemctl status nginx
+
+【云服务器】请在安全组放行 41158 端口
+ 外网ipv4面板地址: https://47.76.48.184:41158/7e892308
+ 内网面板地址:     https://172.19.46.111:41158/7e892308
+ username: iezzbjmn
+ password: 71509516
+ 浏览器访问以下链接，添加宝塔客服
+ https://www.bt.cn/new/wechat_customer
