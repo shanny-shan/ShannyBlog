@@ -26,6 +26,11 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const fullPath = window.location.pathname
+  if (!fullPath.startsWith('/manage/')) {
+    next()
+    return
+  }
   const token = localStorage.getItem('jwtToken')
   const whiteList = ['/login', '/register']
   if (whiteList.includes(to.path)) {
