@@ -33,13 +33,18 @@ onMounted(async () => {
         </p>
         <div class="card-actions">
           <div class="mt-4">
-            <a :href="aboutStore.authorInfo.github" target="_blank">
+            <a
+              class="tooltip"
+              data-tip="GitHub"
+              :href="aboutStore.authorInfo.github"
+              target="_blank"
+            >
               <font-awesome-icon
                 icon="fa-brands fa-github"
                 class="text-xl hover:text-primary"
               />
             </a>
-            <a
+            <!-- <a
               class="ml-4"
               :href="aboutStore.authorInfo.biliBili"
               target="_blank"
@@ -48,14 +53,19 @@ onMounted(async () => {
                 icon="fa-brands fa-bilibili"
                 class="text-xl icon-bilibili"
               />
-            </a>
-            <a class="ml-4" href="/" target="_blank">
+            </a> -->
+            <!-- <a class="ml-4" href="/" target="_blank">
               <font-awesome-icon
                 icon="fa-brands fa-steam"
                 class="text-xl icon-steam hover:text-primary"
               />
-            </a>
-            <a class="ml-4" href="/" target="_blank">
+            </a> -->
+            <a
+              class="ml-4 tooltip"
+              data-tip="WebSite"
+              href="https://www.shanny.wang"
+              target="_blank"
+            >
               <font-awesome-icon
                 icon="fa-solid fa-earth-asia"
                 class="text-xl icon-website"

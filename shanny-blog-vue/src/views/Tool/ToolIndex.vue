@@ -13,7 +13,7 @@ const itemsPerPage = ref(4) // 每页显示的条目数
 const getToolList = async () => {
   const res = await toolStore.getTools()
   console.log(res.data.data)
-  if(res.data.code.toLowerCase() === 'success'){
+  if (res.data.code.toLowerCase() === 'success') {
     toolList.value = res.data.data
   }
 }
@@ -58,9 +58,9 @@ onUnmounted(() => {
         :key="index"
         class="w-full md:w-1/4 p-2"
       >
-        <a :href="item.href" target="_blank">
-          <CardImgComponent :item="item" :index="index" :footer="false" />
-        </a>
+        <!-- <RouterLink :to="`/tool/${item.id}`"> -->
+        <CardImgComponent :item="item" :index="index" :footer="false" />
+        <!-- </RouterLink> -->
       </div>
     </div>
     <div class="mt-2 md:mt-10" v-if="toolList.length > 1">

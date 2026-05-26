@@ -14,7 +14,7 @@ const article = ref({})
 
 const getArticleDetail = async () => {
   const res = await articleStore.getArticleByIds(id)
-  if(res.data.code.toLowerCase() == 'success'){
+  if (res.data.code.toLowerCase() == 'success') {
     article.value = res.data.data
   }
 }
@@ -51,10 +51,7 @@ onUnmounted(() => {
           <!-- 文章标题 -->
           <div class="flex flex-col md:flex-row-reverse items-center w-full">
             <div class="w-full md:w-1/3">
-              <img
-                :src="article.href"
-                class="w-full rounded-2xl"
-              />
+              <img :src="article.image" class="w-full rounded-2xl" />
             </div>
             <div
               class="w-full md:w-3/4 flex flex-col items-center justify-center mt-3 md:mt-0"
@@ -69,14 +66,18 @@ onUnmounted(() => {
                 />
                 <div class="flex flex-row items-center ml-2 text-sm">
                   <span class="font-bold">Published:</span>
-                  <span class="ml-2">{{ formatDateTime(article.createTime) }}</span>
+                  <span class="ml-2">{{
+                    formatDateTime(article.createTime)
+                  }}</span>
                 </div>
               </div>
             </div>
           </div>
           <!-- 文章内容 -->
           <div class="mt-5 md:mt-10">
-            <div class="text-lg leading-10 break-words">{{ article.content }}</div>
+            <div class="text-lg leading-10 break-words">
+              {{ article.content }}
+            </div>
           </div>
         </div>
       </div>

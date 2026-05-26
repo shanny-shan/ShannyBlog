@@ -16,9 +16,12 @@ onMounted(async () => {
   <div class="hidden md:block mt-10 w-full">
     <TitleComponent title="Tags" />
     <div class="mt-5 flex items-center flex-wrap text-sm/8">
-      <a class="flex items-center mr-3" v-for="item in tagStore.tags">
+      <a
+        class="flex items-center mr-3 hover:cursor-pointer"
+        v-for="item in tagStore.tags"
+      >
         <div aria-label="status" class="status status-primary"></div>
-        <span class="ml-2">
+        <span class="ml-2 hover:text-primary hover:pointer">
           {{ languageStore.isEnglish ? item.nameEn : item.name }}
         </span>
       </a>
