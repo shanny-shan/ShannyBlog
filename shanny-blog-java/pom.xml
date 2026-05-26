@@ -1,5 +1,5 @@
 <!--
-版本修改：mvn versions:set "-DnewVersion=1.0.1"
+版本修改：mvn versions:set "-DnewVersion=1.0.2"
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -14,7 +14,7 @@
     <groupId>com.shanny</groupId>
     <artifactId>shanny-blog-java</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <modules>
         <module>blog-server</module>
         <module>blog-pojo</module>

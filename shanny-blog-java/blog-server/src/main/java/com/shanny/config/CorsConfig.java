@@ -14,8 +14,8 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // 匹配所有路径
                         .allowedOrigins(
-                                "https://www.shanny.wang",
-                                "https://shanny.wang",
+                                "https://www.shanny.work",
+                                "https://shanny.work",
                                 "http://localhost:5174",
                                 "http://localhost:5173"
                         )  // 允许的前端域
