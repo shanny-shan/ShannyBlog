@@ -78,7 +78,7 @@ const scrollStore = useScrollStore()
       <div class="flex justify-end items-center md:w-1/5">
         <!-- search -->
         <div>
-          <SearchComponent id="header-search" />
+          <!-- <SearchComponent id="header-search" /> -->
         </div>
         <!-- change theme -->
         <div class="ml-5">

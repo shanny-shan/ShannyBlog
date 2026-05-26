@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 import { useProjectInfoStore } from '@/stores/modules/project'
 const year = new Date().getFullYear()
 const month = new Date().getMonth() + 1
@@ -7,7 +7,7 @@ const projectInfoStore = useProjectInfoStore()
 const projectInfo = ref({})
 const getProjectInfo = async () => {
   const res = await projectInfoStore.getProjectInfos()
-  if(res.data.code.toLowerCase() === 'success'){
+  if (res.data.code.toLowerCase() === 'success') {
     projectInfo.value = res.data.data
   }
 }
@@ -20,7 +20,7 @@ onMounted(() => {
     class="footer footer-horizontal footer-center bg-base-200 text-base-content rounded p-5 md:p-15 mt-5 md:mt-10"
   >
     <div class="md:w-7/10">
-      <nav>
+      <!-- <nav>
         <div class="grid grid-flow-col gap-4">
           <a
             href="https://github.com/shanny-shan?tab=repositories"
@@ -48,12 +48,15 @@ onMounted(() => {
             />
           </a>
         </div>
-      </nav>
+      </nav> -->
       <aside class="mt-3 md:mt-5">
         <p class="text-xs md:text-base">
-          © 2025.9–{{ year }}.{{ month }} {{ projectInfo.owner || 'Shanny' }}
-          · {{projectInfo.name || 'ShannyBlog'}}
-          · v{{ projectInfo.version || '0.0.0' }}
+          © 2025.9–{{ year }}.{{ month }}
+          <!-- {{ projectInfo.owner || 'Shanny' }} · -->
+          {{ projectInfo.name || 'ShannyBlog' }}
+          <!-- · v{{
+            projectInfo.version || '0.0.0'
+          }} -->
         </p>
       </aside>
     </div>

@@ -25,6 +25,7 @@
   default: false;
   --color-neutral: #cccccc;
   --color-neutral-50: #eeeeee;
+  --color-neutral-content: #000000;
 }
 /* 自定义主题样式 */
 [data-theme='pink-light'] {
