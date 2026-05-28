@@ -24,7 +24,7 @@ const logout = () => {
 </script>
 <template>
   <div class="drawer drawer-open">
-    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
+    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" checked />
     <div class="drawer-content w-full h-screen p-5">
       <div class="card bg-base-200 w-full h-full p-5">
         <div v-if="active == 'note'">
@@ -96,7 +96,7 @@ const logout = () => {
                   <span class="is-drawer-close:hidden">Project</span>
                 </button>
               </li>
-              <li @click="active = 'bug'">
+              <!-- <li @click="active = 'bug'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Bug"
@@ -104,7 +104,7 @@ const logout = () => {
                   <font-awesome-icon icon="fa-solid fa-bug" />
                   <span class="is-drawer-close:hidden">Bug</span>
                 </button>
-              </li>
+              </li> -->
             </ul>
           </li>
           <li @click="active = 'tool'">
@@ -116,7 +116,7 @@ const logout = () => {
               <span class="is-drawer-close:hidden">Tool</span>
             </button>
           </li>
-          <li @click="active = 'media'">
+          <!-- <li @click="active = 'media'">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
               data-tip="Media"
@@ -124,8 +124,8 @@ const logout = () => {
               <font-awesome-icon icon="fa-solid fa-photo-film" />
               <span class="is-drawer-close:hidden">Media</span>
             </button>
-          </li>
-          <li @click="active = 'board'">
+          </li> -->
+          <!-- <li @click="active = 'board'">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
               data-tip="Board"
@@ -133,7 +133,7 @@ const logout = () => {
               <font-awesome-icon icon="fa-solid fa-envelope" />
               <span class="is-drawer-close:hidden">Board</span>
             </button>
-          </li>
+          </li> -->
 
           <li>
             <h2
