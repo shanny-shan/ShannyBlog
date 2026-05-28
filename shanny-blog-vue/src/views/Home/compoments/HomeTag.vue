@@ -5,6 +5,7 @@ import { useLanguageStore } from '@/stores/modules/language'
 import { onMounted } from 'vue'
 const tagStore = useTagStore()
 const languageStore = useLanguageStore()
+
 onMounted(async () => {
   const res = await tagStore.getTagList()
   if (res.data.code.toLowerCase() === 'success') {

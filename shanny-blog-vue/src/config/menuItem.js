@@ -1,6 +1,5 @@
 import { translate } from '@/config/translate'
 import { useLanguageStore } from '@/stores/modules/language'
-import { id } from '@kangc/v-md-editor'
 export const menuItems = () => {
   const languageStore = useLanguageStore()
   return [

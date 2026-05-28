@@ -46,7 +46,7 @@ const translations = {
     headerArticle: '文章',
   },
 }
-export const translate = (key, isEnglish = true) => {
-  const lang = isEnglish ? 'zh' : 'en'
+export const translate = (key, isEnglish = false) => {
+  const lang = isEnglish ? 'en' : 'zh'
   return translations[lang][key] || key
 }
