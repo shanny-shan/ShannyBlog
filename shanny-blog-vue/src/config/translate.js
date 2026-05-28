@@ -21,7 +21,6 @@ const translations = {
     headerItemVideo: 'Video',
     headerItemMusic: 'Music',
     headerArticle: 'Article',
-    headerAdmin: 'Admin',
   },
   zh: {
     headerTitle: '珊的博客',
@@ -45,7 +44,6 @@ const translations = {
     headerItemVideo: '视频',
     headerItemMusic: '音乐',
     headerArticle: '文章',
-    headerAdmin: '管理',
   },
 }
 export const translate = (key, isEnglish = true) => {

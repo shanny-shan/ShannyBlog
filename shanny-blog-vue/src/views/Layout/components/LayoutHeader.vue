@@ -85,9 +85,9 @@ const scrollStore = useScrollStore()
           <ThemeToggle />
         </div>
         <!-- change language -->
-        <div class="ml-5">
+        <!-- <div class="ml-5">
           <LanguageToggle />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
