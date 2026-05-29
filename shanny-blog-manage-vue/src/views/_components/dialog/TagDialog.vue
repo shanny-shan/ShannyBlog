@@ -1,9 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useSiteStore } from '@/stores/modules/site'
-import { useTagStore } from '@/stores/modules/tag'
+import { useAdminStore, useSiteStore, useTagStore } from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()

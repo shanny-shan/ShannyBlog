@@ -12,6 +12,8 @@ export const useAdminStore = defineStore('admin', () => {
   const articleStore = useArticleStore()
   const toolStore = useToolStore()
 
+  const isEdit = ref(false)
+
   const noteDialog = ref(false)
   const projectDialog = ref(false)
   const toolDialog = ref(false)
@@ -23,7 +25,9 @@ export const useAdminStore = defineStore('admin', () => {
   const categoryDialog = ref(false)
   const aboutDialog = ref(false)
   const tagDialog = ref(false)
+
   const openDialog = (type) => {
+    isEdit.value = false
     switch (type) {
       case 'note':
         noteDialog.value = true
@@ -110,6 +114,7 @@ export const useAdminStore = defineStore('admin', () => {
   }
 
   return {
+    isEdit,
     noteDialog,
     projectDialog,
     toolDialog,

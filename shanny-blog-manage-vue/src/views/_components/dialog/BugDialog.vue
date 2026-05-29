@@ -3,11 +3,13 @@ import EditComponent from '../common/EditComponent.vue'
 
 import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useTagStore } from '@/stores/modules/tag'
-import { useCategoryStore } from '@/stores/modules/category'
-import { useArticleStore } from '@/stores/modules/article'
-import { useSiteStore } from '@/stores/modules/site'
+import {
+  useAdminStore,
+  useTagStore,
+  useCategoryStore,
+  useArticleStore,
+  useSiteStore,
+} from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()
@@ -43,7 +45,7 @@ const getCategoryId = async () => {
   const categoryResult = await categoryStore.getCategories()
   if (categoryResult.data.code.toLowerCase() === 'success') {
     curCategories.value = categoryResult.data.data.filter(
-      (item) => item.type == 'ARTICLE_BUG'
+      (item) => item.type == 'ARTICLE_BUG',
     )
     articleStore.articleForm.categoryId = curCategories.value[0].id
   }

@@ -1,6 +1,6 @@
 <script setup>
 import MediaDialog from '@/views/_components/dialog/MediaDialog.vue'
-import { useAdminStore } from '@/stores/modules/admin'
+import { useAdminStore } from '@/stores'
 const adminStore = useAdminStore()
 </script>
 <template>

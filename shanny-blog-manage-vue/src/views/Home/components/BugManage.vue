@@ -1,8 +1,8 @@
 <script setup>
 import BugDialog from '@/views/_components/dialog/BugDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useArticleStore } from '@/stores/modules/article'
+import { useAdminStore, useArticleStore } from '@/stores'
+
 const adminStore = useAdminStore()
 const articleStore = useArticleStore()
 const bugList = ref([])

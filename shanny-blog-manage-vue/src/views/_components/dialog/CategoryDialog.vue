@@ -1,9 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useSiteStore } from '@/stores/modules/site'
-import { useCategoryStore } from '@/stores/modules/category'
+import { useAdminStore, useSiteStore, useCategoryStore } from '@/stores'
 
 const adminStore = useAdminStore()
 const siteStore = useSiteStore()
@@ -61,11 +59,11 @@ const addCategory = async (category) => {
           v-model="categoryStore.categoryForm.type"
         >
           <option
-            v-for="(item, key) in categoryStore.categoryType"
-            :key="key"
-            :value="key"
+            v-for="[value, label] in Object.entries(categoryStore.categoryType)"
+            :key="value"
+            :value="value"
           >
-            {{ item }}
+            {{ label }}
           </option>
         </select>
 

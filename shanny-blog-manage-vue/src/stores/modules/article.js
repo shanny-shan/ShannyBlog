@@ -39,6 +39,7 @@ export const useArticleStore = defineStore('article', () => {
   const addArticle = async (article) => {
     return await insertArticle(article)
   }
+  const editArticle = async (article) => {}
   return {
     articles,
     articleForm,
@@ -46,5 +47,6 @@ export const useArticleStore = defineStore('article', () => {
     getArticleByTypeList,
     addArticle,
     resetArticleForm,
+    editArticle,
   }
 })

@@ -17,6 +17,7 @@ export const useAccountStore = defineStore('account', () => {
     password: '123456',
     confirmPassword: '123456',
   })
+  const userForm = ref({})
   /**
    * user register
    */
@@ -58,10 +59,7 @@ export const useAccountStore = defineStore('account', () => {
 
   const users = ref([])
   const getAllUsers = async () => {
-    const res = await getUsers()
-    if (res) {
-      users.value = res.data.data
-    }
+    return await getUsers()
   }
 
   /**
@@ -77,6 +75,7 @@ export const useAccountStore = defineStore('account', () => {
     // account msg
     loginForm,
     registerForm,
+    userForm,
 
     // user register
     getRegister,
@@ -88,6 +87,7 @@ export const useAccountStore = defineStore('account', () => {
     isLoggedIn,
 
     // getUserInfo
+    users,
     userInfo,
     getUserInfo,
 

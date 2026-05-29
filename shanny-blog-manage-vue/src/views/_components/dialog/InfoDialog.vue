@@ -1,17 +1,70 @@
 <script setup>
-import { ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
+import { onMounted, ref } from 'vue'
+import 'cally'
+import { useAdminStore, useAccountStore } from '@/stores'
+
 const adminStore = useAdminStore()
-const tags = [
-  'Vue',
-  'React',
-  'Angular',
-  'Svelte',
-  'TypeScript',
-  'JavaScript',
-  'CSS',
-]
-const selected = ref([])
+const accountStore = useAccountStore()
+
+const sexOptions = ref({
+  UNKNOWN: '未知',
+  MAN: '男',
+  FEMALE: '女',
+})
+const statusOptions = ref({
+  ACTIVE: '启用',
+  LOCKED: '锁定',
+  DELETED: '删除',
+})
+const DEFAULT_TEXT = ref('请选择日期')
+
+const selectedDate = ref(DEFAULT_TEXT.value)
+const calendarRef = ref(null)
+const dropdownOpen = ref(false)
+
+const handleDateChange = (e) => {
+  const date = e.target.value
+  selectedDate.value = date
+  accountStore.userForm.userDetails.birthday = date
+  dropdownOpen.value = false
+}
+
+const setDate = () => {
+  const birthday = accountStore.userForm.userDetails.birthday
+  if (birthday) {
+    selectedDate.value = birthday
+    if (calendarRef.value) {
+      calendarRef.value.value = birthday
+    }
+  } else {
+    selectedDate.value = DEFAULT_TEXT.value
+  }
+}
+
+const closeDialog = () => {
+  adminStore.closeDialog('info')
+}
+
+const submitInfo = async () => {
+  siteStore.loading = true
+
+  // if (adminStore.isEdit) {
+  // } else {
+  //   const res = await articleStore.addArticle(articleStore.articleForm)
+  //   if (res.data.code.toLowerCase() === 'success') {
+  //     toast.success(`${res.data.msg}`)
+  //     closeDialog()
+  //   } else {
+  //     toast.error(`${res.data.msg}`)
+  //   }
+  // }
+
+  siteStore.loading = false
+}
+
+onMounted(() => {
+  setDate()
+})
 </script>
 <template>
   <dialog class="modal h-full" :open="adminStore.infoDialog">
@@ -27,58 +80,124 @@ const selected = ref([])
       <fieldset
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
-        <legend class="fieldset-legend">Add User</legend>
+        <legend class="fieldset-legend">Edit UserInfo</legend>
 
-        <label class="label w-full">Title</label>
+        <label class="label w-full">UserName</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
-          placeholder="Please input title"
+          placeholder="Please input userName"
+          v-model="accountStore.userForm.userDetails.username"
         />
 
-        <label class="label w-full">Href</label>
+        <label class="label w-full">NickName</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
-          placeholder="Please input href"
+          placeholder="Please input nickName"
+          v-model="accountStore.userForm.userDetails.nickname"
         />
 
-        <label class="label w-full">Image</label>
-        <input
-          type="file"
-          class="file-input file-input-primary bg-base-200 w-full"
-        />
+        <label class="label w-full">Birthday</label>
+        <div class="dropdown w-full">
+          <button
+            @click="dropdownOpen = true"
+            class="input input-primary bg-base-200 w-full"
+          >
+            {{ selectedDate }}
+          </button>
 
-        <label class="label w-full">Category</label>
-        <select class="select bg-base-200 w-full select-primary">
-          <option disabled selected>Pick a Category</option>
-          <option>Study</option>
-          <option>Work</option>
-          <option>Life</option>
+          <div
+            v-show="dropdownOpen"
+            class="dropdown-content bg-base-100 rounded-box shadow-lg absolute top-full left-0 z-50 mt-2"
+          >
+            <calendar-date
+              ref="calendarRef"
+              class="cally"
+              @change="handleDateChange"
+            >
+              <svg
+                aria-label="Previous"
+                class="fill-current size-4"
+                slot="previous"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+              </svg>
+              <svg
+                aria-label="Next"
+                class="fill-current size-4"
+                slot="next"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+              </svg>
+              <calendar-month></calendar-month>
+            </calendar-date>
+          </div>
+        </div>
+
+        <label class="label w-full">Status</label>
+        <select
+          class="select bg-base-200 w-full select-primary"
+          v-model="accountStore.userForm.status"
+        >
+          <option
+            v-for="[value, label] in Object.entries(statusOptions)"
+            :key="value"
+            :value="value"
+          >
+            {{ label }}
+          </option>
         </select>
 
-        <label class="label w-full">Tag</label>
-        <div class="flex flex-row flex-wrap">
-          <label
-            v-for="tag in tags"
-            :key="tag"
-            class="cursor-pointer mr-2 mt-1"
+        <label class="label w-full">Sex</label>
+        <select
+          class="select bg-base-200 w-full select-primary"
+          v-model="accountStore.userForm.userDetails.sex"
+        >
+          <option
+            v-for="[value, label] in Object.entries(sexOptions)"
+            :key="value"
+            :value="value"
           >
-            <input
-              type="checkbox"
-              class="hidden peer"
-              :value="tag"
-              v-model="selected"
-            />
-            <div
-              class="badge badge-soft badge-neutral peer-checked:badge-primary"
-            >
-              {{ tag }}
-            </div>
-          </label>
+            {{ label }}
+          </option>
+        </select>
+
+        <label class="label w-full">Mobile</label>
+        <input
+          type="text"
+          class="input input-primary bg-base-200 w-full"
+          placeholder="Please input Mobile"
+          v-model="accountStore.userForm.mobile"
+        />
+
+        <label class="label w-full">Introduce</label>
+        <input
+          type="text"
+          class="input input-primary bg-base-200 w-full"
+          placeholder="Please input Introduce"
+          v-model="accountStore.userForm.userDetails.introduce"
+        />
+
+        <div class="mt-1 flex items-center justify-between gap-2">
+          <button class="btn btn-primary w-1/2" @click="submitInfo()">
+            Submit
+          </button>
+          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+            Cancel
+          </button>
         </div>
       </fieldset>
     </div>
   </dialog>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.cally {
+  background-color: theme('colors.base-100');
+  border-radius: 0.5rem;
+}
+</style>

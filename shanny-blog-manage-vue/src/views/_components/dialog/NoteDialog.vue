@@ -3,11 +3,13 @@ import EditComponent from '../common/EditComponent.vue'
 
 import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useTagStore } from '@/stores/modules/tag'
-import { useCategoryStore } from '@/stores/modules/category'
-import { useArticleStore } from '@/stores/modules/article'
-import { useSiteStore } from '@/stores/modules/site'
+import {
+  useAdminStore,
+  useTagStore,
+  useCategoryStore,
+  useArticleStore,
+  useSiteStore,
+} from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()
@@ -22,16 +24,21 @@ const closeDialog = () => {
   getCategoryId()
 }
 
-const submitArticle = async (type) => {
+const submitNote = async () => {
   siteStore.loading = true
   articleStore.articleForm.type = 'ARTICLE_NOTE'
-  const res = await articleStore.addArticle(articleStore.articleForm)
-  if (res.data.code.toLowerCase() === 'success') {
-    toast.success(`${res.data.msg}`)
-    closeDialog()
+
+  if (adminStore.isEdit) {
   } else {
-    toast.error(`${res.data.msg}`)
+    const res = await articleStore.addArticle(articleStore.articleForm)
+    if (res.data.code.toLowerCase() === 'success') {
+      toast.success(`${res.data.msg}`)
+      closeDialog()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
   }
+
   siteStore.loading = false
 }
 
@@ -43,7 +50,7 @@ const getCategoryId = async () => {
   const categoryResult = await categoryStore.getCategories()
   if (categoryResult.data.code.toLowerCase() === 'success') {
     curCategories.value = categoryResult.data.data.filter(
-      (item) => item.type == 'ARTICLE_NOTE'
+      (item) => item.type == 'ARTICLE_NOTE',
     )
     articleStore.articleForm.categoryId = curCategories.value[0].id
   }
@@ -133,7 +140,7 @@ onMounted(async () => {
           <EditComponent class="h-full" />
         </div>
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button class="btn btn-primary w-1/2" @click="submitArticle('note')">
+          <button class="btn btn-primary w-1/2" @click="submitNote()">
             Submit
           </button>
           <button class="btn btn-soft w-1/2" @click="closeDialog()">

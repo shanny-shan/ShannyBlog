@@ -5,26 +5,26 @@ import { getCategory, insertCategory } from '@/apis/category'
 export const useCategoryStore = defineStore('category', () => {
   const categories = ref([])
   const categoryForm = ref({
-    name: '类别1',
-    nameEn: 'category1',
-    type: 0,
+    name: '',
+    nameEn: '',
+    type: 'ARTICLE_NOTE',
     sort: 0,
   })
   const categoryType = ref({
-    0: '笔记',
-    1: '项目',
-    2: 'Bug',
-    3: '书籍',
-    4: '照片',
-    5: '视频',
-    6: '音乐',
-    7: '工具',
-    8: '通知',
+    ARTICLE_NOTE: '笔记',
+    ARTICLE_PROJECT: '项目',
+    // 2: 'Bug',
+    // 3: '书籍',
+    // 4: '照片',
+    // 5: '视频',
+    // 6: '音乐',
+    TOOL: '工具',
+    // 8: '通知',
   })
   const resetCategoryForm = () => {
     categoryForm.value = {
-      name: '类别1',
-      nameEn: 'category1',
+      name: '',
+      nameEn: '',
       type: 0,
       sort: 0,
     }

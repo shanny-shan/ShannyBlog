@@ -1,6 +1,6 @@
 {
   "name": "shanny-blog",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -20,6 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.1.1",
     "@kangc/v-md-editor": "^2.3.18",
     "axios": "^1.11.0",
+    "cally": "^0.9.2",
     "jwt-decode": "^4.0.0",
     "pinia": "^3.0.3",
     "sweetalert2": "^11.23.0",

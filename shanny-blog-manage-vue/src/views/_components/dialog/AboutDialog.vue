@@ -1,9 +1,6 @@
 <script setup>
-import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useSiteStore } from '@/stores/modules/site'
-import { useAboutStore } from '@/stores/modules/about'
+import { useAdminStore, useSiteStore, useAboutStore } from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()
@@ -82,13 +79,13 @@ const addAbout = async (about) => {
           v-model="aboutStore.aboutForm.github"
         />
 
-        <label class="label w-full">steam</label>
+        <!-- <label class="label w-full">steam</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
           placeholder="Please input steam"
           v-model="aboutStore.aboutForm.steam"
-        />
+        /> -->
 
         <label class="label w-full">web</label>
         <input
@@ -98,13 +95,13 @@ const addAbout = async (about) => {
           v-model="aboutStore.aboutForm.web"
         />
 
-        <label class="label w-full">bilibili</label>
+        <!-- <label class="label w-full">bilibili</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
           placeholder="Please input bilibili"
           v-model="aboutStore.aboutForm.biliBili"
-        />
+        /> -->
 
         <label class="label w-full">isActive</label>
         <input
@@ -113,13 +110,13 @@ const addAbout = async (about) => {
           v-model="aboutStore.aboutForm.isActive"
         />
 
-        <label class="label w-full">other</label>
+        <!-- <label class="label w-full">other</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
           placeholder="Please input other"
           v-model="aboutStore.aboutForm.other"
-        />
+        /> -->
 
         <button class="btn btn-primary" @click="addAbout(aboutStore.aboutForm)">
           Add

@@ -1,19 +1,31 @@
 <script setup>
 import TagDialog from '@/views/_components/dialog/TagDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useTagStore } from '@/stores/modules/tag'
+import { useAdminStore, useTagStore, useSiteStore } from '@/stores'
+
 const adminStore = useAdminStore()
 const tagStore = useTagStore()
+const siteStore = useSiteStore()
+
 const tagList = ref([])
 
 const getTagList = async () => {
+  siteStore.loading = true
   const res = await tagStore.getTagList()
   console.log(res.data.data)
   if (res.data.code.toLowerCase() === 'success') {
     tagList.value = res.data.data || []
+    siteStore.loading = false
   }
 }
+
+const editTag = (item) => {
+  adminStore.openDialog('tag')
+  tagStore.tagForm = item
+  adminStore.isEdit = true
+}
+const deleteTag = (item) => {}
+
 onMounted(() => {
   getTagList()
 })
@@ -50,8 +62,12 @@ onMounted(() => {
             <td>{{ item.nameEn }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs">Edit</button>
-                <button class="btn btn-ghost btn-xs">Delete</button>
+                <button class="btn btn-ghost btn-xs" @click="editTag(item)">
+                  Edit
+                </button>
+                <button class="btn btn-ghost btn-xs" @click="deleteTag(item)">
+                  Delete
+                </button>
               </div>
             </th>
           </tr>

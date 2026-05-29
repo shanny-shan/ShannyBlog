@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
+import { useAdminStore } from '@/stores'
 import EditComponent from '../common/EditComponent.vue'
 const adminStore = useAdminStore()
 const tags = [

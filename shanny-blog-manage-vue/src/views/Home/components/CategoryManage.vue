@@ -1,18 +1,30 @@
 <script setup>
 import categoryDialog from '@/views/_components/dialog/CategoryDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useCategoryStore } from '@/stores/modules/category'
+import { useAdminStore, useCategoryStore, useSiteStore } from '@/stores'
+
 const adminStore = useAdminStore()
 const categoryStore = useCategoryStore()
+const siteStore = useSiteStore()
+
 const categoryList = ref([])
 
 const getCategoryList = async () => {
+  siteStore.loading = true
   const res = await categoryStore.getCategories()
   if (res.data.code.toLowerCase() === 'success') {
     categoryList.value = res.data.data || []
+    siteStore.loading = false
   }
 }
+
+const editCategory = (item) => {
+  adminStore.openDialog('category')
+  categoryStore.categoryForm = item
+  adminStore.isEdit = true
+}
+const deleteCategory = (item) => {}
+
 onMounted(() => {
   getCategoryList()
 })
@@ -56,8 +68,18 @@ onMounted(() => {
             <td>{{ item.type }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs">Edit</button>
-                <button class="btn btn-ghost btn-xs">Delete</button>
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="editCategory(item)"
+                >
+                  Edit
+                </button>
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="deleteCategory(item)"
+                >
+                  Delete
+                </button>
               </div>
             </th>
           </tr>

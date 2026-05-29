@@ -3,11 +3,13 @@ import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import EditComponent from '../common/EditComponent.vue'
 import TimelineComponent from '../common/TimelineComponent.vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useTagStore } from '@/stores/modules/tag'
-import { useArticleStore } from '@/stores/modules/article'
-import { useSiteStore } from '@/stores/modules/site'
-import { useCategoryStore } from '@/stores/modules/category'
+import {
+  useAdminStore,
+  useTagStore,
+  useArticleStore,
+  useCategoryStore,
+  useSiteStore,
+} from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()
@@ -22,7 +24,7 @@ const closeDialog = () => {
   getCategoryId()
 }
 
-const submitArticle = async (type) => {
+const submitProject = async () => {
   siteStore.loading = true
   articleStore.articleForm.type = 'ARTICLE_PROJECT'
   const res = await articleStore.addArticle(articleStore.articleForm)
@@ -43,7 +45,7 @@ const getCategoryId = async () => {
   const categoryResult = await categoryStore.getCategories()
   if (categoryResult.data.code.toLowerCase() === 'success') {
     curCategories.value = categoryResult.data.data.filter(
-      (item) => item.type == 'ARTICLE_PROJECT'
+      (item) => item.type == 'ARTICLE_PROJECT',
     )
     articleStore.articleForm.categoryId = curCategories.value[0].id
   }
@@ -138,16 +140,13 @@ onMounted(async () => {
           </div>
         </div>
         <div class="flex-1 overflow-auto">
-          <label class="label w-full mt-5 mb-5">Timeline</label>
-          <TimelineComponent />
+          <!-- <label class="label w-full mt-5 mb-5">Timeline</label>
+          <TimelineComponent /> -->
           <label class="label w-full mt-5 mb-5">Content</label>
           <EditComponent class="mb-100" />
         </div>
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button
-            class="btn btn-primary w-1/2"
-            @click="submitArticle('project')"
-          >
+          <button class="btn btn-primary w-1/2" @click="submitProject()">
             Submit
           </button>
           <button class="btn btn-soft w-1/2" @click="closeDialog()">

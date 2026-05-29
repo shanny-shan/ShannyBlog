@@ -1,17 +1,28 @@
 <script setup>
 import ProjectDialog from '@/views/_components/dialog/ProjectDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useArticleStore } from '@/stores/modules/article'
+import { useAdminStore, useArticleStore, useSiteStore } from '@/stores'
 const adminStore = useAdminStore()
 const articleStore = useArticleStore()
+const siteStore = useSiteStore()
+
 const projectList = ref([])
 const getProjectList = async () => {
+  siteStore.loading = true
   const res = await articleStore.getArticleByTypeList('ARTICLE_PROJECT')
   if (res.data.code.toLowerCase() === 'success') {
     projectList.value = res.data.data || []
+    siteStore.loading = false
   }
 }
+
+const editProject = (item) => {
+  adminStore.openDialog('project')
+  articleStore.articleForm = item
+  adminStore.isEdit = true
+}
+const deleteProject = (item) => {}
+
 onMounted(() => {
   getProjectList()
 })
@@ -37,7 +48,7 @@ onMounted(() => {
             <th>Content</th>
             <th>Tags</th>
             <th>Published</th>
-            <th>CreateTime</th>
+            <!-- <th>CreateTime</th> -->
             <th>UpdateTime</th>
             <th>Edit</th>
           </tr>
@@ -64,12 +75,19 @@ onMounted(() => {
               </div>
             </td>
             <td>{{ item.published }}</td>
-            <td>{{ item.createTime }}</td>
-            <td>{{ item.updateTime }}</td>
+            <!-- <td>{{ item.createTime }}</td> -->
+            <td>{{ item.updateTime.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs">Edit</button>
-                <button class="btn btn-ghost btn-xs">Delete</button>
+                <button class="btn btn-ghost btn-xs" @click="editProject(item)">
+                  Edit
+                </button>
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="deleteProject(item)"
+                >
+                  Delete
+                </button>
               </div>
             </th>
           </tr>

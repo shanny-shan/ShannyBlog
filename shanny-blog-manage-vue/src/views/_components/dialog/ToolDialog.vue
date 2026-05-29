@@ -1,10 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useTagStore } from '@/stores/modules/tag'
-import { useToolStore } from '@/stores/modules/tool'
-import { useSiteStore } from '@/stores/modules/site'
+import {
+  useAdminStore,
+  useTagStore,
+  useToolStore,
+  useSiteStore,
+} from '@/stores'
 
 const toast = useToast()
 const adminStore = useAdminStore()
@@ -12,7 +14,7 @@ const tagStore = useTagStore()
 const toolStore = useToolStore()
 const siteStore = useSiteStore()
 
-const submitTool = async (type) => {
+const submitTool = async () => {
   siteStore.loading = true
   const res = await toolStore.addTool(toolStore.toolForm)
   if (res.data.code.toLowerCase() === 'success') {

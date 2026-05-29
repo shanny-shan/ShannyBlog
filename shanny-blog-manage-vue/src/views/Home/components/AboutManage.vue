@@ -1,19 +1,31 @@
 <script setup>
 import AboutDialog from '@/views/_components/dialog/AboutDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useAboutStore } from '@/stores/modules/about'
+import { useAdminStore, useAboutStore, useSiteStore } from '@/stores'
+
 const adminStore = useAdminStore()
 const aboutStore = useAboutStore()
+const siteStore = useSiteStore()
+
 const aboutList = ref([])
 
 const getAboutList = async () => {
+  siteStore.loading = true
   const res = await aboutStore.getAboutMe()
   console.log(res.data.data)
   if (res.data.code.toLowerCase() === 'success') {
     aboutList.value = res.data.data || []
+    siteStore.loading = false
   }
 }
+
+const editAbout = (item) => {
+  adminStore.openDialog('about')
+  aboutStore.aboutForm = item
+  adminStore.isEdit = true
+}
+const deleteAbout = (item) => {}
+
 onMounted(() => {
   getAboutList()
 })
@@ -38,11 +50,11 @@ onMounted(() => {
             <th>Tag</th>
             <th>Introduce</th>
             <th>GitHub</th>
-            <th>Steam</th>
+            <!-- <th>Steam</th> -->
             <th>Web</th>
-            <th>Bilibili</th>
+            <!-- <th>Bilibili</th> -->
             <th>IsActive</th>
-            <th>CreateTime</th>
+            <!-- <th>CreateTime</th> -->
             <th>UpdateTime</th>
             <th>Edit</th>
           </tr>
@@ -58,16 +70,20 @@ onMounted(() => {
             <td>{{ item.tag }}</td>
             <td>{{ item.introduce }}</td>
             <td>{{ item.github }}</td>
-            <td>{{ item.steam }}</td>
+            <!-- <td>{{ item.steam }}</td> -->
             <td>{{ item.web }}</td>
-            <td>{{ item.biliBili }}</td>
+            <!-- <td>{{ item.biliBili }}</td> -->
             <td>{{ item.isActive }}</td>
-            <td>{{ item.createTime }}</td>
-            <td>{{ item.updateTime }}</td>
+            <!-- <td>{{ item.createTime }}</td> -->
+            <td>{{ item.updateTime.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs">Edit</button>
-                <button class="btn btn-ghost btn-xs">Delete</button>
+                <button class="btn btn-ghost btn-xs" @click="editAbout(item)">
+                  Edit
+                </button>
+                <button class="btn btn-ghost btn-xs" @click="deleteAbout(item)">
+                  Delete
+                </button>
               </div>
             </th>
           </tr>

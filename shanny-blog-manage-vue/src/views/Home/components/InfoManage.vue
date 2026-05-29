@@ -1,23 +1,38 @@
 <script setup>
 import { onMounted } from 'vue'
 import InfoDialog from '@/views/_components/dialog/InfoDialog.vue'
-import { useAdminStore } from '@/stores/modules/admin'
-import { useAccountStore } from '@/stores/modules/account'
+import { useAdminStore, useAccountStore, useSiteStore } from '@/stores'
 
 const accountStore = useAccountStore()
 const adminStore = useAdminStore()
+const siteStore = useSiteStore()
 
-onMounted(async () => {
-  await accountStore.getAllUsers()
+const getUserInfo = async () => {
+  siteStore.loading = true
+  const res = await accountStore.getAllUsers()
+  if (res) {
+    accountStore.users = res.data.data || []
+    siteStore.loading = false
+  }
+}
+
+const editInfo = (item) => {
+  adminStore.openDialog('info')
+  accountStore.userForm = item
+  adminStore.isEdit = true
+}
+
+onMounted(() => {
+  getUserInfo()
 })
 </script>
 <template>
   <div>
-    <div class="flex justify-end gap-2">
+    <!-- <div class="flex justify-end gap-2">
       <button class="btn btn-primary" @click="adminStore.openDialog('info')">
         Add User
       </button>
-    </div>
+    </div> -->
     <div class="overflow-x-auto mt-2">
       <table class="table">
         <!-- head -->
@@ -34,7 +49,6 @@ onMounted(async () => {
             <th>birthday</th>
             <th>sex</th>
             <th>mobile</th>
-            <th>tag</th>
             <th>introduce</th>
             <th>lastLogin</th>
             <th>other</th>
@@ -63,16 +77,17 @@ onMounted(async () => {
                 </div>
               </div>
             </td>
-            <td>{{ item.userDetails?.nickName }}</td>
+            <td>{{ item.userDetails?.nickname }}</td>
             <td>{{ item.userDetails?.username }}</td>
             <td>{{ item.userDetails?.birthday }}</td>
             <td>{{ item.userDetails?.sex }}</td>
             <td>{{ item.mobile }}</td>
-            <td>{{ item.userDetails?.tag }}</td>
             <td>{{ item.userDetails?.introduce }}</td>
             <td>{{ item.lastLoginTime.substring(0, 10) }}</td>
             <th>
-              <button class="btn btn-ghost btn-xs">update</button>
+              <button class="btn btn-ghost btn-xs" @click="editInfo(item)">
+                update
+              </button>
             </th>
           </tr>
         </tbody>

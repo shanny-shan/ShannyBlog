@@ -81,6 +81,7 @@ const logout = () => {
               <li @click="active = 'note'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'note' }"
                   data-tip="Note"
                 >
                   <font-awesome-icon icon="fa-solid fa-note-sticky" />
@@ -90,6 +91,7 @@ const logout = () => {
               <li @click="active = 'project'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'project' }"
                   data-tip="Project"
                 >
                   <font-awesome-icon icon="fa-solid fa-bars-progress" />
@@ -99,6 +101,7 @@ const logout = () => {
               <!-- <li @click="active = 'bug'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'bug' }"
                   data-tip="Bug"
                 >
                   <font-awesome-icon icon="fa-solid fa-bug" />
@@ -110,6 +113,7 @@ const logout = () => {
           <li @click="active = 'tool'">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              :class="{ 'active-menu': active == 'tool' }"
               data-tip="Tool"
             >
               <font-awesome-icon icon="fa-solid fa-screwdriver-wrench" />
@@ -119,6 +123,7 @@ const logout = () => {
           <!-- <li @click="active = 'media'">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              :class="{ 'active-menu': active == 'media' }"
               data-tip="Media"
             >
               <font-awesome-icon icon="fa-solid fa-photo-film" />
@@ -128,6 +133,7 @@ const logout = () => {
           <!-- <li @click="active = 'board'">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+              :class="{ 'active-menu': active == 'board' }"
               data-tip="Board"
             >
               <font-awesome-icon icon="fa-solid fa-envelope" />
@@ -147,6 +153,7 @@ const logout = () => {
               <li @click="active = 'info'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'info' }"
                   data-tip="UserInfo"
                 >
                   <font-awesome-icon icon="fa-solid fa-user" />
@@ -156,6 +163,7 @@ const logout = () => {
               <li @click="active = 'about'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'about' }"
                   data-tip="About"
                 >
                   <font-awesome-icon icon="fa-solid fa-circle-info" />
@@ -165,6 +173,7 @@ const logout = () => {
               <li @click="active = 'category'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'category' }"
                   data-tip="Category"
                 >
                   <font-awesome-icon icon="fa-solid fa-layer-group" />
@@ -174,6 +183,7 @@ const logout = () => {
               <li @click="active = 'tag'">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  :class="{ 'active-menu': active == 'tag' }"
                   data-tip="Tag"
                 >
                   <font-awesome-icon icon="fa-solid fa-tags" />
@@ -222,4 +232,9 @@ const logout = () => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.active-menu {
+  color: var(--menu-active-fg);
+  background-color: var(--menu-active-bg);
+}
+</style>

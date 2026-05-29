@@ -1,6 +1,6 @@
 <script setup>
 import BoardDialog from '@/views/_components/dialog/BoardDialog.vue'
-import { useAdminStore } from '@/stores/modules/admin'
+import { useAdminStore } from '@/stores'
 const adminStore = useAdminStore()
 </script>
 <template>
