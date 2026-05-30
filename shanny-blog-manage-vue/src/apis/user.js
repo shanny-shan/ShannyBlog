@@ -34,4 +34,28 @@ const getUsers = () => {
   })
 }
 
-export { registerUser, loginUser, getInfo, getUsers }
+const updateUserInfo = (info) => {
+  return request({
+    url: '/account/update',
+    method: 'Post',
+    data: info,
+  })
+}
+const deleteUserByUuid = (uuid) => {
+  return request({
+    url: '/account/delete',
+    method: 'Post',
+    params: {
+      uuid,
+    },
+  })
+}
+
+export {
+  registerUser,
+  loginUser,
+  getInfo,
+  getUsers,
+  updateUserInfo,
+  deleteUserByUuid,
+}

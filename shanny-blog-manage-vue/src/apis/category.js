@@ -14,4 +14,21 @@ const insertCategory = (category) => {
   })
 }
 
-export { getCategory, insertCategory }
+const updateCategory = (category) => {
+  return request({
+    url: '/category/update',
+    method: 'Post',
+    data: category,
+  })
+}
+const deleteCategoryById = (id) => {
+  return request({
+    url: '/category/delete',
+    method: 'Post',
+    params: {
+      id,
+    },
+  })
+}
+
+export { getCategory, insertCategory, updateCategory, deleteCategoryById }

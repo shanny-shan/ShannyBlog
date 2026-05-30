@@ -8,16 +8,27 @@ const siteStore = useSiteStore()
 const categoryStore = useCategoryStore()
 const toast = useToast()
 
-const addCategory = async (category) => {
+const closeDialog = () => {
+  adminStore.closeDialog('category')
+}
+
+const submitCategory = async (category) => {
   siteStore.loading = true
-  const res = await categoryStore.addCategory(category)
+  let res = null
+  if (adminStore.isEdit) {
+    res = await categoryStore.editCategory(category)
+  } else {
+    res = await categoryStore.addCategory(category)
+  }
+
   if (res?.data?.code == 'SUCCESS') {
-    categoryStore.categories.push(res.data.data)
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('category')
+    await categoryStore.getCategoryList()
   } else {
     toast.error(`${res.data.msg}`)
   }
+
   siteStore.loading = false
 }
 </script>
@@ -75,12 +86,17 @@ const addCategory = async (category) => {
           v-model="categoryStore.categoryForm.sort"
         />
 
-        <button
-          class="btn btn-primary"
-          @click="addCategory(categoryStore.categoryForm)"
-        >
-          Add
-        </button>
+        <div class="mt-1 flex items-center justify-between gap-2">
+          <button
+            class="btn btn-primary w-1/2"
+            @click="submitCategory(categoryStore.categoryForm)"
+          >
+            Submit
+          </button>
+          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+            Cancel
+          </button>
+        </div>
       </fieldset>
     </div>
   </dialog>

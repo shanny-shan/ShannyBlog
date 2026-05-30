@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.shanny</groupId>
         <artifactId>shanny-blog-java</artifactId>
-        <version>1.0.2</version>
+        <version>1.2.0</version>
     </parent>
     <artifactId>blog-pojo</artifactId>
     <!-- end -->

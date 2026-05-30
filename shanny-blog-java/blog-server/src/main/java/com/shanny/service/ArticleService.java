@@ -18,4 +18,8 @@ public interface ArticleService {
     Result<List<ArticleVO>> getArticlesByType(CategoryEnum.CategoryType type);
 
     Result<ArticleVO> getArticleById(Long id);
+
+    Result<ArticleVO> updateArticle(ArticleDTO articleDTO);
+
+    Result<String> deleteArticle(Long id);
 }

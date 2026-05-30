@@ -7,7 +7,7 @@
      values (#{avatar}, #{biliBili}, #{createTime}, #{github}, #{introduce}, #{name}, #{other},
              #{isActive}, #{steam}, #{tag}, #{updateTime}, #{web})
     </insert>
-    <update id="updateById" parameterType="com.shanny.entity.About">
+    <update id="update_about" parameterType="com.shanny.entity.About">
         update shanny_blog.abouts
         <set>
             <if test="avatar != null">avatar = #{avatar}, </if>

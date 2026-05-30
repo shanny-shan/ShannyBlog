@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAdminStore, useSiteStore, useTagStore } from '@/stores'
 
@@ -8,16 +7,27 @@ const adminStore = useAdminStore()
 const siteStore = useSiteStore()
 const tagStore = useTagStore()
 
-const addTag = async (tag) => {
+const closeDialog = () => {
+  adminStore.closeDialog('tag')
+}
+
+const submitTag = async (tag) => {
   siteStore.loading = true
-  const res = await tagStore.addTag(tag)
+
+  let res = null
+  if (adminStore.isEdit) {
+    res = await tagStore.editTag(tag)
+  } else {
+    res = await tagStore.addTag(tag)
+  }
   if (res.data.code.toLowerCase() === 'success') {
-    tagStore.tags.push(res.data.data)
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('tag')
+    tagStore.getTagList()
   } else {
     toast.error(`${res.data.msg}`)
   }
+
   siteStore.loading = false
 }
 </script>
@@ -52,9 +62,18 @@ const addTag = async (tag) => {
           placeholder="Please input nameEn"
           v-model="tagStore.tagForm.nameEn"
         />
-        <button class="btn btn-primary" @click="addTag(tagStore.tagForm)">
-          Add
-        </button>
+
+        <div class="mt-1 flex items-center justify-between gap-2">
+          <button
+            class="btn btn-primary w-1/2"
+            @click="submitTag(tagStore.tagForm)"
+          >
+            Submit
+          </button>
+          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+            Cancel
+          </button>
+        </div>
       </fieldset>
     </div>
   </dialog>

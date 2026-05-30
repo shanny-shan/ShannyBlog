@@ -25,8 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shanny.constant.ResultConstant.INSERT_SUCCESS;
-import static com.shanny.constant.ResultConstant.SELECT_SUCCESS;
+import static com.shanny.constant.ResultConstant.*;
 
 @Service
 public class ArticleServiceImpl implements ArticleService {
@@ -41,18 +40,7 @@ public class ArticleServiceImpl implements ArticleService {
         this.categoryMapper = categoryMapper;
     }
 
-    @Override
-    public Result<ArticleVO> addArticle(ArticleDTO articleDTO) {
-        Article article = new Article();
-        BeanUtils.copyProperties(articleDTO, article);
 
-        articleMapper.insert_article(article);
-
-        ArticleVO articleVO = new ArticleVO();
-        BeanUtils.copyProperties(article, articleVO);
-
-        return Result.success(INSERT_SUCCESS, articleVO);
-    }
 
     @Override
     public Result<List<ArticleVO>> getArticles(){
@@ -103,5 +91,44 @@ public class ArticleServiceImpl implements ArticleService {
         BeanUtils.copyProperties(category, categoryVO);
         vo.setCategory(categoryVO);
         return Result.success(SELECT_SUCCESS, vo);
+    }
+
+    @Override
+    public Result<ArticleVO> addArticle(ArticleDTO articleDTO) {
+        Article article = new Article();
+        BeanUtils.copyProperties(articleDTO, article);
+
+        articleMapper.insert_article(article);
+
+        ArticleVO articleVO = new ArticleVO();
+        BeanUtils.copyProperties(article, articleVO);
+
+        return Result.success(INSERT_SUCCESS, articleVO);
+    }
+
+    @Override
+    public Result<ArticleVO> updateArticle(ArticleDTO articleDTO) {
+        if(articleDTO.getId() == null){
+            return Result.error(UPDATE_FAIL);
+        }
+
+        Article article = new Article();
+        BeanUtils.copyProperties(articleDTO, article);
+
+        articleMapper.update_article(article);
+
+        ArticleVO articleVO = new ArticleVO();
+        BeanUtils.copyProperties(article, articleVO);
+
+        return Result.success(UPDATE_SUCCESS, articleVO);
+    }
+
+    @Override
+    public Result<String> deleteArticle(Long id) {
+        if(id == null){
+            return Result.error(DELETE_FAIL);
+        }
+        articleMapper.deleteById(id);
+        return Result.success(DELETE_SUCCESS);
     }
 }

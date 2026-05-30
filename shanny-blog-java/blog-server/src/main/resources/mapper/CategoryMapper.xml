@@ -5,7 +5,7 @@
         insert into shanny_blog.categories( name, type, sort, name_en)
         values (#{name}, #{type}, #{sort}, #{nameEn})
     </insert>
-    <update id="updateById" parameterType="com.shanny.entity.Category">
+    <update id="update_category" parameterType="com.shanny.entity.Category">
         update shanny_blog.categories
         <set>
             <if test="name != null">name = #{name}, </if>

@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getAbout, insertAbout } from '@/apis/about'
+import {
+  deleteAboutById,
+  getAbout,
+  insertAbout,
+  updateAbout,
+} from '@/apis/about'
+import { useSiteStore } from '@/stores'
 
 export const useAboutStore = defineStore('about', () => {
+  const siteStore = useSiteStore()
+
   const authors = ref([])
+  const aboutList = ref([])
   const authorInfo = ref({})
   const aboutForm = ref({
     avatar: '',
@@ -30,18 +39,35 @@ export const useAboutStore = defineStore('about', () => {
       other: '',
     }
   }
-  const getAboutMe = async () => {
-    return await getAbout()
+
+  const getAboutList = async () => {
+    siteStore.loading = true
+    const res = await getAbout()
+    if (res.data.code.toLowerCase() === 'success') {
+      aboutList.value = res.data.data || []
+      siteStore.loading = false
+    }
   }
+
   const addAbout = async (about) => {
     return await insertAbout(about)
   }
+  const editAbout = async (about) => {
+    return await updateAbout(about)
+  }
+  const deleteAbout = async (id) => {
+    return await deleteAboutById(id)
+  }
+
   return {
     authors,
+    aboutList,
     authorInfo,
     aboutForm,
     resetAboutForm,
-    getAboutMe,
     addAbout,
+    editAbout,
+    deleteAbout,
+    getAboutList,
   }
 })

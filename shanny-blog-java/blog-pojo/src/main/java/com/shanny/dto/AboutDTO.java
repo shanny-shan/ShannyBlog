@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Schema(description = "添加作者信息提交的数据")
 public class AboutDTO {
+    private Long id;
     private String avatar;
     private String name;
     private String introduce;

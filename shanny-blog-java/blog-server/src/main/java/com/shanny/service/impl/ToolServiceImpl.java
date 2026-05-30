@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.shanny.constant.ResultConstant.INSERT_SUCCESS;
-import static com.shanny.constant.ResultConstant.SELECT_SUCCESS;
+import static com.shanny.constant.ResultConstant.*;
+import static com.shanny.constant.ResultConstant.DELETE_FAIL;
+import static com.shanny.constant.ResultConstant.DELETE_SUCCESS;
+import static com.shanny.constant.ResultConstant.UPDATE_SUCCESS;
 
 @Service
 public class ToolServiceImpl implements ToolService {
@@ -66,5 +68,30 @@ public class ToolServiceImpl implements ToolService {
         BeanUtils.copyProperties(tool, toolVO);
 
         return Result.success(INSERT_SUCCESS, toolVO);
+    }
+
+    @Override
+    public Result<ToolVO> updateTool(ToolDTO toolDTO) {
+        if(toolDTO.getId() == null){
+            return Result.error(UPDATE_FAIL);
+        }
+
+        Tool tool = new Tool();
+        BeanUtils.copyProperties(toolDTO, tool);
+        toolMapper.update_tool(tool);
+
+        ToolVO toolVO = new ToolVO();
+        BeanUtils.copyProperties(tool, toolVO);
+
+        return Result.success(UPDATE_SUCCESS, toolVO);
+    }
+
+    @Override
+    public Result<String> deleteTool(Long id) {
+        if(id == null){
+            return Result.error(DELETE_FAIL);
+        }
+        toolMapper.deleteById(id);
+        return Result.success(DELETE_SUCCESS);
     }
 }

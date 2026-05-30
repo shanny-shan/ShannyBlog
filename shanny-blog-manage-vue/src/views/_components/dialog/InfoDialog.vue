@@ -1,10 +1,13 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import 'cally'
-import { useAdminStore, useAccountStore } from '@/stores'
+import { useAdminStore, useAccountStore, useSiteStore } from '@/stores'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const adminStore = useAdminStore()
 const accountStore = useAccountStore()
+const siteStore = useSiteStore()
 
 const sexOptions = ref({
   UNKNOWN: '未知',
@@ -48,16 +51,16 @@ const closeDialog = () => {
 const submitInfo = async () => {
   siteStore.loading = true
 
-  // if (adminStore.isEdit) {
-  // } else {
-  //   const res = await articleStore.addArticle(articleStore.articleForm)
-  //   if (res.data.code.toLowerCase() === 'success') {
-  //     toast.success(`${res.data.msg}`)
-  //     closeDialog()
-  //   } else {
-  //     toast.error(`${res.data.msg}`)
-  //   }
-  // }
+  if (adminStore.isEdit) {
+    const res = await accountStore.editUserInfo(accountStore.userForm)
+    if (res.data.code.toLowerCase() === 'success') {
+      toast.success(`${res.data.msg}`)
+      closeDialog()
+      await accountStore.getAllUsers()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+  }
 
   siteStore.loading = false
 }
@@ -173,14 +176,6 @@ onMounted(() => {
           class="input input-primary bg-base-200 w-full"
           placeholder="Please input Mobile"
           v-model="accountStore.userForm.mobile"
-        />
-
-        <label class="label w-full">Introduce</label>
-        <input
-          type="text"
-          class="input input-primary bg-base-200 w-full"
-          placeholder="Please input Introduce"
-          v-model="accountStore.userForm.userDetails.introduce"
         />
 
         <div class="mt-1 flex items-center justify-between gap-2">

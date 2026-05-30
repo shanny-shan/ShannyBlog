@@ -1,29 +1,22 @@
 <script setup>
 import { onMounted } from 'vue'
 import InfoDialog from '@/views/_components/dialog/InfoDialog.vue'
-import { useAdminStore, useAccountStore, useSiteStore } from '@/stores'
+import { useAdminStore, useAccountStore } from '@/stores'
 
 const accountStore = useAccountStore()
 const adminStore = useAdminStore()
-const siteStore = useSiteStore()
-
-const getUserInfo = async () => {
-  siteStore.loading = true
-  const res = await accountStore.getAllUsers()
-  if (res) {
-    accountStore.users = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editInfo = (item) => {
   adminStore.openDialog('info')
-  accountStore.userForm = item
+  accountStore.userForm = {
+    ...item,
+    userDetails: { ...item.userDetails },
+  }
   adminStore.isEdit = true
 }
 
-onMounted(() => {
-  getUserInfo()
+onMounted(async () => {
+  await accountStore.getAllUsers()
 })
 </script>
 <template>
@@ -49,7 +42,6 @@ onMounted(() => {
             <th>birthday</th>
             <th>sex</th>
             <th>mobile</th>
-            <th>introduce</th>
             <th>lastLogin</th>
             <th>other</th>
           </tr>
@@ -82,11 +74,10 @@ onMounted(() => {
             <td>{{ item.userDetails?.birthday }}</td>
             <td>{{ item.userDetails?.sex }}</td>
             <td>{{ item.mobile }}</td>
-            <td>{{ item.userDetails?.introduce }}</td>
             <td>{{ item.lastLoginTime.substring(0, 10) }}</td>
             <th>
               <button class="btn btn-ghost btn-xs" @click="editInfo(item)">
-                update
+                Edit
               </button>
             </th>
           </tr>

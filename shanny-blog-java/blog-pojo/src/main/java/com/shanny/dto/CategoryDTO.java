@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Schema(description = "添加菜单时提交的数据")
 public class CategoryDTO {
+    private Long id;
     private String name;
     private String nameEn;
     private CategoryEnum.CategoryType type;

@@ -1,9 +1,22 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { loginUser, registerUser, getInfo, getUsers } from '@/apis/user'
+import {
+  loginUser,
+  registerUser,
+  getInfo,
+  getUsers,
+  updateUserInfo,
+  deleteUserByUuid,
+} from '@/apis/user'
 import router from '@/router'
+import { useSiteStore } from '@/stores'
 
 export const useAccountStore = defineStore('account', () => {
+  const siteStore = useSiteStore()
+
+  const users = ref([])
+  const userInfo = ref({})
+
   /**
    * account msg
    */
@@ -17,7 +30,9 @@ export const useAccountStore = defineStore('account', () => {
     password: '123456',
     confirmPassword: '123456',
   })
-  const userForm = ref({})
+  const userForm = ref({
+    userDetails: {},
+  })
   /**
    * user register
    */
@@ -45,7 +60,7 @@ export const useAccountStore = defineStore('account', () => {
   /**
    * getUserInfo
    */
-  const userInfo = ref({})
+
   const getUserInfo = async () => {
     const res = await getInfo()
     if (res) {
@@ -57,9 +72,13 @@ export const useAccountStore = defineStore('account', () => {
    * getUsers
    */
 
-  const users = ref([])
   const getAllUsers = async () => {
-    return await getUsers()
+    siteStore.loading = true
+    const res = await getUsers()
+    if (res) {
+      users.value = res.data.data || []
+      siteStore.loading = false
+    }
   }
 
   /**
@@ -69,6 +88,13 @@ export const useAccountStore = defineStore('account', () => {
     userInfo.value.value = {}
     localStorage.removeItem('jwtToken')
     router.push('/login')
+  }
+
+  const editUserInfo = async (info) => {
+    return await updateUserInfo(info)
+  }
+  const deleteUser = async (uuid) => {
+    return await deleteUserByUuid(uuid)
   }
 
   return {
@@ -87,7 +113,6 @@ export const useAccountStore = defineStore('account', () => {
     isLoggedIn,
 
     // getUserInfo
-    users,
     userInfo,
     getUserInfo,
 
@@ -97,5 +122,8 @@ export const useAccountStore = defineStore('account', () => {
 
     // logout
     logout,
+
+    editUserInfo,
+    deleteUser,
   }
 })

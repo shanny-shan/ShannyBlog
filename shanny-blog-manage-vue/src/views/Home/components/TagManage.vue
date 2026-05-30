@@ -1,33 +1,42 @@
 <script setup>
 import TagDialog from '@/views/_components/dialog/TagDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore, useTagStore, useSiteStore } from '@/stores'
+import { useAdminStore, useTagStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
+const toast = useToast()
 const adminStore = useAdminStore()
 const tagStore = useTagStore()
-const siteStore = useSiteStore()
-
-const tagList = ref([])
-
-const getTagList = async () => {
-  siteStore.loading = true
-  const res = await tagStore.getTagList()
-  console.log(res.data.data)
-  if (res.data.code.toLowerCase() === 'success') {
-    tagList.value = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editTag = (item) => {
   adminStore.openDialog('tag')
-  tagStore.tagForm = item
+  tagStore.tagForm = { ...item }
   adminStore.isEdit = true
 }
-const deleteTag = (item) => {}
+const deleteTag = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的标签吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await tagStore.deleteTag(item.id)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await tagStore.getTagList()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
+}
 
-onMounted(() => {
-  getTagList()
+onMounted(async () => {
+  await tagStore.getTagList()
 })
 </script>
 <template>
@@ -52,7 +61,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in tagList">
+          <tr v-for="item in tagStore.tagList">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />

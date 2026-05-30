@@ -47,4 +47,24 @@ public class ToolController {
             return Result.error(e.getMessage());
         }
     }
+
+    @PostMapping("/update")
+    @Operation(summary = "工具修改")
+    public Result<ToolVO> UpdateTool(@RequestBody ToolDTO toolDTO) {
+        try {
+            return toolService.updateTool(toolDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "工具删除")
+    public Result<String> deleteTool(Long id) {
+        try {
+            return toolService.deleteTool(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

@@ -5,6 +5,7 @@ import com.shanny.entity.Category;
 import com.shanny.entity.User;
 import com.shanny.entity.UserDetails;
 import com.shanny.enums.AutoFillEnum.OperationType;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -18,7 +19,10 @@ public interface CategoryMapper {
     @Select("select * from shanny_blog.categories where id = #{id}")
     Category getById(Long id);
 
-    Category updateById(Category category);
-
     void insert_category(Category category);
+
+    void update_category(Category category);
+
+    @Delete("delete from shanny_blog.categories where id = #{id}")
+    void deleteById(Long id);
 }

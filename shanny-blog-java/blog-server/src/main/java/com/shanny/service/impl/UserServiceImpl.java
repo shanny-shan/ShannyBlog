@@ -4,6 +4,7 @@ import com.shanny.constant.JwtClaimsConstant;
 import com.shanny.context.BaseContext;
 import com.shanny.dto.RegisterDTO;
 import com.shanny.dto.LoginDTO;
+import com.shanny.dto.UserInfoDTO;
 import com.shanny.entity.User;
 import com.shanny.entity.UserDetails;
 import com.shanny.enums.UserEnum.*;
@@ -16,7 +17,6 @@ import com.shanny.vo.LoginVO;
 import com.shanny.vo.UserInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.shanny.constant.DefaultConstant.DEFAULT_INTRO;
 import static com.shanny.constant.DefaultConstant.DEFAULT_UUID;
 import static com.shanny.constant.ResultConstant.*;
 
@@ -157,5 +156,22 @@ public class UserServiceImpl implements UserService {
         else{
             return Result.error(LOGIN_ERROR);
         }
+    }
+
+    @Override
+    public Result<UserInfoVO> updateUserInfo(UserInfoDTO userInfoDTO) {
+        if(userInfoDTO.getUserId() == null){
+            return Result.error(UPDATE_FAIL);
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userInfoDTO, user);
+
+        UserDetails detail = new UserDetails();
+        BeanUtils.copyProperties(userInfoDTO.getUserDetails(), detail);
+
+        userMapper.update_user(user);
+        userMapper.update_user_detail(detail);
+
+        return Result.success(UPDATE_SUCCESS);
     }
 }

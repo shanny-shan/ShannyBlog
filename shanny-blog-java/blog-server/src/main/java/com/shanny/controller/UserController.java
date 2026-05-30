@@ -2,6 +2,7 @@ package com.shanny.controller;
 
 import com.shanny.dto.RegisterDTO;
 import com.shanny.dto.LoginDTO;
+import com.shanny.dto.UserInfoDTO;
 import com.shanny.result.Result;
 import com.shanny.service.UserService;
 import com.shanny.vo.LoginVO;
@@ -62,6 +63,16 @@ public class UserController {
         try{
             return userService.getUsers();
         }catch (Exception e){
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "用户更新")
+    public Result<UserInfoVO> UpdateUserInfo(@RequestBody UserInfoDTO userInfoDTO) {
+        try {
+            return userService.updateUserInfo(userInfoDTO);
+        } catch (Exception e) {
             return Result.error(e.getMessage());
         }
     }

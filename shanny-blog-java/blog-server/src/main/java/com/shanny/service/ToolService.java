@@ -14,4 +14,8 @@ public interface ToolService {
     Result<List<ToolVO>> getTools();
 
     Result<ToolVO> addTool(ToolDTO toolDTO);
+
+    Result<ToolVO> updateTool(ToolDTO toolDTO);
+
+    Result<String> deleteTool(Long id);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @Data
 @Schema(description = "添加工具提交的数据")
 public class ToolDTO {
+    private Long id;
     private String title;
     private String content;
     private String image;

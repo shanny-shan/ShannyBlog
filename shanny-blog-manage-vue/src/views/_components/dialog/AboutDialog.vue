@@ -7,19 +7,27 @@ const adminStore = useAdminStore()
 const siteStore = useSiteStore()
 const aboutStore = useAboutStore()
 
-const addAbout = async (about) => {
+const closeDialog = () => {
+  adminStore.closeDialog('about')
+}
+
+const submitAbout = async (about) => {
   siteStore.loading = true
-  const res = await aboutStore.addAbout(about)
+  let res = null
+  if (adminStore.isEdit) {
+    res = await aboutStore.editAbout(about)
+  } else {
+    res = await aboutStore.addAbout(about)
+  }
+
   if (res?.data?.code == 'SUCCESS') {
-    aboutStore.authors.push(res.data.data)
-    if (res.data.data.isActive) {
-      aboutStore.authorInfo = res.data.data
-    }
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('about')
+    await aboutStore.getAboutList()
   } else {
     toast.error(`${res.data.msg}`)
   }
+
   siteStore.loading = false
 }
 </script>
@@ -117,10 +125,17 @@ const addAbout = async (about) => {
           placeholder="Please input other"
           v-model="aboutStore.aboutForm.other"
         /> -->
-
-        <button class="btn btn-primary" @click="addAbout(aboutStore.aboutForm)">
-          Add
-        </button>
+        <div class="mt-1 flex items-center justify-between gap-2">
+          <button
+            class="btn btn-primary w-1/2"
+            @click="submitAbout(aboutStore.aboutForm)"
+          >
+            Submit
+          </button>
+          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+            Cancel
+          </button>
+        </div>
       </fieldset>
     </div>
   </dialog>

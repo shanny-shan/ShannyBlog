@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 @Schema(description = "添加文章提交的数据")
 public class ArticleDTO {
+    private Long id;
     private String title;
     private String content;
     private String memo;

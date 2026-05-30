@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
+import static com.shanny.constant.ResultConstant.DELETE_FAIL;
+import static com.shanny.constant.ResultConstant.DELETE_SUCCESS;
 
 @RestController()
 @RequestMapping("/article")
@@ -60,6 +64,26 @@ public class ArticleController {
     public Result<ArticleVO> AddArticle(@RequestBody ArticleDTO articleDTO) {
         try {
             return articleService.addArticle(articleDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "文章修改")
+    public Result<ArticleVO> UpdateArticle(@RequestBody ArticleDTO articleDTO) {
+        try {
+            return articleService.updateArticle(articleDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "文章删除")
+    public Result<String> deleteArticle(Long id) {
+        try {
+            return articleService.deleteArticle(id);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

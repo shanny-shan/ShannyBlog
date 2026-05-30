@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Schema(description = "添加作者信息提交的数据")
 public class TagDTO {
+    private Long id;
     private String name;
     private String nameEn;
 }

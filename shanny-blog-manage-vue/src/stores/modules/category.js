@@ -1,9 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getCategory, insertCategory } from '@/apis/category'
+import {
+  getCategory,
+  insertCategory,
+  updateCategory,
+  deleteCategoryById,
+} from '@/apis/category'
+
+import { useSiteStore } from '@/stores'
 
 export const useCategoryStore = defineStore('category', () => {
+  const siteStore = useSiteStore()
+
   const categories = ref([])
+  const categoryList = ref([])
   const categoryForm = ref({
     name: '',
     nameEn: '',
@@ -32,15 +42,35 @@ export const useCategoryStore = defineStore('category', () => {
   const getCategories = async () => {
     return await getCategory()
   }
+
+  const getCategoryList = async () => {
+    siteStore.loading = true
+    const res = await getCategory()
+    if (res.data.code.toLowerCase() === 'success') {
+      categoryList.value = res.data.data || []
+      siteStore.loading = false
+    }
+  }
+
   const addCategory = async (category) => {
     return await insertCategory(category)
   }
+  const editCategory = async (category) => {
+    return await updateCategory(category)
+  }
+  const deleteCategory = async (id) => {
+    return await deleteCategoryById(id)
+  }
   return {
     categories,
+    categoryList,
     categoryForm,
     categoryType,
     resetCategoryForm,
     getCategories,
+    getCategoryList,
     addCategory,
+    editCategory,
+    deleteCategory,
   }
 })

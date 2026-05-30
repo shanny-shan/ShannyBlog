@@ -16,10 +16,18 @@ const siteStore = useSiteStore()
 
 const submitTool = async () => {
   siteStore.loading = true
-  const res = await toolStore.addTool(toolStore.toolForm)
+
+  let res = null
+  if (adminStore.isEdit) {
+    res = await toolStore.editTool(toolStore.toolForm)
+  } else {
+    res = await toolStore.addTool(toolStore.toolForm)
+  }
+
   if (res.data.code.toLowerCase() === 'success') {
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('tool')
+    await toolStore.getToolList()
   } else {
     toast.error(`${res.data.msg}`)
   }

@@ -1,32 +1,42 @@
 <script setup>
 import categoryDialog from '@/views/_components/dialog/CategoryDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore, useCategoryStore, useSiteStore } from '@/stores'
+import { useAdminStore, useCategoryStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
+const toast = useToast()
 const adminStore = useAdminStore()
 const categoryStore = useCategoryStore()
-const siteStore = useSiteStore()
-
-const categoryList = ref([])
-
-const getCategoryList = async () => {
-  siteStore.loading = true
-  const res = await categoryStore.getCategories()
-  if (res.data.code.toLowerCase() === 'success') {
-    categoryList.value = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editCategory = (item) => {
   adminStore.openDialog('category')
-  categoryStore.categoryForm = item
+  categoryStore.categoryForm = { ...item }
   adminStore.isEdit = true
 }
-const deleteCategory = (item) => {}
+const deleteCategory = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的类型吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await categoryStore.deleteCategory(item.id)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await categoryStore.getCategoryList()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
+}
 
-onMounted(() => {
-  getCategoryList()
+onMounted(async () => {
+  await categoryStore.getCategoryList()
 })
 </script>
 <template>
@@ -56,7 +66,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in categoryList">
+          <tr v-for="item in categoryStore.categoryList">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />

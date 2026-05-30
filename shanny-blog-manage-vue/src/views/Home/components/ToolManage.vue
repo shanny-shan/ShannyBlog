@@ -1,31 +1,42 @@
 <script setup>
 import ToolDialog from '@/views/_components/dialog/ToolDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore, useToolStore, useSiteStore } from '@/stores'
+import { useAdminStore, useToolStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
+
+const toast = useToast()
 const adminStore = useAdminStore()
 const toolStore = useToolStore()
-const siteStore = useSiteStore()
-
-const toolList = ref([])
-
-const getToolList = async () => {
-  siteStore.loading = true
-  const res = await toolStore.getToolList()
-  if (res.data.code.toLowerCase() === 'success') {
-    toolList.value = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editTool = (item) => {
   adminStore.openDialog('tool')
-  toolStore.toolForm = item
+  toolStore.toolForm = { ...item }
   adminStore.isEdit = true
 }
-const deleteTool = (item) => {}
+const deleteTool = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除标题为<span class="text-primary font-bold">${item.title}</span>的工具吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await toolStore.deleteTool(item.id)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await toolStore.getToolList()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
+}
 
-onMounted(() => {
-  getToolList()
+onMounted(async () => {
+  await toolStore.getToolList()
 })
 </script>
 <template>
@@ -55,7 +66,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in toolList">
+          <tr v-for="item in toolStore.toolList">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -77,7 +88,7 @@ onMounted(() => {
             </td>
             <td>{{ item.published }}</td>
             <!-- <td>{{ item.createTime }}</td> -->
-            <td>{{ item.updateTime.substring(0, 10) }}</td>
+            <td>{{ item.updateTime?.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
                 <button class="btn btn-ghost btn-xs" @click="editTool(item)">

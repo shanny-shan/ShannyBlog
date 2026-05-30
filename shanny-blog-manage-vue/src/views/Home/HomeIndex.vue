@@ -15,7 +15,7 @@ import { swal } from '@/utils/sweetalert'
 const accountStore = useAccountStore()
 const active = ref('note')
 const logout = () => {
-  swal('', '确定退出登陆吗？', 'question', true, true).then((result) => {
+  swal('', '确定退出登陆吗？', '', 'question', true, true).then((result) => {
     if (result.isConfirmed) {
       accountStore.logout()
     }

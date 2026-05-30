@@ -27,7 +27,6 @@ export const useAdminStore = defineStore('admin', () => {
   const tagDialog = ref(false)
 
   const openDialog = (type) => {
-    isEdit.value = false
     switch (type) {
       case 'note':
         noteDialog.value = true
@@ -67,6 +66,7 @@ export const useAdminStore = defineStore('admin', () => {
     }
   }
   const closeDialog = (type) => {
+    isEdit.value = false
     switch (type) {
       case 'note':
         noteDialog.value = false

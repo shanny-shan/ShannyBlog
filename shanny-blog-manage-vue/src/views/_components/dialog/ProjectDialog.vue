@@ -27,13 +27,24 @@ const closeDialog = () => {
 const submitProject = async () => {
   siteStore.loading = true
   articleStore.articleForm.type = 'ARTICLE_PROJECT'
-  const res = await articleStore.addArticle(articleStore.articleForm)
-  if (res.data.code.toLowerCase() === 'success') {
-    toast.success(`${res.data.msg}`)
-    closeDialog()
+
+  let res = null
+
+  if (adminStore.isEdit) {
+    res = await articleStore.editArticle(articleStore.articleForm)
   } else {
-    toast.error(`${res.data.msg}`)
+    res = await articleStore.addArticle(articleStore.articleForm)
   }
+  if (res != null) {
+    if (res.data.code.toLowerCase() === 'success') {
+      toast.success(`${res.data.msg}`)
+      closeDialog()
+      await articleStore.getProjectList()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+  }
+
   siteStore.loading = false
 }
 

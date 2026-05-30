@@ -1,10 +1,12 @@
 package com.shanny.controller;
 
+import com.shanny.dto.CategoryDTO;
 import com.shanny.dto.TagDTO;
 import com.shanny.enums.CategoryEnum;
 import com.shanny.result.Result;
 import com.shanny.service.TagService;
 import com.shanny.vo.ArticleVO;
+import com.shanny.vo.CategoryVO;
 import com.shanny.vo.TagVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,6 +53,26 @@ public class TagController {
     public Result<TagVO> AddAboutMe(@RequestBody TagDTO tagDTO) {
         try {
             return tagService.addTag(tagDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "作者信息修改")
+    public Result<TagVO> UpdateTag(@RequestBody TagDTO tagDTO) {
+        try {
+            return tagService.updateTag(tagDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "作者信息删除")
+    public Result<String> deleteTag(Long id) {
+        try {
+            return tagService.deleteTagById(id);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

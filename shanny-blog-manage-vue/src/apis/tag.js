@@ -23,4 +23,21 @@ const insertTag = (tag) => {
   })
 }
 
-export { getTags, getTagsById, insertTag }
+const updateTag = (tag) => {
+  return request({
+    url: '/tag/update',
+    method: 'Post',
+    data: tag,
+  })
+}
+const deleteTagById = (id) => {
+  return request({
+    url: '/tag/delete',
+    method: 'Post',
+    params: {
+      id,
+    },
+  })
+}
+
+export { getTags, getTagsById, insertTag, updateTag, deleteTagById }

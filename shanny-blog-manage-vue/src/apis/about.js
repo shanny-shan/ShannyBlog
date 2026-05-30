@@ -15,4 +15,21 @@ const insertAbout = (about) => {
   })
 }
 
-export { getAbout, insertAbout }
+const updateAbout = (tool) => {
+  return request({
+    url: '/about/update',
+    method: 'Post',
+    data: tool,
+  })
+}
+const deleteAboutById = (id) => {
+  return request({
+    url: '/about/delete',
+    method: 'Post',
+    params: {
+      id,
+    },
+  })
+}
+
+export { getAbout, insertAbout, updateAbout, deleteAboutById }

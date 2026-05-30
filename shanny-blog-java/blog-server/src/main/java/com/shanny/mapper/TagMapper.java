@@ -4,6 +4,7 @@ import com.shanny.annotation.AutoFill;
 import com.shanny.entity.About;
 import com.shanny.entity.Tag;
 import com.shanny.enums.AutoFillEnum;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -16,4 +17,9 @@ public interface TagMapper {
     Tag getById(Long id);
 
     void insert_tag(Tag tag);
+
+    void update_tag(Tag tag);
+
+    @Delete("delete from shanny_blog.tags where id = #{id}")
+    void deleteById(Long id);
 }

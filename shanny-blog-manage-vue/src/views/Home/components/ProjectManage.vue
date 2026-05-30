@@ -1,30 +1,42 @@
 <script setup>
 import ProjectDialog from '@/views/_components/dialog/ProjectDialog.vue'
 import { onMounted, ref } from 'vue'
-import { useAdminStore, useArticleStore, useSiteStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { useAdminStore, useArticleStore } from '@/stores'
+import { swal } from '@/utils/sweetalert'
+
+const toast = useToast()
 const adminStore = useAdminStore()
 const articleStore = useArticleStore()
-const siteStore = useSiteStore()
-
-const projectList = ref([])
-const getProjectList = async () => {
-  siteStore.loading = true
-  const res = await articleStore.getArticleByTypeList('ARTICLE_PROJECT')
-  if (res.data.code.toLowerCase() === 'success') {
-    projectList.value = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editProject = (item) => {
   adminStore.openDialog('project')
-  articleStore.articleForm = item
+  articleStore.articleForm = { ...item }
   adminStore.isEdit = true
 }
-const deleteProject = (item) => {}
+const deleteProject = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除标题为<span class="text-primary font-bold">${item.title}</span>的项目吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await articleStore.deleteArticle(item.id)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await articleStore.getProjectList()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
+}
 
-onMounted(() => {
-  getProjectList()
+onMounted(async () => {
+  await articleStore.getProjectList()
 })
 </script>
 <template>
@@ -54,7 +66,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in projectList">
+          <tr v-for="item in articleStore.projectList">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -76,7 +88,7 @@ onMounted(() => {
             </td>
             <td>{{ item.published }}</td>
             <!-- <td>{{ item.createTime }}</td> -->
-            <td>{{ item.updateTime.substring(0, 10) }}</td>
+            <td>{{ item.updateTime?.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
                 <button class="btn btn-ghost btn-xs" @click="editProject(item)">

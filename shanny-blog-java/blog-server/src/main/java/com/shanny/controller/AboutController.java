@@ -1,9 +1,11 @@
 package com.shanny.controller;
 
 import com.shanny.dto.AboutDTO;
+import com.shanny.dto.ArticleDTO;
 import com.shanny.result.Result;
 import com.shanny.service.AboutService;
 import com.shanny.vo.AboutVO;
+import com.shanny.vo.ArticleVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,26 @@ public class AboutController {
     public Result<AboutVO> AddAboutMe(@RequestBody AboutDTO aboutDTO) {
         try {
             return aboutService.addAbout(aboutDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "作者信息修改")
+    public Result<AboutVO> UpdateAboutMe(@RequestBody AboutDTO aboutDTO) {
+        try {
+            return aboutService.updateAbout(aboutDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "作者信息删除")
+    public Result<String> deleteAboutMe(Long id) {
+        try {
+            return aboutService.deleteAboutById(id);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

@@ -2,6 +2,7 @@ package com.shanny.service;
 
 import com.shanny.dto.RegisterDTO;
 import com.shanny.dto.LoginDTO;
+import com.shanny.dto.UserInfoDTO;
 import com.shanny.result.Result;
 import com.shanny.vo.LoginVO;
 import com.shanny.vo.UserInfoVO;
@@ -16,4 +17,6 @@ public interface UserService {
     Result<UserInfoVO> getUserInfo();
 
     Result<List<UserInfoVO>> getUsers();
+
+    Result<UserInfoVO> updateUserInfo(UserInfoDTO userInfoDTO);
 }

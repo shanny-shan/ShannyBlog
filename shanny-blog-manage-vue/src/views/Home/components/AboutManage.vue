@@ -1,33 +1,42 @@
 <script setup>
 import AboutDialog from '@/views/_components/dialog/AboutDialog.vue'
-import { onMounted, ref } from 'vue'
-import { useAdminStore, useAboutStore, useSiteStore } from '@/stores'
+import { onMounted } from 'vue'
+import { useAdminStore, useAboutStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
+const toast = useToast()
 const adminStore = useAdminStore()
 const aboutStore = useAboutStore()
-const siteStore = useSiteStore()
-
-const aboutList = ref([])
-
-const getAboutList = async () => {
-  siteStore.loading = true
-  const res = await aboutStore.getAboutMe()
-  console.log(res.data.data)
-  if (res.data.code.toLowerCase() === 'success') {
-    aboutList.value = res.data.data || []
-    siteStore.loading = false
-  }
-}
 
 const editAbout = (item) => {
   adminStore.openDialog('about')
-  aboutStore.aboutForm = item
+  aboutStore.aboutForm = { ...item }
   adminStore.isEdit = true
 }
-const deleteAbout = (item) => {}
+const deleteAbout = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的个人信息吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await aboutStore.deleteAbout(item.id)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await aboutStore.getAboutList()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
+}
 
-onMounted(() => {
-  getAboutList()
+onMounted(async () => {
+  await aboutStore.getAboutList()
 })
 </script>
 <template>
@@ -60,7 +69,7 @@ onMounted(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in aboutList">
+          <tr v-for="item in aboutStore.aboutList">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />

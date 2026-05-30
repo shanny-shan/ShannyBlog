@@ -28,12 +28,18 @@ const submitNote = async () => {
   siteStore.loading = true
   articleStore.articleForm.type = 'ARTICLE_NOTE'
 
+  let res = null
+
   if (adminStore.isEdit) {
+    res = await articleStore.editArticle(articleStore.articleForm)
   } else {
-    const res = await articleStore.addArticle(articleStore.articleForm)
+    res = await articleStore.addArticle(articleStore.articleForm)
+  }
+  if (res != null) {
     if (res.data.code.toLowerCase() === 'success') {
       toast.success(`${res.data.msg}`)
       closeDialog()
+      await articleStore.getNoteList()
     } else {
       toast.error(`${res.data.msg}`)
     }
@@ -57,7 +63,7 @@ const getCategoryId = async () => {
 }
 
 onMounted(async () => {
-  const tagResult = await tagStore.getTagList()
+  const tagResult = await tagStore.getTagAll()
   if (tagResult.data.code.toLowerCase() === 'success') {
     tagStore.tags = tagResult.data.data
   }

@@ -22,5 +22,27 @@ const insertArticle = (article) => {
     data: article,
   })
 }
+const updateArticle = (article) => {
+  return request({
+    url: '/article/update',
+    method: 'Post',
+    data: article,
+  })
+}
+const deleteArticleById = (id) => {
+  return request({
+    url: '/article/delete',
+    method: 'Post',
+    params: {
+      id,
+    },
+  })
+}
 
-export { getArticles, getArticleByType, insertArticle }
+export {
+  getArticles,
+  getArticleByType,
+  insertArticle,
+  updateArticle,
+  deleteArticleById,
+}

@@ -14,4 +14,8 @@ public interface AboutService {
     Result<AboutVO> getAboutMeByShow();
 
     Result<AboutVO> addAbout(AboutDTO aboutDTO);
+
+    Result<AboutVO> updateAbout(AboutDTO aboutDTO);
+
+    Result<String> deleteAboutById(Long id);
 }

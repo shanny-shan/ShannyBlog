@@ -14,4 +14,8 @@ public interface CategoryService {
     Result<List<CategoryVO>> getCategories();
 
     Result<CategoryVO> addCategory(CategoryDTO categoryDTO);
+
+    Result<CategoryVO> updateCategory(CategoryDTO categoryDTO);
+
+    Result<String> deleteCategoryById(Long id);
 }

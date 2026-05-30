@@ -4,7 +4,7 @@
     <insert id="insert_tag" parameterType="com.shanny.entity.Tag" useGeneratedKeys="true" keyProperty="id">
         insert into shanny_blog.tags(name, name_en) values (#{name}, #{nameEn})
     </insert>
-    <update id="updateById" parameterType="com.shanny.entity.Tag">
+    <update id="update_tag" parameterType="com.shanny.entity.Tag">
         update shanny_blog.tags
         <set>
             <if test="name != null">name = #{name}, </if>

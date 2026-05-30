@@ -1,8 +1,10 @@
 package com.shanny.controller;
 
+import com.shanny.dto.AboutDTO;
 import com.shanny.dto.CategoryDTO;
 import com.shanny.result.Result;
 import com.shanny.service.CategoryService;
+import com.shanny.vo.AboutVO;
 import com.shanny.vo.CategoryVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +41,26 @@ public class CategoryController {
     public Result<CategoryVO> AddCategory(@RequestBody CategoryDTO categoryDTO) {
         try {
             return categoryService.addCategory(categoryDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "作者信息修改")
+    public Result<CategoryVO> UpdateCategory(@RequestBody CategoryDTO categoryDTO) {
+        try {
+            return categoryService.updateCategory(categoryDTO);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete")
+    @Operation(summary = "作者信息删除")
+    public Result<String> deleteCategory(Long id) {
+        try {
+            return categoryService.deleteCategoryById(id);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

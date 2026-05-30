@@ -38,4 +38,6 @@ public class ArticleVO {
     private Boolean published;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
+
 }
