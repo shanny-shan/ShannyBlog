@@ -75,9 +75,10 @@ onUnmounted(() => {
           </div>
           <!-- 文章内容 -->
           <div class="mt-5 md:mt-10">
-            <div class="text-lg leading-10 break-words">
-              {{ article.content }}
-            </div>
+            <v-md-preview
+              :text="article.content"
+              class="text-lg leading-10 break-words"
+            />
           </div>
         </div>
       </div>

@@ -72,8 +72,20 @@ onMounted(async () => {
                 <input type="checkbox" class="checkbox" />
               </label>
             </th>
-            <td>{{ item.title }}</td>
-            <td>{{ item.content }}</td>
+            <td>
+              {{
+                item.title.length > 10
+                  ? item.title.slice(0, 10) + '...'
+                  : item.title
+              }}
+            </td>
+            <td>
+              {{
+                item.content.length > 10
+                  ? item.content.slice(0, 10) + '...'
+                  : item.content
+              }}
+            </td>
             <td>{{ item.href }}</td>
             <td>
               <div class="flex flex-wrap gap-2">

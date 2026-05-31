@@ -76,8 +76,18 @@ onMounted(async () => {
               </label>
             </th>
             <td>{{ item.name }}</td>
-            <td>{{ item.tag }}</td>
-            <td>{{ item.introduce }}</td>
+            <td>
+              {{
+                item.tag.length > 5 ? item.tag.slice(0, 5) + '...' : item.tag
+              }}
+            </td>
+            <td>
+              {{
+                item.introduce.length > 10
+                  ? item.introduce.slice(0, 10) + '...'
+                  : item.introduce
+              }}
+            </td>
             <td>{{ item.github }}</td>
             <!-- <td>{{ item.steam }}</td> -->
             <td>{{ item.web }}</td>

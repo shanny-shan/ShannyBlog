@@ -99,6 +99,7 @@ onMounted(async () => {
                 maxlength="30"
                 placeholder="Please input title"
                 v-model="articleStore.articleForm.title"
+                title="标题不能为空，且最长不能超过30个字符"
               />
               <p class="validator-hint hidden">
                 标题不能为空，且最长不能超过30个字符
