@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,21 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/recent")
     @Operation(summary = "文章获取")
-    public Result<List<ArticleVO>> GetArticles() {
+    public Result<List<ArticleVO>> GetArticlesByRecent() {
         try {
-            return articleService.getArticles();
+            return articleService.getArticlesByRecent();
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/views")
+    @Operation(summary = "文章获取")
+    public Result<List<ArticleVO>> GetArticlesByView() {
+        try {
+            return articleService.getArticlesByView();
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }
@@ -71,7 +82,7 @@ public class ArticleController {
 
     @PostMapping("/update")
     @Operation(summary = "文章修改")
-    public Result<ArticleVO> UpdateArticle(@RequestBody ArticleDTO articleDTO) {
+    public Result<ArticleVO> UpdateArticle(@RequestBody ArticleDTO articleDTO){
         try {
             return articleService.updateArticle(articleDTO);
         } catch (Exception e) {

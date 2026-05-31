@@ -1,20 +1,22 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useScrollStore } from '@/stores/modules/scroll'
-import { useToolStore } from '@/stores/modules/tool'
+import { useScrollStore, useToolStore, useSiteStore } from '@/stores'
 import PaginationComponent from '@/components/common/PaginationComponent.vue'
 import CardImgComponent from '@/components/common/CardImgComponent.vue'
 const scrollStore = useScrollStore()
 const toolStore = useToolStore()
+const siteStore = useSiteStore()
+
 const toolList = ref([])
 const currentPage = ref(1) // 当前页码
 const itemsPerPage = ref(4) // 每页显示的条目数
 
 const getToolList = async () => {
+  siteStore.loading = true
   const res = await toolStore.getTools()
-  console.log(res.data.data)
   if (res.data.code.toLowerCase() === 'success') {
     toolList.value = res.data.data
+    siteStore.loading = false
   }
 }
 
@@ -51,19 +53,19 @@ onUnmounted(() => {
   >
     <div class="text-primary font-bold text-2xl">Tool</div>
     <div
-      class="flex flex-col md:flex-row md:flex-wrap md:justify-between items-center w-full mt-2 md:mt-10"
+      class="flex flex-col md:flex-row md:flex-wrap md:justify-start items-center w-full mt-2 md:mt-10"
     >
       <div
-        v-for="(item, index) in toolList"
+        v-for="(item, index) in items"
         :key="index"
         class="w-full md:w-1/4 p-2"
       >
-        <!-- <RouterLink :to="`/tool/${item.id}`"> -->
-        <CardImgComponent :item="item" :index="index" :footer="false" />
-        <!-- </RouterLink> -->
+        <a :href="item.href" target="_blank" class="link">
+          <CardImgComponent :item="item" :index="index" :footer="false" />
+        </a>
       </div>
     </div>
-    <div class="mt-2 md:mt-10" v-if="toolList.length > 1">
+    <div class="mt-2 md:mt-10" v-if="totalPages > 1">
       <PaginationComponent
         :current-page="currentPage"
         :total-pages="totalPages"

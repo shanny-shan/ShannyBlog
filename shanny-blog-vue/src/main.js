@@ -12,6 +12,10 @@ import '@kangc/v-md-editor/lib/style/codemirror-editor.css'
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
 import hljs from 'highlight.js'
+
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import '@kangc/v-md-editor/lib/style/preview.css'
+
 import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index'
 import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css'
 import createTipPlugin from '@kangc/v-md-editor/lib/plugins/tip/index'
@@ -47,6 +51,8 @@ VMdEditor.use(createMermaidPlugin())
 VMdEditor.use(createTodoListPlugin())
 VMdEditor.use(createAlignPlugin())
 
+VMdPreview.use(githubTheme, { Hljs: hljs })
+
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 const toastOptions = {
@@ -68,4 +74,5 @@ app.use(router)
 app.use(VueCookies)
 app.use(Toast, toastOptions)
 app.use(VMdEditor)
+app.use(VMdPreview)
 app.mount('#app')

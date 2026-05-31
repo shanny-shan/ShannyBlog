@@ -19,4 +19,6 @@ public interface UserService {
     Result<List<UserInfoVO>> getUsers();
 
     Result<UserInfoVO> updateUserInfo(UserInfoDTO userInfoDTO);
+
+    Result<String> deleteUserByUuid(String uuid);
 }

@@ -2,7 +2,10 @@
 import { onMounted } from 'vue'
 import InfoDialog from '@/views/_components/dialog/InfoDialog.vue'
 import { useAdminStore, useAccountStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
+const toast = useToast()
 const accountStore = useAccountStore()
 const adminStore = useAdminStore()
 
@@ -13,6 +16,26 @@ const editInfo = (item) => {
     userDetails: { ...item.userDetails },
   }
   adminStore.isEdit = true
+}
+const deleteInfo = (item) => {
+  swal(
+    '',
+    '',
+    `确定删除名为<span class="text-primary font-bold">${item.userId}</span>的账户吗？`,
+    'question',
+    true,
+    true,
+  ).then(async (result) => {
+    if (result.isConfirmed) {
+      const res = await accountStore.deleteUser(item.uuid)
+      if (res.data.code.toLowerCase() === 'success') {
+        toast.success(`${res.data.msg}`)
+        await accountStore.getAllUsers()
+      } else {
+        toast.error(`${res.data.msg}`)
+      }
+    }
+  })
 }
 
 onMounted(async () => {
@@ -76,9 +99,14 @@ onMounted(async () => {
             <td>{{ item.mobile }}</td>
             <td>{{ item.lastLoginTime.substring(0, 10) }}</td>
             <th>
-              <button class="btn btn-ghost btn-xs" @click="editInfo(item)">
-                Edit
-              </button>
+              <div class="flex gap-2">
+                <button class="btn btn-ghost btn-xs" @click="editInfo(item)">
+                  Edit
+                </button>
+                <button class="btn btn-ghost btn-xs" @click="deleteInfo(item)">
+                  Delete
+                </button>
+              </div>
             </th>
           </tr>
         </tbody>

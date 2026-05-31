@@ -1,11 +1,5 @@
 import request from '@/utils/request'
 
-const getArticles = () => {
-  return request({
-    url: '/article/all',
-    method: 'Get',
-  })
-}
 const getArticleByType = (type) => {
   return request({
     url: '/article/type',
@@ -39,10 +33,4 @@ const deleteArticleById = (id) => {
   })
 }
 
-export {
-  getArticles,
-  getArticleByType,
-  insertArticle,
-  updateArticle,
-  deleteArticleById,
-}
+export { getArticleByType, insertArticle, updateArticle, deleteArticleById }

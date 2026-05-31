@@ -1,5 +1,7 @@
 <script setup>
 import { formatDateTime } from '@/utils/time'
+import defaultAvatar from '@/assets/images/avatar.jpg'
+
 defineProps({
   index: {
     type: Number,
@@ -16,7 +18,12 @@ defineProps({
     :class="index == 0 ? '' : 'mt-4'"
   >
     <div class="w-1/5 md:w-1/3">
-      <img :src="item.image" class="w-full rounded-md" />
+      <img
+        :src="defaultAvatar"
+        @load="(e) => (e.target.src = item.image)"
+        @error="(e) => (e.target.src = defaultAvatar)"
+        class="w-full rounded-md"
+      />
     </div>
     <div class="flex flex-col justify-between w-4/5 md:w-2/3 ml-2 md:ml-4">
       <div class="hover:underline">

@@ -43,7 +43,7 @@ onMounted(async () => {
   <div>
     <div class="flex justify-end gap-2">
       <button class="btn btn-primary" @click="adminStore.openDialog('about')">
-        Add about
+        Add About
       </button>
     </div>
     <div class="overflow-x-auto mt-2">

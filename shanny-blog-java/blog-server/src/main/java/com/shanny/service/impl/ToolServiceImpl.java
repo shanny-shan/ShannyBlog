@@ -62,6 +62,10 @@ public class ToolServiceImpl implements ToolService {
         Tool tool = new Tool();
         BeanUtils.copyProperties(toolDTO, tool);
 
+        String src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
+        int randomNum = (int) (Math.random() * 6) + 1;
+        tool.setImage(src + randomNum + ".jpg");
+
         toolMapper.insert_tool(tool);
 
         ToolVO toolVO = new ToolVO();

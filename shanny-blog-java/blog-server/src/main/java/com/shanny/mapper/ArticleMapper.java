@@ -13,8 +13,8 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 public interface ArticleMapper {
-    @Select("select * from shanny_blog.articles")
-    List<Article> getAll();
+    @Select("select * from shanny_blog.articles ORDER BY update_time DESC LIMIT 5")
+    List<Article> getByRecent();
 
     @Select("select * from shanny_blog.articles where type = #{type}")
     List<Article> getByType(CategoryEnum.CategoryType type);
@@ -30,4 +30,7 @@ public interface ArticleMapper {
 
     @Delete("delete from shanny_blog.articles where id = #{id}")
     void deleteById(Long id);
+
+    @Select("select * from shanny_blog.articles ORDER BY views DESC LIMIT 5")
+    List<Article> getByView();
 }

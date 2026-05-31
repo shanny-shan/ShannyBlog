@@ -4,6 +4,7 @@ import com.shanny.entity.User;
 import com.shanny.entity.UserDetails;
 import com.shanny.enums.AutoFillEnum.*;
 import com.shanny.vo.UserInfoVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -36,4 +37,10 @@ public interface UserMapper {
 
     @Select("select * from shanny_blog.user_details")
     List<UserDetails> getUserDetails();
+
+    @Delete("delete from shanny_blog.users where uuid = #{uuid}")
+    void deleteUserByUuid(String uuid);
+
+    @Delete("delete from shanny_blog.user_details where uuid = #{uuid}")
+    void deleteInfoByUuid(String uuid);
 }

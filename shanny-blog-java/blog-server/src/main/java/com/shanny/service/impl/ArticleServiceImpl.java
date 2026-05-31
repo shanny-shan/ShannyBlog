@@ -21,9 +21,12 @@ import com.shanny.vo.TagVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.shanny.constant.ResultConstant.*;
 
@@ -40,20 +43,34 @@ public class ArticleServiceImpl implements ArticleService {
         this.categoryMapper = categoryMapper;
     }
 
-
-
     @Override
-    public Result<List<ArticleVO>> getArticles(){
-        List<Article> articles = articleMapper.getAll();
-        List<ArticleVO> articleVOList = articles.stream().map(article -> {
-            ArticleVO vo = new ArticleVO();
-            BeanUtils.copyProperties(article, vo);
-            Category category = categoryMapper.getById(article.getCategoryId());
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(category, categoryVO);
-            vo.setCategory(categoryVO);
-            return vo;
-        }).toList();
+    public Result<List<ArticleVO>> getArticlesByRecent(){
+        List<Article> articles = articleMapper.getByRecent();
+
+        if (articles == null || articles.isEmpty()) {
+            return Result.success(SELECT_SUCCESS, new ArrayList<>());
+        }
+
+        List<ArticleVO> articleVOList = articles.stream()
+                .map(article -> {
+                    ArticleVO vo = new ArticleVO();
+                    BeanUtils.copyProperties(article, vo);
+                    vo.setTagList(new ArrayList<>());
+                    if (article.getTags() != null) {
+                        for (Long tagId : article.getTags()) {
+                            Tag tag = tagMapper.getById(tagId);
+                            if (tag != null) {
+                                vo.getTagList().add(tag);
+                            }
+                        }
+                    }
+                    Category category = categoryMapper.getById(article.getCategoryId());
+                    CategoryVO categoryVO = new CategoryVO();
+                    BeanUtils.copyProperties(category, categoryVO);
+                    vo.setCategory(categoryVO);
+                    return vo;
+                }).toList();
+
         return Result.success(SELECT_SUCCESS, articleVOList);
     }
 
@@ -84,6 +101,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Result<ArticleVO> getArticleById(Long id) {
         Article article = articleMapper.getById(id);
+
+        article.setViews(article.getViews() + 1);
+        articleMapper.update_article(article);
+
         ArticleVO vo = new ArticleVO();
         BeanUtils.copyProperties(article, vo);
         Category category = categoryMapper.getById(article.getCategoryId());
@@ -97,6 +118,11 @@ public class ArticleServiceImpl implements ArticleService {
     public Result<ArticleVO> addArticle(ArticleDTO articleDTO) {
         Article article = new Article();
         BeanUtils.copyProperties(articleDTO, article);
+
+        String src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
+        int randomNum = (int) (Math.random() * 6) + 1;
+        article.setImage(src + randomNum + ".jpg");
+        article.setHref(src+ "5.jpg");
 
         articleMapper.insert_article(article);
 
@@ -130,5 +156,36 @@ public class ArticleServiceImpl implements ArticleService {
         }
         articleMapper.deleteById(id);
         return Result.success(DELETE_SUCCESS);
+    }
+
+    @Override
+    public Result<List<ArticleVO>> getArticlesByView() {
+        List<Article> articles = articleMapper.getByView();
+
+        if (articles == null || articles.isEmpty()) {
+            return Result.success(SELECT_SUCCESS, new ArrayList<>());
+        }
+
+        List<ArticleVO> articleVOList = articles.stream()
+                .map(article -> {
+                    ArticleVO vo = new ArticleVO();
+                    BeanUtils.copyProperties(article, vo);
+                    vo.setTagList(new ArrayList<>());
+                    if (article.getTags() != null) {
+                        for (Long tagId : article.getTags()) {
+                            Tag tag = tagMapper.getById(tagId);
+                            if (tag != null) {
+                                vo.getTagList().add(tag);
+                            }
+                        }
+                    }
+                    Category category = categoryMapper.getById(article.getCategoryId());
+                    CategoryVO categoryVO = new CategoryVO();
+                    BeanUtils.copyProperties(category, categoryVO);
+                    vo.setCategory(categoryVO);
+                    return vo;
+                }).toList();
+
+        return Result.success(SELECT_SUCCESS, articleVOList);
     }
 }

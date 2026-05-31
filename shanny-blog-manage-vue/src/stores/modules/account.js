@@ -21,14 +21,14 @@ export const useAccountStore = defineStore('account', () => {
    * account msg
    */
   const loginForm = ref({
-    userId: 'shanny',
-    password: '123456',
+    userId: '',
+    password: '',
   })
   const registerForm = ref({
-    userId: 'shanny',
-    mobile: '15603214235',
-    password: '123456',
-    confirmPassword: '123456',
+    userId: '',
+    mobile: '',
+    password: '',
+    confirmPassword: '',
   })
   const userForm = ref({
     userDetails: {},

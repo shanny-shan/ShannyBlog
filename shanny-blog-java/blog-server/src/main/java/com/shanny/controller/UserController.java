@@ -76,4 +76,16 @@ public class UserController {
             return Result.error(e.getMessage());
         }
     }
+
+
+    @PostMapping("/delete")
+    @Operation(summary = "账户删除")
+    public Result<String> deleteUser(String uuid) {
+        try {
+            return userService.deleteUserByUuid(uuid);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
 }

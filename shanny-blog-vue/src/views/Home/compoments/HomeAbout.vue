@@ -1,13 +1,25 @@
 <script setup>
 import { onMounted } from 'vue'
+import defaultAvatar from '@/assets/images/avatar.jpg'
 import TitleComponent from '@/components/home/TitleComponent.vue'
-import { useAboutStore } from '@/stores/modules/about'
+import { useAboutStore } from '@/stores'
 const aboutStore = useAboutStore()
-onMounted(async () => {
-  const res = await aboutStore.getAboutMe()
-  if (res.data.code.toLowerCase() === 'success') {
-    aboutStore.authorInfo = res.data.data
+
+const emit = defineEmits(['load-complete'])
+
+const getAbout = async () => {
+  try {
+    const res = await aboutStore.getAboutMe()
+    if (res.data.code.toLowerCase() === 'success') {
+      aboutStore.authorInfo = res.data.data
+    }
+  } finally {
+    emit('load-complete')
   }
+}
+
+onMounted(async () => {
+  await getAbout()
 })
 </script>
 <template>
@@ -18,7 +30,11 @@ onMounted(async () => {
         <div class="card-title flex items-center">
           <div class="avatar">
             <div class="w-18 rounded-full shadow-xl">
-              <img src="@/assets/images/avatar.jpg" />
+              <img
+                :src="defaultAvatar"
+                @load="(e) => (e.target.src = aboutStore.authorInfo.avatar)"
+                @error="(e) => (e.target.src = defaultAvatar)"
+              />
             </div>
           </div>
           <div class="ml-2">

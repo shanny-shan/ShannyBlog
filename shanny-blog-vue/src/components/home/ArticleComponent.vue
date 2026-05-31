@@ -1,5 +1,6 @@
 <script setup>
 import { formatDateTime } from '@/utils/time'
+import defaultAvatar from '@/assets/images/avatar.jpg'
 defineProps({
   index: {
     type: Number,
@@ -19,7 +20,12 @@ defineProps({
     }"
   >
     <figure class="w-full md:w-1/4">
-      <img :src="item.image" alt="" class="md:rounded-xl" />
+      <img
+        :src="defaultAvatar"
+        @load="(e) => (e.target.src = item.image)"
+        @error="(e) => (e.target.src = defaultAvatar)"
+        class="md:rounded-xl"
+      />
     </figure>
     <div
       class="card-body w-full p-3 md:p-5 md:w-3/4 flex flex-col justify-between"
@@ -37,7 +43,7 @@ defineProps({
         <div class="hidden md:block ml-3">
           <font-awesome-icon icon="fa-solid fa-bell" class="text-primary" />
           <span class="ml-1 text-xs font-light text-neutral"
-            >{{ item.views }} Read</span
+            >{{ item.views > 99 ? '99+' : item.views }} Read</span
           >
         </div>
         <!-- <div class="flex items-center ml-3">
@@ -66,11 +72,11 @@ defineProps({
         <div class="flex items-center">
           <a class="flex items-center mr-3" v-for="tag in item.tagList">
             <div aria-label="status" class="status status-primary"></div>
-            <span class="ml-1 text-xs">{{ tag }}</span>
+            <span class="ml-1 text-xs">{{ tag.name }}</span>
           </a>
         </div>
         <div class="flex justify-end items-center">
-          <img src="@/assets/images/avatar.jpg" class="w-5 rounded-full" />
+          <img :src="item.href" class="w-5 rounded-full" />
           <span class="ml-1 text-xs">Shanny</span>
         </div>
       </div>

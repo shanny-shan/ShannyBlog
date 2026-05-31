@@ -20,11 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.shanny.constant.DefaultConstant.DEFAULT_UUID;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
         } else {
             User user = new User();
             BeanUtils.copyProperties(registerDTO, user);
-            String uuid = DEFAULT_UUID;
+            String uuid = UUID.randomUUID().toString();
             String password = DigestUtils.md5DigestAsHex(registerDTO.getPassword().getBytes());
             user.setUuid(uuid);
             user.setPassword(password);
@@ -65,6 +67,11 @@ public class UserServiceImpl implements UserService {
             UserDetails userDetails = new UserDetails();
             userDetails.setUuid(uuid);
             userDetails.setSex(UserSex.UNKNOWN);
+
+            String src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
+            int randomNum = (int) (Math.random() * 6) + 1;
+            userDetails.setAvatar(src + randomNum + ".jpg");
+            
             userMapper.insert_user_detail(userDetails);
             return Result.success(REGISTER_SUCCESS);
         }
@@ -173,5 +180,15 @@ public class UserServiceImpl implements UserService {
         userMapper.update_user_detail(detail);
 
         return Result.success(UPDATE_SUCCESS);
+    }
+
+    @Override
+    public Result<String> deleteUserByUuid(String uuid) {
+        if(uuid == null){
+            return Result.error(DELETE_FAIL);
+        }
+        userMapper.deleteUserByUuid(uuid);
+        userMapper.deleteInfoByUuid(uuid);
+        return Result.success(DELETE_SUCCESS);
     }
 }

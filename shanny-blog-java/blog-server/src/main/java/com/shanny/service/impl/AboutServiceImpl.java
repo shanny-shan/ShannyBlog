@@ -65,6 +65,10 @@ public class AboutServiceImpl implements AboutService {
             about.setIsActive(false);
         }
 
+        String src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
+        int randomNum = (int) (Math.random() * 6) + 1;
+        about.setAvatar(src + randomNum + ".jpg");
+
         aboutMapper.insert_about(about);
 
         AboutVO aboutVO = new AboutVO();

@@ -1,10 +1,9 @@
 <script setup>
-import { ref } from 'vue'
 import { useArticleStore } from '@/stores/modules/article'
 const articleStore = useArticleStore()
 const handleUploadImage = (event, insertImage, files) => {
   insertImage({
-    url: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1269952892,3525182336&fm=26&gp=0.jpg',
+    url: '',
     desc: 'desc',
     width: 'auto',
     height: 'auto',
@@ -112,12 +111,12 @@ B-->D(fa:fa-spinner)`
 }
 </script>
 <template>
+  <!-- @upload-image="handleUploadImage" -->
   <v-md-editor
     v-model="articleStore.articleForm.content"
     :disabled-menus="[]"
-    @upload-image="handleUploadImage"
     height="100%"
-    left-toolbar="undo redo clear | align h bold italic strikethrough quote | ul ol table hr todo-list | link image code tip emoji | save"
+    left-toolbar="undo redo clear | align h bold italic strikethrough quote | ul ol table hr todo-list | link code tip emoji | save"
     :toolbar="toolbar"
   >
   </v-md-editor>

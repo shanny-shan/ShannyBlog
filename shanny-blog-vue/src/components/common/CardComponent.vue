@@ -1,5 +1,5 @@
 <script setup>
-  import { formatDateTime } from '@/utils/time';
+import { formatDateTime } from '@/utils/time'
 defineProps({
   index: {
     type: Number,
@@ -41,15 +41,23 @@ defineProps({
       </div>
       <div class="flex justify-center items-center mt-5">
         <div class="flex items-center">
-          <img src="@/assets/images/avatar.jpg" class="w-5 rounded-full" />
+          <img :src="item.href" class="w-5 rounded-full" />
           <span class="ml-1 text-xs">Shanny</span>
+        </div>
+        <div class="ml-3">
+          <font-awesome-icon icon="fa-regular fa-eye" class="text-primary" />
+          <span class="text-xs font-light text-neutral">
+            {{ item.view > 99 ? '99+' : item.views }}
+          </span>
         </div>
         <div class="ml-3">
           <font-awesome-icon
             icon="fa-regular fa-calendar"
             class="text-primary"
           />
-          <span class="text-xs font-light text-neutral">{{ formatDateTime(item.updateTime) }}</span>
+          <span class="text-xs font-light text-neutral">{{
+            formatDateTime(item.updateTime)
+          }}</span>
         </div>
       </div>
     </div>

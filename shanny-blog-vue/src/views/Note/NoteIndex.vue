@@ -1,21 +1,23 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useScrollStore } from '@/stores/modules/scroll'
-import { useArticleStore } from '@/stores/modules/article'
+import { useScrollStore, useArticleStore, useSiteStore } from '@/stores'
 import { RouterLink } from 'vue-router'
 import CardImgComponent from '@/components/common/CardImgComponent.vue'
 import PaginationComponent from '@/components/common/PaginationComponent.vue'
 const scrollStore = useScrollStore()
 const articleStore = useArticleStore()
+const siteStore = useSiteStore()
+
 const noteList = ref([])
 const currentPage = ref(1)
 const itemsPerPage = ref(4)
 
 const getNoteList = async () => {
+  siteStore.loading = true
   const res = await articleStore.getArticleByTypes('ARTICLE_NOTE')
-  console.log(res.data.data)
-  if(res.data.code.toLowerCase() === 'success'){
+  if (res.data.code.toLowerCase() === 'success') {
     noteList.value = res.data.data
+    siteStore.loading = false
   }
 }
 
@@ -53,10 +55,10 @@ onUnmounted(() => {
   >
     <div class="text-primary font-bold text-2xl">Article / Note</div>
     <div
-      class="flex flex-col md:flex-row md:flex-wrap md:justify-between items-center w-full mt-2 md:mt-10"
+      class="flex flex-col md:flex-row md:flex-wrap md:justify-start items-center w-full mt-2 md:mt-10"
     >
       <div
-        v-for="(item, index) in noteList"
+        v-for="(item, index) in items"
         :key="index"
         class="w-full md:w-1/4 p-2"
       >
@@ -65,7 +67,7 @@ onUnmounted(() => {
         </RouterLink>
       </div>
     </div>
-    <div class="mt-2 md:mt-10" v-if="noteList.length > 1">
+    <div class="mt-2 md:mt-10" v-if="totalPages > 1">
       <PaginationComponent
         :current-page="currentPage"
         :total-pages="totalPages"

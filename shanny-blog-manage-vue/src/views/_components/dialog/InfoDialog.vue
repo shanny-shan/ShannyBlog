@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import 'cally'
 import { useAdminStore, useAccountStore, useSiteStore } from '@/stores'
 import { useToast } from 'vue-toastification'
 
@@ -102,47 +101,16 @@ onMounted(() => {
         />
 
         <label class="label w-full">Birthday</label>
-        <div class="dropdown w-full">
-          <button
-            @click="dropdownOpen = true"
-            class="input input-primary bg-base-200 w-full"
-          >
-            {{ selectedDate }}
-          </button>
+        <input
+          type="date"
+          class="input input-primary bg-base-200 w-full"
+          required
+          placeholder="Pick a date"
+          title="Must be valid URL"
+          v-model="accountStore.userForm.userDetails.birthday"
+        />
 
-          <div
-            v-show="dropdownOpen"
-            class="dropdown-content bg-base-100 rounded-box shadow-lg absolute top-full left-0 z-50 mt-2"
-          >
-            <calendar-date
-              ref="calendarRef"
-              class="cally"
-              @change="handleDateChange"
-            >
-              <svg
-                aria-label="Previous"
-                class="fill-current size-4"
-                slot="previous"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
-              </svg>
-              <svg
-                aria-label="Next"
-                class="fill-current size-4"
-                slot="next"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-              >
-                <path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
-              </svg>
-              <calendar-month></calendar-month>
-            </calendar-date>
-          </div>
-        </div>
-
-        <label class="label w-full">Status</label>
+        <!-- <label class="label w-full">Status</label>
         <select
           class="select bg-base-200 w-full select-primary"
           v-model="accountStore.userForm.status"
@@ -154,7 +122,7 @@ onMounted(() => {
           >
             {{ label }}
           </option>
-        </select>
+        </select> -->
 
         <label class="label w-full">Sex</label>
         <select

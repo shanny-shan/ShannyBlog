@@ -11,14 +11,14 @@ const closeDialog = () => {
   adminStore.closeDialog('tag')
 }
 
-const submitTag = async (tag) => {
+const submitTag = async () => {
   siteStore.loading = true
 
   let res = null
   if (adminStore.isEdit) {
-    res = await tagStore.editTag(tag)
+    res = await tagStore.editTag(tagStore.tagForm)
   } else {
-    res = await tagStore.addTag(tag)
+    res = await tagStore.addTag(tagStore.tagForm)
   }
   if (res.data.code.toLowerCase() === 'success') {
     toast.success(`${res.data.msg}`)
@@ -42,7 +42,8 @@ const submitTag = async (tag) => {
           ✕
         </button>
       </form>
-      <fieldset
+      <form
+        @submit.prevent="submitTag"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Tag</legend>
@@ -50,10 +51,17 @@ const submitTag = async (tag) => {
         <label class="label w-full">name</label>
         <input
           type="text"
-          class="input input-primary bg-base-200 w-full"
+          class="input validator input-primary bg-base-200 w-full"
+          required
+          minlength="1"
+          maxlength="10"
+          title="名称不能为空，且最长不能超过10个字符"
           placeholder="Please input name"
           v-model="tagStore.tagForm.name"
         />
+        <p class="validator-hint hidden">
+          名称不能为空，且最长不能超过10个字符
+        </p>
 
         <label class="label w-full">nameEn</label>
         <input
@@ -64,17 +72,12 @@ const submitTag = async (tag) => {
         />
 
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button
-            class="btn btn-primary w-1/2"
-            @click="submitTag(tagStore.tagForm)"
-          >
-            Submit
-          </button>
+          <button type="submit" class="btn btn-primary w-1/2">Submit</button>
           <button class="btn btn-soft w-1/2" @click="closeDialog()">
             Cancel
           </button>
         </div>
-      </fieldset>
+      </form>
     </div>
   </dialog>
 </template>

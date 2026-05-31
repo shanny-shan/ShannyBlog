@@ -47,13 +47,13 @@ const submitAbout = async (about) => {
       >
         <legend class="fieldset-legend">Add About</legend>
 
-        <label class="label w-full">avatar</label>
+        <!-- <label class="label w-full">avatar</label>
         <input
           type="text"
           class="input input-primary bg-base-200 w-full"
           placeholder="Please input avatar"
           v-model="aboutStore.aboutForm.avatar"
-        />
+        /> -->
 
         <label class="label w-full">name</label>
         <input

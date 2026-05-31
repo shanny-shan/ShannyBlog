@@ -21,6 +21,7 @@ import {
   faCircle,
   faEdit,
   faCalendar,
+  faEye,
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faGithub,
@@ -48,6 +49,7 @@ library.add(
   faAngleDoubleRight,
   faTag,
   faUser,
-  faClock
+  faClock,
+  faEye,
 )
 export { FontAwesomeIcon }

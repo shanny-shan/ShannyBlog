@@ -1,10 +1,18 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { getArticleAll,getArticleByType,getArticleById } from '@/apis/article'
+import {
+  getArticleByRecent,
+  getArticleByType,
+  getArticleById,
+  getArticleByViews,
+} from '@/apis/article'
 
 export const useArticleStore = defineStore('article', () => {
-  const getArticles = async () => {
-    return await getArticleAll()
+  const getRecents = async () => {
+    return await getArticleByRecent()
+  }
+
+  const getViews = async () => {
+    return await getArticleByViews()
   }
 
   const getArticleByTypes = async (type) => {
@@ -15,10 +23,10 @@ export const useArticleStore = defineStore('article', () => {
     return await getArticleById(id)
   }
 
-
   return {
-    getArticles,
+    getRecents,
+    getViews,
     getArticleByTypes,
-    getArticleByIds
+    getArticleByIds,
   }
 })

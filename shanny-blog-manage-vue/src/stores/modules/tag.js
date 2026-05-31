@@ -29,7 +29,6 @@ export const useTagStore = defineStore('tag', () => {
   const getTagList = async () => {
     siteStore.loading = true
     const res = await getTags()
-    console.log(res.data.data)
     if (res.data.code.toLowerCase() === 'success') {
       tagList.value = res.data.data || []
       siteStore.loading = false

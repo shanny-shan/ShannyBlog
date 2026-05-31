@@ -2,38 +2,34 @@
 import { onMounted, ref } from 'vue'
 import ArticleComponent from '@/components/home/ArticleComponent.vue'
 import TitleComponent from '@/components/home/TitleComponent.vue'
-import { useArticleStore } from '@/stores/modules/article'
+import { useArticleStore } from '@/stores'
 import { getTypePath } from '@/config/enum'
+
 const articleStore = useArticleStore()
-const articleList = ref([])
-const getArticleList = async () => {
-  const res = await articleStore.getArticles()
-  if (res.data.code.toLowerCase() === 'success') {
-    articleList.value = res.data.data
+const viewList = ref([])
+const emit = defineEmits(['load-complete'])
+
+const getViewList = async () => {
+  try {
+    const res = await articleStore.getViews()
+    if (res.data.code.toLowerCase() === 'success') {
+      viewList.value = res.data.data
+    }
+  } finally {
+    emit('load-complete')
   }
 }
-onMounted(() => {
-  getArticleList()
+onMounted(async () => {
+  await getViewList()
 })
 </script>
 <template>
   <div class="block md:hidden mt-5">
     <TitleComponent title="Articles" />
   </div>
-  <div v-for="(item, index) in articleList" :key="index">
-    <a
-      :href="`${getTypePath(item.type)}/${item.id}`"
-      class="hover-3d my-10 mx-1 cursor-pointer"
-    >
+  <div v-for="(item, index) in viewList" :key="index">
+    <a :href="`${getTypePath(item.type)}/${item.id}`" class="cursor-pointer">
       <ArticleComponent :item="item" :index="index" />
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
     </a>
   </div>
 </template>

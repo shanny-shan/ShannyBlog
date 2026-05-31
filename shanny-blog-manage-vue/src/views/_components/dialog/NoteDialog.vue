@@ -81,22 +81,30 @@ onMounted(async () => {
           ✕
         </button>
       </form>
-      <fieldset
+      <form
+        @submit.prevent="submitNote"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Note</legend>
 
         <div class="flex flex-col gap-2">
           <div class="flex flex-col md:flex-row md:gap-2">
-            <div class="md:w-1/3">
+            <div class="md:w-2/3">
               <label class="label w-full">Title</label>
               <input
                 type="text"
-                class="input input-primary bg-base-200 w-full"
+                class="input validator input-primary bg-base-200 w-full"
+                required
+                min="1"
+                maxlength="30"
                 placeholder="Please input title"
                 v-model="articleStore.articleForm.title"
               />
+              <p class="validator-hint hidden">
+                标题不能为空，且最长不能超过30个字符
+              </p>
             </div>
+
             <div class="md:w-1/3">
               <label class="label w-full">Category</label>
               <select
@@ -112,14 +120,14 @@ onMounted(async () => {
                 </option>
               </select>
             </div>
-            <div class="md:w-1/3">
+            <!-- <div class="md:w-1/3">
               <label class="label w-full">Image</label>
               <input
                 type="file"
                 class="file-input file-input-primary bg-base-200 w-full"
                 @change="inputImage($event)"
               />
-            </div>
+            </div> -->
           </div>
 
           <label class="label w-full">Tag</label>
@@ -146,14 +154,12 @@ onMounted(async () => {
           <EditComponent class="h-full" />
         </div>
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button class="btn btn-primary w-1/2" @click="submitNote()">
-            Submit
-          </button>
+          <button type="submit" class="btn btn-primary w-1/2">Submit</button>
           <button class="btn btn-soft w-1/2" @click="closeDialog()">
             Cancel
           </button>
         </div>
-      </fieldset>
+      </form>
     </div>
   </dialog>
 </template>

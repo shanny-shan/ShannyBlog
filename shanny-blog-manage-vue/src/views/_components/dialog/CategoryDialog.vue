@@ -12,13 +12,13 @@ const closeDialog = () => {
   adminStore.closeDialog('category')
 }
 
-const submitCategory = async (category) => {
+const submitCategory = async () => {
   siteStore.loading = true
   let res = null
   if (adminStore.isEdit) {
-    res = await categoryStore.editCategory(category)
+    res = await categoryStore.editCategory(categoryStore.categoryForm)
   } else {
-    res = await categoryStore.addCategory(category)
+    res = await categoryStore.addCategory(categoryStore.categoryForm)
   }
 
   if (res?.data?.code == 'SUCCESS') {
@@ -43,7 +43,8 @@ const submitCategory = async (category) => {
           ✕
         </button>
       </form>
-      <fieldset
+      <form
+        @submit.prevent="submitCategory"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Category</legend>
@@ -51,10 +52,17 @@ const submitCategory = async (category) => {
         <label class="label w-full">name</label>
         <input
           type="text"
-          class="input input-primary bg-base-200 w-full"
+          class="input validator input-primary bg-base-200 w-full"
+          required
           placeholder="Please input name"
+          minlength="1"
+          maxlength="10"
+          title="名称不能为空，且最长不能超过10个字符"
           v-model="categoryStore.categoryForm.name"
         />
+        <p class="validator-hint hidden">
+          名称不能为空，且最长不能超过10个字符
+        </p>
 
         <label class="label w-full">nameEn</label>
         <input
@@ -87,17 +95,12 @@ const submitCategory = async (category) => {
         />
 
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button
-            class="btn btn-primary w-1/2"
-            @click="submitCategory(categoryStore.categoryForm)"
-          >
-            Submit
-          </button>
+          <button type="submit" class="btn btn-primary w-1/2">Submit</button>
           <button class="btn btn-soft w-1/2" @click="closeDialog()">
             Cancel
           </button>
         </div>
-      </fieldset>
+      </form>
     </div>
   </dialog>
 </template>

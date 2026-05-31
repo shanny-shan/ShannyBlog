@@ -14,7 +14,7 @@ const article = ref({})
 
 const getArticleDetail = async () => {
   const res = await articleStore.getArticleByIds(id)
-  if(res.data.code.toLowerCase() == 'success'){
+  if (res.data.code.toLowerCase() == 'success') {
     article.value = res.data.data
   }
 }
@@ -64,14 +64,21 @@ onUnmounted(() => {
                 />
                 <div class="flex flex-row items-center ml-2 text-sm">
                   <span class="font-bold">Published:</span>
-                  <span class="ml-2">{{ formatDateTime(article.createTime) }}</span>
+                  <span class="ml-2">{{
+                    formatDateTime(article.createTime)
+                  }}</span>
                 </div>
               </div>
             </div>
           </div>
           <!-- 文章内容 -->
           <div class="mt-5 md:mt-10">
-            <div class="text-lg leading-10 break-words">{{ article.content }}</div>
+            <div class="text-lg leading-10 break-words">
+              <v-md-preview
+                :text="article.content"
+                class="text-lg leading-10 break-words"
+              />
+            </div>
           </div>
         </div>
       </div>

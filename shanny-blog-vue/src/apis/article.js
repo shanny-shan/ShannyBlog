@@ -1,8 +1,15 @@
 import request from '@/utils/request'
 
-const getArticleAll = () => {
+const getArticleByRecent = () => {
   return request({
-    url: '/article/all',
+    url: '/article/recent',
+    method: 'Get',
+  })
+}
+
+const getArticleByViews = () => {
+  return request({
+    url: '/article/views',
     method: 'Get',
   })
 }
@@ -26,4 +33,9 @@ const getArticleById = (id) => {
     },
   })
 }
-export { getArticleAll, getArticleByType, getArticleById }
+export {
+  getArticleByRecent,
+  getArticleByViews,
+  getArticleByType,
+  getArticleById,
+}

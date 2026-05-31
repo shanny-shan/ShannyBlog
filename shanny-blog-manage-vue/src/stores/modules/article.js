@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
-  getArticles,
   getArticleByType,
   insertArticle,
   updateArticle,
@@ -41,9 +40,7 @@ export const useArticleStore = defineStore('article', () => {
       published: true,
     }
   }
-  const getArticleList = async () => {
-    return await getArticles()
-  }
+
   const getArticleByTypeList = async (type) => {
     return await getArticleByType(type)
   }
@@ -78,7 +75,6 @@ export const useArticleStore = defineStore('article', () => {
     noteList,
     projectList,
     articleForm,
-    getArticleList,
     getArticleByTypeList,
     getNoteList,
     getProjectList,
