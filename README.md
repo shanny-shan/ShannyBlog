@@ -1,2 +1,3 @@
 # ShannyBlog
-个人博客项目
+主页网址：https://www.shanny.work/
+后台网址：https://www.shanny.work/manage/
