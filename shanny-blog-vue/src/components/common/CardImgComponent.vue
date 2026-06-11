@@ -14,14 +14,26 @@ defineProps({
     default: true,
   },
 })
+
+const handleLoad = (e, item) => {
+  if (!e.target.dataset.done) {
+    e.target.dataset.done = '1'
+    e.target.src = item.image
+  }
+}
+
+const handleError = (e) => {
+  e.target.dataset.done = '1'
+  e.target.src = defaultAvatar
+}
 </script>
 <template>
   <div class="card bg-base-200 shadow-sm flex w-full">
     <figure class="w-full">
       <img
         :src="defaultAvatar"
-        @load="(e) => (e.target.src = item.image)"
-        @error="(e) => (e.target.src = defaultAvatar)"
+        @load="(e) => handleLoad(e, item)"
+        @error="handleError"
       />
     </figure>
     <div class="card-body w-full p-3 flex flex-col justify-between">
