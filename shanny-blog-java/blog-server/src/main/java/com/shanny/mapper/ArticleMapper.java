@@ -33,4 +33,6 @@ public interface ArticleMapper {
 
     @Select("select * from shanny_blog.articles ORDER BY views DESC LIMIT 5")
     List<Article> getByView();
+
+    void update_article_views(Article article);
 }

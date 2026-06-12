@@ -25,4 +25,7 @@
         </set>
         where id = #{id}
     </update>
+    <update id="update_article_views" parameterType="com.shanny.entity.Article">
+        UPDATE shanny_blog.articles SET views = #{views} WHERE id = #{id}
+    </update>
 </mapper>

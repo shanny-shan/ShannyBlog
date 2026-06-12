@@ -1,6 +1,6 @@
 <script setup>
 import { formatDateTime } from '@/utils/time'
-import defaultAvatar from '@/assets/images/avatar.jpg'
+import defaultImage from '@/assets/images/loading.gif'
 
 defineProps({
   index: {
@@ -19,9 +19,9 @@ defineProps({
   >
     <div class="w-1/5 md:w-1/3">
       <img
-        :src="defaultAvatar"
+        :src="defaultImage"
         @load="(e) => (e.target.src = item.image)"
-        @error="(e) => (e.target.src = defaultAvatar)"
+        @error="(e) => (e.target.src = defaultImage)"
         class="w-full rounded-md"
       />
     </div>

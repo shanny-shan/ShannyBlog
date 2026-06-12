@@ -103,7 +103,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.getById(id);
 
         article.setViews(article.getViews() + 1);
-        articleMapper.update_article(article);
+        articleMapper.update_article_views(article);
 
         ArticleVO vo = new ArticleVO();
         BeanUtils.copyProperties(article, vo);

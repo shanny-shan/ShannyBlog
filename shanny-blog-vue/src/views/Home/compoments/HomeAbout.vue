@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import defaultAvatar from '@/assets/images/avatar.jpg'
+import defaultImage from '@/assets/images/loading.gif'
 import TitleComponent from '@/components/home/TitleComponent.vue'
 import { useAboutStore } from '@/stores'
 const aboutStore = useAboutStore()
@@ -31,9 +31,9 @@ onMounted(async () => {
           <div class="avatar">
             <div class="w-18 rounded-full shadow-xl">
               <img
-                :src="defaultAvatar"
+                :src="defaultImage"
                 @load="(e) => (e.target.src = aboutStore.authorInfo.avatar)"
-                @error="(e) => (e.target.src = defaultAvatar)"
+                @error="(e) => (e.target.src = defaultImage)"
               />
             </div>
           </div>
