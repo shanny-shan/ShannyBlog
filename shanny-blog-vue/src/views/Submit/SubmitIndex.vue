@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useScrollStore } from '@/stores/modules/scroll'
 import { useRoute } from 'vue-router'
-import DetailMessage from '@/components/common/DetailMessage.vue'
+import DetailMessage from '@/views/_components/common/DetailMessage.vue'
 const route = useRoute()
 const category = route.params.category
 const id = route.params.id

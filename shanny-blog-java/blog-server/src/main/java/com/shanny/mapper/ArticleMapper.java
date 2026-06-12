@@ -35,4 +35,7 @@ public interface ArticleMapper {
     List<Article> getByView();
 
     void update_article_views(Article article);
+
+    @Select("SELECT * FROM shanny_blog.articles WHERE JSON_CONTAINS(tags, CAST(#{tagId} AS JSON))")
+    List<Article> getByTag(Long tagId);
 }

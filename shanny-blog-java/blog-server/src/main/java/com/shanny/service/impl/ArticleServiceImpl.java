@@ -99,6 +99,30 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Result<List<ArticleVO>> getArticleByTag(Long tagId) {
+        List<Article> articles = articleMapper.getByTag(tagId);
+        List<ArticleVO> articleVOList = articles.stream().map(article -> {
+            ArticleVO vo = new ArticleVO();
+            BeanUtils.copyProperties(article, vo);
+            vo.setTagList(new ArrayList<>());
+            if (article.getTags() != null) {
+                for (Long tId : article.getTags()) {
+                    Tag tag = tagMapper.getById(tId);
+                    if (tag != null) {
+                        vo.getTagList().add(tag);
+                    }
+                }
+            }
+            Category category = categoryMapper.getById(article.getCategoryId());
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category, categoryVO);
+            vo.setCategory(categoryVO);
+            return vo;
+        }).toList();
+        return Result.success(SELECT_SUCCESS, articleVOList);
+    }
+
+    @Override
     public Result<ArticleVO> getArticleById(Long id) {
         Article article = articleMapper.getById(id);
 
@@ -188,4 +212,6 @@ public class ArticleServiceImpl implements ArticleService {
 
         return Result.success(SELECT_SUCCESS, articleVOList);
     }
+
+
 }

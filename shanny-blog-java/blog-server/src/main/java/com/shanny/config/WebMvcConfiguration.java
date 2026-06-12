@@ -29,6 +29,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("/article/recent")
                 .excludePathPatterns("/article/views")
                 .excludePathPatterns("/article/type")
+                .excludePathPatterns("/article/tag")
                 .excludePathPatterns("/article/id")
                 .excludePathPatterns("/category/all")
                 .excludePathPatterns("/tag/all")

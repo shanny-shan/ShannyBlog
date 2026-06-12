@@ -57,11 +57,7 @@ onUnmounted(() => {
     <div
       class="flex flex-col md:flex-row md:flex-wrap md:justify-start items-center w-full mt-2 md:mt-10"
     >
-      <div
-        v-for="(item, index) in items"
-        :key="index"
-        class="w-full md:w-1/4 p-2"
-      >
+      <div v-for="item in items" :key="item.id" class="w-full md:w-1/4 p-2">
         <RouterLink :to="`/article/note/${item.id}`">
           <CardImgComponent :item="item" :index="index" />
         </RouterLink>

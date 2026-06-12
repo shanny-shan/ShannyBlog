@@ -1,11 +1,11 @@
 <script setup>
-import TitleComponent from '@/components/home/TitleComponent.vue'
+import TitleComponent from '@/views/_components/home/TitleComponent.vue'
 import { formatDateTime } from '@/utils/time'
 defineProps({
   item: {
     type: Object,
     default: () => {},
-  }
+  },
 })
 </script>
 <template>
@@ -27,7 +27,9 @@ defineProps({
           <div class="ml-2 flex items-center">
             <span class="font-bold text-natural">Updated:</span>
             <div class="hover:underline ml-2">
-              <a href="/" class="text-natural">{{ formatDateTime(item.updateTime) }}</a>
+              <a href="/" class="text-natural">{{
+                formatDateTime(item.updateTime)
+              }}</a>
             </div>
           </div>
         </div>

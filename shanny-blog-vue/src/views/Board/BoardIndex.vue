@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useScrollStore } from '@/stores/modules/scroll'
-import PaginationComponent from '@/components/common/PaginationComponent.vue'
-import CardImgComponent from '@/components/common/CardImgComponent.vue'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
+import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
 const scrollStore = useScrollStore()
 const allItems = ref([
   {

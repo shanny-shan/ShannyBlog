@@ -25,6 +25,7 @@ onMounted(async () => {
       <a
         class="flex items-center mr-3 hover:cursor-pointer"
         v-for="item in tagStore.tags"
+        :href="`/tag/${item.id}/${item.name}`"
       >
         <div aria-label="status" class="status status-primary"></div>
         <span class="ml-2 hover:text-primary hover:pointer">

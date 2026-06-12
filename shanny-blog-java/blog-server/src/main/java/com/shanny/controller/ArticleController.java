@@ -60,6 +60,16 @@ public class ArticleController {
         }
     }
 
+    @GetMapping("/tag")
+    @Operation(summary = "文章获取")
+    public Result<List<ArticleVO>> GetArticleByTag(Long tagId) {
+        try {
+            return articleService.getArticleByTag(tagId);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
     @GetMapping("/id")
     @Operation(summary = "文章获取")
     public Result<ArticleVO> GetArticleById(Long id) {

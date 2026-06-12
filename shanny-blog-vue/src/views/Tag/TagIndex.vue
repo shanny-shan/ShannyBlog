@@ -1,38 +1,41 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useScrollStore, useArticleStore, useSiteStore } from '@/stores'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
-
 const scrollStore = useScrollStore()
 const articleStore = useArticleStore()
 const siteStore = useSiteStore()
 
-const projectList = ref([])
-const getProjectList = async () => {
+const route = useRoute()
+const tagId = route.params.tagId
+const tagName = route.params.tagName
+
+const tagList = ref([])
+const currentPage = ref(1)
+const itemsPerPage = ref(4)
+
+const getTagList = async () => {
   siteStore.loading = true
-  const res = await articleStore.getArticleByTypes('ARTICLE_PROJECT')
-  if (res.data.code.toLowerCase() === 'success') {
-    projectList.value = res.data.data
+  const res = await articleStore.getArticleByTags(tagId)
+  if (res?.data?.code.toLowerCase() === 'success') {
+    tagList.value = res.data.data
     siteStore.loading = false
   }
 }
 
 // pagination-------------------------------------------------------------------------------------
-const currentPage = ref(1) // 当前页码
-const itemsPerPage = ref(4) // 每页显示的条目数
-
 // 计算总页数
 const totalPages = computed(() => {
-  return Math.ceil(projectList.value.length / itemsPerPage.value)
+  return Math.ceil(tagList.value.length / itemsPerPage.value)
 })
 
 // 计算当前页显示的条目
 const items = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value
   const endIndex = startIndex + itemsPerPage.value
-  return projectList.value.slice(startIndex, endIndex)
+  return tagList.value.slice(startIndex, endIndex)
 })
 // 处理页码变化事件
 const handlePageChange = (page) => {
@@ -40,9 +43,10 @@ const handlePageChange = (page) => {
   // 可以在这里添加滚动到页面顶部的逻辑
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
 onMounted(() => {
   scrollStore.enableScrollListener()
-  getProjectList()
+  getTagList()
 })
 onUnmounted(() => {
   scrollStore.disableScrollListener()
@@ -53,12 +57,14 @@ onUnmounted(() => {
     class="mt-22 md:mt-45 flex flex-col items-center w-full md:w-7/10"
     :class="scrollStore.isScrolled ? 'md:mt-45' : ''"
   >
-    <div class="text-primary font-bold text-2xl">Article / Project</div>
+    <div class="text-primary font-bold text-2xl">Tag / {{ tagName }}</div>
     <div
       class="flex flex-col md:flex-row md:flex-wrap md:justify-start items-center w-full mt-2 md:mt-10"
     >
       <div v-for="item in items" :key="item.id" class="w-full md:w-1/4 p-2">
-        <RouterLink :to="`/article/project/${item.id}`">
+        <RouterLink
+          :to="`/article/${item.type == 'ARTICLE_NOTE' ? 'note' : 'project'}/${item.id}`"
+        >
           <CardImgComponent :item="item" :index="index" />
         </RouterLink>
       </div>

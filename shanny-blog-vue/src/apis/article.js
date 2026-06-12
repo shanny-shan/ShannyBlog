@@ -24,6 +24,16 @@ const getArticleByType = (type) => {
   })
 }
 
+const getArticleByTag = (tagId) => {
+  return request({
+    url: '/article/tag',
+    method: 'Get',
+    params: {
+      tagId,
+    },
+  })
+}
+
 const getArticleById = (id) => {
   return request({
     url: '/article/id',
@@ -38,4 +48,5 @@ export {
   getArticleByViews,
   getArticleByType,
   getArticleById,
+  getArticleByTag,
 }

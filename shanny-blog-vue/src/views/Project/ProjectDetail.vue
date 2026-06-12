@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import DetailMessage from '@/components/common/DetailMessage.vue'
+import DetailMessage from '@/views/_components/common/DetailMessage.vue'
 import { useScrollStore, useSiteStore } from '@/stores'
 import { useRoute } from 'vue-router'
 import { useArticleStore } from '@/stores/modules/article'

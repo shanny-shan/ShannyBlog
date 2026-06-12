@@ -25,4 +25,6 @@ public interface ArticleService {
     Result<String> deleteArticle(Long id);
 
     Result<List<ArticleVO>> getArticlesByView();
+
+    Result<List<ArticleVO>> getArticleByTag(Long tagId);
 }

@@ -6,9 +6,10 @@ const NoteDetail = () => import('@/views/Note/NoteDetail.vue')
 const Project = () => import('@/views/Project/ProjectIndex.vue')
 const ProjectDetail = () => import('@/views/Project/ProjectDetail.vue')
 const Tool = () => import('@/views/Tool/ToolIndex.vue')
-const Media = () => import('@/views/Media/MediaIndex.vue')
-const Bug = () => import('@/views/Bug/BugIndex.vue')
-const Board = () => import('@/views/Board/BoardIndex.vue')
+const Tag = () => import('@/views/Tag/TagIndex.vue')
+// const Media = () => import('@/views/Media/MediaIndex.vue')
+// const Bug = () => import('@/views/Bug/BugIndex.vue')
+// const Board = () => import('@/views/Board/BoardIndex.vue')
 
 const routes = [
   {
@@ -40,17 +41,21 @@ const routes = [
         component: Tool,
       },
       {
-        path: '/media/:type',
-        component: Media,
+        path: '/tag/:tagId/:tagName',
+        component: Tag,
       },
-      {
-        path: '/article/bug',
-        component: Bug,
-      },
-      {
-        path: '/board',
-        component: Board,
-      },
+      // {
+      //   path: '/media/:type',
+      //   component: Media,
+      // },
+      // {
+      //   path: '/article/bug',
+      //   component: Bug,
+      // },
+      // {
+      //   path: '/board',
+      //   component: Board,
+      // },
     ],
   },
 ]

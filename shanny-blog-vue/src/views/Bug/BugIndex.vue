@@ -4,8 +4,8 @@ import { useScrollStore } from '@/stores/modules/scroll'
 import { RouterLink, useRoute } from 'vue-router'
 const route = useRoute()
 const type = route.params.type
-import PaginationComponent from '@/components/common/PaginationComponent.vue'
-import CardImgComponent from '@/components/common/CardImgComponent.vue'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
+import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
 const scrollStore = useScrollStore()
 const allItems = ref([
   {

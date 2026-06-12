@@ -4,6 +4,7 @@ import {
   getArticleByType,
   getArticleById,
   getArticleByViews,
+  getArticleByTag,
 } from '@/apis/article'
 
 export const useArticleStore = defineStore('article', () => {
@@ -18,6 +19,9 @@ export const useArticleStore = defineStore('article', () => {
   const getArticleByTypes = async (type) => {
     return await getArticleByType(type)
   }
+  const getArticleByTags = async (tagId) => {
+    return await getArticleByTag(tagId)
+  }
 
   const getArticleByIds = async (id) => {
     return await getArticleById(id)
@@ -28,5 +32,6 @@ export const useArticleStore = defineStore('article', () => {
     getViews,
     getArticleByTypes,
     getArticleByIds,
+    getArticleByTags,
   }
 })
