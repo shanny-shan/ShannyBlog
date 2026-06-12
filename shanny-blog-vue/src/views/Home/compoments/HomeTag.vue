@@ -1,5 +1,5 @@
 <script setup>
-import TitleComponent from '@/components/home/TitleComponent.vue'
+import TitleComponent from '@/views/_components/home/TitleComponent.vue'
 import { useTagStore, useLanguageStore } from '@/stores'
 import { onMounted } from 'vue'
 

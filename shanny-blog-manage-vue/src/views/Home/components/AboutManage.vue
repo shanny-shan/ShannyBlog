@@ -1,13 +1,17 @@
 <script setup>
 import AboutDialog from '@/views/_components/dialog/AboutDialog.vue'
-import { onMounted } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useAdminStore, useAboutStore } from '@/stores'
 import { useToast } from 'vue-toastification'
 import { swal } from '@/utils/sweetalert'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
 const toast = useToast()
 const adminStore = useAdminStore()
 const aboutStore = useAboutStore()
+
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 const editAbout = (item) => {
   adminStore.openDialog('about')
@@ -33,6 +37,22 @@ const deleteAbout = (item) => {
       }
     }
   })
+}
+
+const totalPages = computed(() => {
+  return Math.ceil(aboutStore.aboutList.length / itemsPerPage.value)
+})
+
+// 计算当前页显示的条目
+const items = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value
+  const endIndex = startIndex + itemsPerPage.value
+  return aboutStore.aboutList.slice(startIndex, endIndex)
+})
+// 处理页码变化事件
+const handlePageChange = (page) => {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 onMounted(async () => {
@@ -69,7 +89,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in aboutStore.aboutList">
+          <tr v-for="item in items" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -108,6 +128,14 @@ onMounted(async () => {
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
+      <PaginationComponent
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :page-range="5"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
   <AboutDialog />

@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import defaultImage from '@/assets/images/loading.gif'
-import TitleComponent from '@/components/home/TitleComponent.vue'
+import TitleComponent from '@/views/_components/home/TitleComponent.vue'
 import { useAboutStore } from '@/stores'
 const aboutStore = useAboutStore()
 

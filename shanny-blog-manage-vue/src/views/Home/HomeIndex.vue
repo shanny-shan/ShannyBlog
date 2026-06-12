@@ -29,7 +29,7 @@ const goWebSite = () => {
   <div class="drawer drawer-open">
     <input id="my-drawer-4" type="checkbox" class="drawer-toggle" checked />
     <div class="drawer-content w-full h-screen p-5">
-      <div class="card bg-base-200 w-full h-full p-5">
+      <div class="card bg-base-200 w-full min-h-full p-5">
         <div v-if="active == 'note'">
           <NoteManage />
         </div>

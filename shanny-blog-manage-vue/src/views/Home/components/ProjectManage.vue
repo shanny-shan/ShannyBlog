@@ -1,13 +1,17 @@
 <script setup>
 import ProjectDialog from '@/views/_components/dialog/ProjectDialog.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAdminStore, useArticleStore } from '@/stores'
 import { swal } from '@/utils/sweetalert'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
 const toast = useToast()
 const adminStore = useAdminStore()
 const articleStore = useArticleStore()
+
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 const editProject = (item) => {
   adminStore.openDialog('project')
@@ -33,6 +37,22 @@ const deleteProject = (item) => {
       }
     }
   })
+}
+
+const totalPages = computed(() => {
+  return Math.ceil(articleStore.projectList.length / itemsPerPage.value)
+})
+
+// 计算当前页显示的条目
+const items = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value
+  const endIndex = startIndex + itemsPerPage.value
+  return articleStore.projectList.slice(startIndex, endIndex)
+})
+// 处理页码变化事件
+const handlePageChange = (page) => {
+  currentPage.value = page
+  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 onMounted(async () => {
@@ -66,7 +86,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in articleStore.projectList">
+          <tr v-for="item in items" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -123,6 +143,14 @@ onMounted(async () => {
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
+      <PaginationComponent
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :page-range="5"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
   <ProjectDialog />

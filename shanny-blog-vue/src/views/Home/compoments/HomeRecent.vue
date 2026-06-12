@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import RecentComponent from '@/components/home/RecentComponent.vue'
-import TitleComponent from '@/components/home/TitleComponent.vue'
+import RecentComponent from '@/views/_components/home/RecentComponent.vue'
+import TitleComponent from '@/views/_components/home/TitleComponent.vue'
 import { useArticleStore } from '@/stores'
 import { getTypePath } from '@/config/enum'
 

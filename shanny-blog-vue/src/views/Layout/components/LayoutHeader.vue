@@ -1,8 +1,7 @@
 <script setup>
-import ThemeToggle from '@/components/header/ThemeToggle.vue'
-import DrawerComponent from '@/components/common/DrawerComponent.vue'
-import { useLanguageStore } from '@/stores/modules/language'
-import { useScrollStore } from '@/stores/modules/scroll'
+import ThemeToggle from '@/views/_components/header/ThemeToggle.vue'
+import DrawerComponent from '@/views/_components/common/DrawerComponent.vue'
+import { useScrollStore } from '@/stores'
 import { menuItems } from '@/config/menuItem'
 const scrollStore = useScrollStore()
 const goManage = () => {

@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useScrollStore, useToolStore, useSiteStore } from '@/stores'
-import PaginationComponent from '@/components/common/PaginationComponent.vue'
-import CardImgComponent from '@/components/common/CardImgComponent.vue'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
+import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
 const scrollStore = useScrollStore()
 const toolStore = useToolStore()
 const siteStore = useSiteStore()
@@ -35,7 +35,6 @@ const items = computed(() => {
 // 处理页码变化事件
 const handlePageChange = (page) => {
   currentPage.value = page
-  // 可以在这里添加滚动到页面顶部的逻辑
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 onMounted(() => {

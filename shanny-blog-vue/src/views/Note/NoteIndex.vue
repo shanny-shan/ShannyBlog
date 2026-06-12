@@ -2,8 +2,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useScrollStore, useArticleStore, useSiteStore } from '@/stores'
 import { RouterLink } from 'vue-router'
-import CardImgComponent from '@/components/common/CardImgComponent.vue'
-import PaginationComponent from '@/components/common/PaginationComponent.vue'
+import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
+import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 const scrollStore = useScrollStore()
 const articleStore = useArticleStore()
 const siteStore = useSiteStore()
