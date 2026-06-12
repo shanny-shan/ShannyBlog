@@ -1,6 +1,6 @@
 <script setup>
 import { formatDateTime } from '@/utils/time'
-import defaultAvatar from '@/assets/images/avatar.jpg'
+import defaultImage from '@/assets/images/loading.gif'
 defineProps({
   index: {
     type: Number,
@@ -24,14 +24,14 @@ const handleLoad = (e, item) => {
 
 const handleError = (e) => {
   e.target.dataset.done = '1'
-  e.target.src = defaultAvatar
+  e.target.src = defaultImage
 }
 </script>
 <template>
   <div class="card bg-base-200 shadow-sm flex w-full">
     <figure class="w-full">
       <img
-        :src="defaultAvatar"
+        :src="defaultImage"
         @load="(e) => handleLoad(e, item)"
         @error="handleError"
       />

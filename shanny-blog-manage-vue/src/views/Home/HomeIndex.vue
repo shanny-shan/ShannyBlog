@@ -21,6 +21,9 @@ const logout = () => {
     }
   })
 }
+const goWebSite = () => {
+  window.open('https://www.shanny.work', '_blank')
+}
 </script>
 <template>
   <div class="drawer drawer-open">
@@ -69,6 +72,15 @@ const logout = () => {
         class="is-drawer-close:w-20 is-drawer-open:w-40 bg-base-200 flex flex-col items-start min-h-full"
       >
         <ul class="menu w-full grow">
+          <li @click="goWebSite()">
+            <button
+              class="is-drawer-close:tooltip is-drawer-close:tooltip-right text-red"
+              data-tip="WebSite"
+            >
+              <font-awesome-icon icon="fa-regular fa-circle-left" />
+              <span class="is-drawer-close:hidden">WebSite</span>
+            </button>
+          </li>
           <li>
             <h2
               class="menu-title is-drawer-close:tooltip is-drawer-close:tooltip-right"

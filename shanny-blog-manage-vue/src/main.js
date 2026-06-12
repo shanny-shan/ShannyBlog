@@ -3,7 +3,7 @@ import pinia from './stores'
 import App from './App.vue'
 import router from './router'
 
-import { FontAwesomeIcon } from './assets/icons.js'
+import { FontAwesomeIcon } from './utils/icons.js'
 import './styles/main.css'
 import VueCookies from 'vue3-cookies'
 

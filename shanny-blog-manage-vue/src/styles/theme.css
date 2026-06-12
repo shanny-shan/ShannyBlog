@@ -16,8 +16,7 @@
   --color-base-content: #363853;
   --color-primary: #ff6481; /* pink */
   --color-primary-content: #fff;
-  --color-neutral: #ff6481;
-  --color-neutral-content: #fff;
+  --color-neutral: #4d6385;
   --color-neutral-50: #eeeeee;
   --color-accent: #ffbac7;
 }
@@ -26,6 +25,7 @@
   default: false;
   --color-neutral: #cccccc;
   --color-neutral-50: #eeeeee;
+  --color-neutral-content: #000000;
 }
 /* 自定义主题样式 */
 [data-theme='pink-light'] {

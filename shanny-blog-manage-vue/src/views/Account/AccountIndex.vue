@@ -46,8 +46,6 @@ const register = async () => {
   }
 }
 
-const resetPassword = async () => {}
-
 onMounted(async () => {
   if (accountStore.isLoggedIn()) {
     await accountStore.getUserInfo()
@@ -55,10 +53,20 @@ onMounted(async () => {
     accountStore.userInfo = {}
   }
 })
+const goWebSite = () => {
+  window.open('https://www.shanny.work', '_blank')
+}
 </script>
 <template>
   <div class="flex justify-center items-center w-full h-screen">
     <div class="card card-border bg-base-200 w-96">
+      <button
+        class="btn btn-ghost tooltip absolute top-2 left-2"
+        data-tip="GO WebSite"
+        @click="goWebSite()"
+      >
+        <font-awesome-icon icon="fa-regular fa-circle-left" />
+      </button>
       <div class="card-body">
         <div class="flex flex-row w-full justify-center items-center gap-2">
           <button

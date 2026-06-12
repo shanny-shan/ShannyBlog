@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import DetailMessage from '@/components/common/DetailMessage.vue'
-import { useScrollStore } from '@/stores/modules/scroll'
+import { useScrollStore, useSiteStore } from '@/stores'
 import { useRoute } from 'vue-router'
 import { useArticleStore } from '@/stores/modules/article'
 import { formatDateTime } from '@/utils/time'
 const articleStore = useArticleStore()
+const siteStore = useSiteStore()
 
 const route = useRoute()
 const id = route.params.id
@@ -16,10 +17,12 @@ const getArticleDetail = async () => {
   const res = await articleStore.getArticleByIds(id)
   if (res.data.code.toLowerCase() == 'success') {
     article.value = res.data.data
+    siteStore.loading = false
   }
 }
 
 onMounted(() => {
+  siteStore.loading = true
   scrollStore.enableScrollListener()
   getArticleDetail()
 })

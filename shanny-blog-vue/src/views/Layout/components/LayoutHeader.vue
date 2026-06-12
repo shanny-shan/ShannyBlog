@@ -1,14 +1,13 @@
 <script setup>
-import LanguageToggle from '@/components/header/LanguageToggle.vue'
 import ThemeToggle from '@/components/header/ThemeToggle.vue'
 import DrawerComponent from '@/components/common/DrawerComponent.vue'
-import SearchComponent from '@/components/header/SearchComponent.vue'
-import { translate } from '@/config/translate'
 import { useLanguageStore } from '@/stores/modules/language'
 import { useScrollStore } from '@/stores/modules/scroll'
 import { menuItems } from '@/config/menuItem'
-const languageStore = useLanguageStore()
 const scrollStore = useScrollStore()
+const goManage = () => {
+  window.open('https://www.shanny.work/manage', '_blank')
+}
 </script>
 <template>
   <div
@@ -88,6 +87,15 @@ const scrollStore = useScrollStore()
         <!-- <div class="ml-5">
           <LanguageToggle />
         </div> -->
+        <div class="ml-5">
+          <button
+            class="btn btn-ghost tooltip"
+            data-tip="Go Manage"
+            @click="goManage()"
+          >
+            <font-awesome-icon icon="fa-regular fa-user" class="fa-lg" />
+          </button>
+        </div>
       </div>
     </div>
   </div>
