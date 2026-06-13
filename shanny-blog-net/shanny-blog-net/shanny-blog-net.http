@@ -1,0 +1,6 @@
+@shanny_blog_net_HostAddress = http://localhost:5122
+
+GET {{shanny_blog_net_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
