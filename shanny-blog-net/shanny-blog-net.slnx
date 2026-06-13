@@ -1,3 +1,5 @@
 <Solution>
-  <Project Path="shanny-blog-net/shanny-blog-net.csproj" />
+  <Project Path="blog-common/blog-common.csproj" Id="cebb869f-f491-4705-afe9-9e2bb966229c" />
+  <Project Path="blog-pojo/blog-pojo.csproj" Id="dafaf627-3fa2-42e2-b86f-9b1cfa689fa6" />
+  <Project Path="blog-server/blog-server.csproj" />
 </Solution>

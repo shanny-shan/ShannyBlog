@@ -1,0 +1,5 @@
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-pojo\obj\Debug\net10.0\blog-pojo.GeneratedMSBuildEditorConfig.editorconfig
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-pojo\obj\Debug\net10.0\blog-pojo.AssemblyInfoInputs.cache
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-pojo\obj\Debug\net10.0\blog-pojo.AssemblyInfo.cs
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-pojo\obj\Debug\net10.0\blog-pojo.csproj.CoreCompileInputs.cache
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-pojo\obj\Debug\net10.0\blog-pojo.sourcelink.json

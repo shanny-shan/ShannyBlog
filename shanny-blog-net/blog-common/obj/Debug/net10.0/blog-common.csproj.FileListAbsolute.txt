@@ -1,0 +1,5 @@
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-common\obj\Debug\net10.0\blog-common.GeneratedMSBuildEditorConfig.editorconfig
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-common\obj\Debug\net10.0\blog-common.AssemblyInfoInputs.cache
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-common\obj\Debug\net10.0\blog-common.AssemblyInfo.cs
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-common\obj\Debug\net10.0\blog-common.csproj.CoreCompileInputs.cache
+D:\Files\study\project\ShannyBlog\shanny-blog-net\blog-common\obj\Debug\net10.0\blog-common.sourcelink.json
