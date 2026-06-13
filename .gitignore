@@ -1,0 +1,6 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/shanny-blog-net/.vs/shanny-blog-net.slnx
+/shanny-blog-net/shanny-blog-net/obj
