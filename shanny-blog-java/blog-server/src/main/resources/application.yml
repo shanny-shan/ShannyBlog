@@ -30,7 +30,7 @@ knife4j:
 
 shanny:
   jwt:
-    user-secret-key: "shanny-blog&https://www.shanny.wang&ruanmengdashanny@gmail.com"
+    user-secret-key: "shanny-blog&https://www.shanny.work&ruanmengdashanny@gmail.com"
     user-ttl: 86400000
     user-token-name: "Authorization"
 
