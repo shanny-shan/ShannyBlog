@@ -22,7 +22,7 @@ namespace blog_pojo.Entities
         public string Username { get; set; } = string.Empty;
 
         [Column("birthday")]
-        public DateOnly? Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         [Required]
         [Column("sex")]

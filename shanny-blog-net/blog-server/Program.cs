@@ -1,5 +1,6 @@
 using blog_common.Config;
 using blog_server.Annotatin;
+using blog_server.Mapper;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -31,6 +32,14 @@ builder.Services.AddScoped<JwtTokenUserInterceptor>();
 builder.Services.AddScoped<WebMvcConfig>();
 builder.Services.AddScoped<JwtConfig>();
 
+builder.Services.AddScoped<AboutMapper>();
+builder.Services.AddScoped<ArticleMapper>();
+builder.Services.AddScoped<CategoryMapper>();
+builder.Services.AddScoped<TagMapper>();
+builder.Services.AddScoped<ToolMapper>();
+builder.Services.AddScoped<UserMapper>();
+
+/* http://localhost:8080/swagger/index.html */
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -43,7 +52,6 @@ builder.Services.AddSwaggerGen(c =>
         {
             Name = "Shanny",
             Email = "wangshanshanwork@gamil.com",
-            Url = new Uri("") 
         },
         License = new OpenApiLicense
         {
@@ -85,13 +93,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors(corsPolicyName);
 app.UseShannyCors();
 
-app.UseSwagger();
-app.UseSwaggerUI(opt =>
+if (app.Environment.IsDevelopment())
 {
-    opt.SwaggerEndpoint("/swagger/v1/swagger.json", "全部接口");
-    opt.SwaggerEndpoint("/swagger/user/swagger.json", "用户管理");
-    opt.RoutePrefix = string.Empty;
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseAuthentication();
 

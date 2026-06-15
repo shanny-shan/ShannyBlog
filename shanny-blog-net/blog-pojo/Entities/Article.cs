@@ -42,7 +42,7 @@ namespace blog_pojo.Entities
         public CategoryType Type { get; set; }
 
         [Column("categoryId")]
-        public long? CategoryId { get; set; }
+        public long CategoryId { get; set; }
 
         [Required]
         [Column("timelines")]

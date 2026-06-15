@@ -10,7 +10,7 @@ namespace blog_server.Annotatin
     public class AutoFillAs : AbstractInterceptor
     {
         [FromServices]
-        public ILogger<CorsConfig> Logger { get; set; } = null!;
+        public ILogger<AutoFillAs> Logger { get; set; } = null!;
 
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
