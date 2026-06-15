@@ -16,3 +16,7 @@
 /shanny-blog-net/blog-pojo/obj
 /shanny-blog-net/blog-server/bin/Debug/net10.0
 /shanny-blog-net/blog-server/obj
+/shanny-blog-net/blog-common/bin/Release
+/shanny-blog-net/blog-db/bin
+/shanny-blog-net/blog-db/obj
+/shanny-blog-net/blog-pojo/bin/Release
