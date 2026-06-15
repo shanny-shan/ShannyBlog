@@ -1,7 +1,10 @@
 ﻿namespace blog_common.Constant
 {
-    public class ResuleConstant
+    public class ResultMsg
     {
+        public const string CODE_SUCCESS = "Success";
+        public const string CODE_FAIL = "Fail";
+
         public const string InsertSuccess = "添加成功！";
         public const string InsertFail = "添加失败！";
         public const string InsertFailExist = "相关数据已存在，添加失败！";
@@ -11,6 +14,8 @@
         public const string DeleteFail = "删除失败！";
         public const string SelectSuccess = "获取成功！";
         public const string SelectFail = "获取失败！";
+        public const string ParamInvalid = "参数错误";
+
 
         /// <summary>
         /// 登录注册相关

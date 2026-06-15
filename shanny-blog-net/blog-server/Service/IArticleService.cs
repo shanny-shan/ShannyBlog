@@ -11,7 +11,7 @@ namespace blog_server.Service
 
         Task<Result<List<ArticleVO>>> GetArticlesByRecent();
 
-        Task<Result<List<ArticleVO>>> GetArticlesByType(CategoryType type);
+        Task<Result<List<ArticleVO>>> GetArticlesByType(string type);
 
         Task<Result<ArticleVO>> GetArticleById(long id);
 

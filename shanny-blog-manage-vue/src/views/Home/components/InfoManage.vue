@@ -114,7 +114,7 @@ onMounted(async () => {
             </td>
             <td>{{ item.userDetails?.nickname }}</td>
             <td>{{ item.userDetails?.username }}</td>
-            <td>{{ item.userDetails?.birthday }}</td>
+            <td>{{ item.userDetails?.birthday.substring(0, 10) }}</td>
             <td>{{ item.userDetails?.sex }}</td>
             <td>{{ item.mobile }}</td>
             <td>{{ item.lastLoginTime.substring(0, 10) }}</td>

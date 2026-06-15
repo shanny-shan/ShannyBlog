@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace blog_server.Controller
 {
     [ApiController]
-    [Route("/category")]
+    [Route("category")]
     [Tags("菜单相关接口")]
     public class CategoryController : ControllerBase
     {

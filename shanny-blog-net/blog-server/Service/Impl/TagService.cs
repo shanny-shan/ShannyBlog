@@ -1,3 +1,4 @@
+using blog_common.Constant;
 using blog_common.Result;
 using blog_db;
 using blog_db.Data;
@@ -27,7 +28,7 @@ namespace blog_server.Service.Impl
         {
             var tag = await _dbContext.Set<Tag>().FindAsync(id);
             if (tag == null)
-                return Result<TagVO>.Error("NOT_FOUND");
+                return Result<TagVO>.Error(ResultMsg.AccountNotFound);
             TagVO vo = MapTagToVo(tag);
             return Result<TagVO>.Success(vo);
         }
@@ -38,23 +39,23 @@ namespace blog_server.Service.Impl
             _dbContext.Set<Tag>().Add(tag);
             await _dbContext.SaveChangesAsync();
             TagVO vo = MapTagToVo(tag);
-            return Result<TagVO>.Success(vo);
+            return Result<TagVO>.Success(ResultMsg.InsertSuccess, vo);
         }
 
         public async Task<Result<TagVO>> UpdateTag(TagDTO tagDTO)
         {
             if (tagDTO.Id <= 0)
-                return Result<TagVO>.Error("UPDATE_FAIL");
+                return Result<TagVO>.Error(ResultMsg.UpdateFail);
 
             var dbTag = await _dbContext.Set<Tag>().FindAsync(tagDTO.Id);
             if (dbTag == null)
-                return Result<TagVO>.Error("UPDATE_FAIL");
+                return Result<TagVO>.Error(ResultMsg.UpdateFail);
 
             MapDtoCoverEntity(tagDTO, dbTag);
             await _dbContext.SaveChangesAsync();
 
             TagVO vo = MapTagToVo(dbTag);
-            return Result<TagVO>.Success(vo);
+            return Result<TagVO>.Success(ResultMsg.UpdateSuccess, vo);
         }
 
         public async Task<Result<string>> DeleteTagById(long id)
@@ -65,7 +66,7 @@ namespace blog_server.Service.Impl
                 _dbContext.Set<Tag>().Remove(tag);
                 await _dbContext.SaveChangesAsync();
             }
-            return Result<string>.Success("DELETE_SUCCESS");
+            return Result<string>.Success(ResultMsg.DeleteSuccess);
         }
 
         #region 映射方法

@@ -1,10 +1,10 @@
-﻿using blog_common.Enums;
+﻿using blog_common.Constant;
 
 namespace blog_common.Result
 {
     public class Result<T>
     {
-        public ResultCode Code { get; set; }
+        public string Code { get; set; }
         public string Msg { get; set; } = string.Empty;
         public T? Data { get; set; }
 
@@ -12,7 +12,7 @@ namespace blog_common.Result
         {
             return new Result<T>
             {
-                Code = ResultCode.Success
+                Code = ResultMsg.CODE_SUCCESS
             };
         }
 
@@ -20,7 +20,7 @@ namespace blog_common.Result
         {
             return new Result<T>
             {
-                Code = ResultCode.Success,
+                Code = ResultMsg.CODE_SUCCESS,
                 Msg = msg
             };
         }
@@ -29,7 +29,7 @@ namespace blog_common.Result
         {
             return new Result<T>
             {
-                Code = ResultCode.Success,
+                Code = ResultMsg.CODE_SUCCESS,
                 Data = data
             };
         }
@@ -38,7 +38,7 @@ namespace blog_common.Result
         {
             return new Result<T>
             {
-                Code = ResultCode.Success,
+                Code = ResultMsg.CODE_SUCCESS,
                 Msg = msg,
                 Data = data
             };
@@ -48,7 +48,7 @@ namespace blog_common.Result
         {
             return new Result<T>
             {
-                Code = ResultCode.Error,
+                Code = ResultMsg.CODE_FAIL,
                 Msg = msg
             };
         }

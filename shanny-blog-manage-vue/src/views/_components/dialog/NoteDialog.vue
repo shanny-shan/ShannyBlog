@@ -58,7 +58,9 @@ const getCategoryId = async () => {
     curCategories.value = categoryResult.data.data.filter(
       (item) => item.type == 'ARTICLE_NOTE',
     )
-    articleStore.articleForm.categoryId = curCategories.value[0].id
+    if (curCategories.value.length > 0) {
+      articleStore.articleForm.categoryId = curCategories.value[0].id
+    }
   }
 }
 

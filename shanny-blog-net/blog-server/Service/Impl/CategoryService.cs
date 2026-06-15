@@ -1,3 +1,4 @@
+using blog_common.Constant;
 using blog_common.Result;
 using blog_db;
 using blog_db.Data;
@@ -31,27 +32,27 @@ namespace blog_server.Service.Impl
             await _dbContext.SaveChangesAsync();
 
             CategoryVO vo = MapEntityToVo(entity);
-            return Result<CategoryVO>.Success(vo);
+            return Result<CategoryVO>.Success(ResultMsg.InsertSuccess, vo);
         }
 
         public async Task<Result<CategoryVO>> UpdateCategory(CategoryDTO categoryDTO)
         {
             if (categoryDTO.Id <= 0)
             {
-                return Result<CategoryVO>.Error("UPDATE_FAIL");
+                return Result<CategoryVO>.Error(ResultMsg.UpdateFail);
             }
 
             var dbModel = await _dbContext.Set<Category>().FindAsync(categoryDTO.Id);
             if (dbModel == null)
             {
-                return Result<CategoryVO>.Error("UPDATE_FAIL");
+                return Result<CategoryVO>.Error(ResultMsg.UpdateFail);
             }
 
             MapDtoCoverEntity(categoryDTO, dbModel);
             await _dbContext.SaveChangesAsync();
 
             CategoryVO vo = MapEntityToVo(dbModel);
-            return Result<CategoryVO>.Success(vo);
+            return Result<CategoryVO>.Success(ResultMsg.UpdateSuccess, vo);
         }
 
         public async Task<Result<string>> DeleteCategoryById(long id)
@@ -62,7 +63,7 @@ namespace blog_server.Service.Impl
                 _dbContext.Set<Category>().Remove(model);
                 await _dbContext.SaveChangesAsync();
             }
-            return Result<string>.Success("DELETE_SUCCESS");
+            return Result<string>.Success(ResultMsg.DeleteSuccess);
         }
 
         #region 映射方法

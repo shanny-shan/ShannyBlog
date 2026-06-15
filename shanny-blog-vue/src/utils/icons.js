@@ -15,6 +15,7 @@ import {
   faTag,
   faClock,
   faRightFromBracket,
+  faUser as faUserSolid,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faCircle,
@@ -48,6 +49,7 @@ library.add(
   faAngleRight,
   faAngleDoubleRight,
   faTag,
+  faUserSolid,
   faUser,
   faClock,
   faEye,

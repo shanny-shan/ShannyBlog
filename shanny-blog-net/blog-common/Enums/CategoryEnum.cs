@@ -4,25 +4,18 @@ namespace blog_common.Enums
 {
     public enum CategoryType
     {
-        [Description("ARTICLE_NOTE")]
-        ArticleNote,
+        ARTICLE_NOTE,
 
-        [Description("ARTICLE_PROJECT")]
-        ArticleProject,
+        ARTICLE_PROJECT,
 
-        [Description("ARTICLE_BUG")]
-        ArticleBug,
+        ARTICLE_BUG,
 
-        [Description("MEDIA_BOOK")]
-        MediaBook,
+        MEDIA_BOOK,
+        
+        MEDIA_PHOTO,
 
-        [Description("MEDIA_PHOTO")]
-        MediaPhoto,
+        MEDIA_VIDEO,
 
-        [Description("MEDIA_VIDEO")]
-        MediaVideo,
-
-        [Description("MEDIA_MUSIC")]
-        MediaMusic
+        MEDIA_MUSIC
     }
 }

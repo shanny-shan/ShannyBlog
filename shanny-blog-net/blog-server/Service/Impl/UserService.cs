@@ -1,4 +1,5 @@
 using blog_common.Config;
+using blog_common.Constant;
 using blog_common.Context;
 using blog_common.Enums;
 using blog_common.Result;
@@ -31,9 +32,9 @@ namespace blog_server.Service.Impl
             bool existMobile = await _dbContext.Set<User>().AnyAsync(u => u.Mobile == registerDTO.Mobile);
 
             if (existUserId)
-                return Result<string>.Error("USER_ID_EXISTED");
+                return Result<string>.Error(ResultMsg.UserIdExisted);
             if (existMobile)
-                return Result<string>.Error("MOBILE_EXISTED");
+                return Result<string>.Error(ResultMsg.MobileExisted);
 
             User user = new User();
             MapRegisterToUser(registerDTO, user);
@@ -63,7 +64,7 @@ namespace blog_server.Service.Impl
             _dbContext.Set<UserDetails>().Add(detail);
             await _dbContext.SaveChangesAsync();
 
-            return Result<string>.Success("REGISTER_SUCCESS");
+            return Result<string>.Success(ResultMsg.RegisterSuccess);
         }
 
         public async Task<Result<LoginVO>> Login(LoginDTO loginDTO)
@@ -73,11 +74,11 @@ namespace blog_server.Service.Impl
 
             User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
-                return Result<LoginVO>.Error("ACCOUNT_NOT_FOUND");
+                return Result<LoginVO>.Error(ResultMsg.AccountNotFound);
 
             string md5Pwd = ComputeMd5(inputPwd);
             if (md5Pwd != user.Password)
-                return Result<LoginVO>.Error("PASSWORD_ERROR");
+                return Result<LoginVO>.Error(ResultMsg.PasswordError);
 
             Dictionary<string, object> claims = new();
             claims.Add("userId", userId);
@@ -100,11 +101,11 @@ namespace blog_server.Service.Impl
         {
             string userId = BaseContext.GetCurrentId();
             if (string.IsNullOrEmpty(userId))
-                return Result<UserInfoVO>.Error("USERINFO_IS_NULL");
+                return Result<UserInfoVO>.Error(ResultMsg.UserInfoIsNull);
 
             User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
-                return Result<UserInfoVO>.Error("USERINFO_IS_NULL");
+                return Result<UserInfoVO>.Error(ResultMsg.UserInfoIsNull);
 
             UserDetails? detail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == user.Uuid);
 
@@ -127,7 +128,7 @@ namespace blog_server.Service.Impl
         {
             string userId = BaseContext.GetCurrentId();
             if (string.IsNullOrEmpty(userId))
-                return Result<List<UserInfoVO>>.Error("LOGIN_ERROR");
+                return Result<List<UserInfoVO>>.Error(ResultMsg.LoginError);
 
             List<User> userList = await _dbContext.Set<User>().ToListAsync();
             List<UserDetails> detailList = await _dbContext.Set<UserDetails>().ToListAsync();
@@ -156,13 +157,13 @@ namespace blog_server.Service.Impl
         public async Task<Result<UserInfoVO>> UpdateUserInfo(UserInfoDTO userInfoDTO)
         {
             if (string.IsNullOrEmpty(userInfoDTO.UserId) || string.IsNullOrEmpty(userInfoDTO.Uuid))
-                return Result<UserInfoVO>.Error("UPDATE_FAIL");
+                return Result<UserInfoVO>.Error(ResultMsg.UpdateFail);
 
             User? dbUser = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Uuid == userInfoDTO.Uuid);
             UserDetails? dbDetail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == userInfoDTO.Uuid);
 
             if (dbUser == null || dbDetail == null)
-                return Result<UserInfoVO>.Error("UPDATE_FAIL");
+                return Result<UserInfoVO>.Error(ResultMsg.UpdateFail);
 
             MapUserInfoDtoToUser(userInfoDTO, dbUser);
             MapDetailDtoToDetail(userInfoDTO.UserDetails, dbDetail);
@@ -183,13 +184,13 @@ namespace blog_server.Service.Impl
                 LastLoginTime = dbUser.LastLoginTime,
                 UserDetails = dbDetail
             };
-            return Result<UserInfoVO>.Success(vo);
+            return Result<UserInfoVO>.Success(ResultMsg.UpdateSuccess, vo);
         }
 
         public async Task<Result<string>> DeleteUserByUuid(string uuid)
         {
             if (string.IsNullOrEmpty(uuid))
-                return Result<string>.Error("DELETE_FAIL");
+                return Result<string>.Error(ResultMsg.DeleteFail);
 
             User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Uuid == uuid);
             UserDetails? detail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == uuid);
@@ -200,7 +201,7 @@ namespace blog_server.Service.Impl
                 _dbContext.Set<UserDetails>().Remove(detail);
 
             await _dbContext.SaveChangesAsync();
-            return Result<string>.Success("DELETE_SUCCESS");
+            return Result<string>.Success(ResultMsg.DeleteSuccess);
         }
 
         #region 私有工具映射

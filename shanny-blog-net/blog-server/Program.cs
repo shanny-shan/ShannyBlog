@@ -5,19 +5,22 @@ Update-Database
 http://localhost:8080/swagger
 */
 using blog_common.Config;
+using blog_common.Constant;
 using blog_common.Result;
 using blog_db;
 using blog_server.Annotatin;
+using blog_server.Interceptor;
 using blog_server.Service;
 using blog_server.Service.Impl;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using System.Text;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +34,14 @@ builder.Services.AddDbContext<_DbContext>(options =>
 });
 
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("Jwt"));
+var jwtConfig = new JwtConfig();
+builder.Configuration.GetSection("Jwt").Bind(jwtConfig);
+builder.Services.AddSingleton(jwtConfig);
+
 builder.Services.Configure<AppConfig>(builder.Configuration.GetSection("App"));
+var appConfig = new AppConfig();
+builder.Configuration.GetSection("App").Bind(appConfig);
+builder.Services.AddSingleton(appConfig);
 
 // JWT
 var jwtSection = builder.Configuration.GetSection("Jwt");
@@ -45,6 +55,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(userSecretKey))
+        };
+        opt.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = 200;
+                context.Response.ContentType = "application/json";
+                var res = Result<string>.Error(ResultMsg.LoginError);
+                return context.Response.WriteAsJsonAsync(res);
+            }
         };
     });
 builder.Services.AddAuthorization();
@@ -84,7 +105,13 @@ builder.Services.AddControllers(options =>
     var mvcConfig = sp.GetRequiredService<WebMvcConfig>();
     mvcConfig.AddInterceptors(options);
     options.Filters.Add<GlobalExceptionFilter>();
+    options.Filters.Add<ModelValidateFilter>();
+})
+.AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
+
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -181,7 +208,6 @@ app.MapControllers();
 
 app.Run("http://localhost:8080");
 
-// Swagger外部文档过滤器
 public class ExternalDocsFilter : Swashbuckle.AspNetCore.SwaggerGen.IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext context)

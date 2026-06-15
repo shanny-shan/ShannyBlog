@@ -11,7 +11,7 @@
         public string Steam { get; set; } = string.Empty;
         public string Web { get; set; } = string.Empty;
         public string BiliBili { get; set; } = string.Empty;
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         public string Other { get; set; } = string.Empty;
     }
 }

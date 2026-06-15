@@ -1,3 +1,4 @@
+using blog_common.Constant;
 using blog_common.Result;
 using blog_db;
 using blog_db.Data;
@@ -57,20 +58,20 @@ namespace blog_server.Service.Impl
             await _dbContext.SaveChangesAsync();
 
             ToolVO vo = MapEntityToVo(entity);
-            return Result<ToolVO>.Success(vo);
+            return Result<ToolVO>.Success(ResultMsg.InsertSuccess, vo);
         }
 
         public async Task<Result<ToolVO>> UpdateTool(ToolDTO toolDTO)
         {
             if (toolDTO.Id <= 0)
             {
-                return Result<ToolVO>.Error("UPDATE_FAIL");
+                return Result<ToolVO>.Error(ResultMsg.UpdateFail);
             }
 
             var dbTool = await _dbContext.Set<Tool>().FindAsync(toolDTO.Id);
             if (dbTool == null)
             {
-                return Result<ToolVO>.Error("UPDATE_FAIL");
+                return Result<ToolVO>.Error(ResultMsg.UpdateFail);
             }
 
             MapDtoCoverEntity(toolDTO, dbTool);
@@ -78,7 +79,7 @@ namespace blog_server.Service.Impl
             await _dbContext.SaveChangesAsync();
 
             ToolVO vo = MapEntityToVo(dbTool);
-            return Result<ToolVO>.Success(vo);
+            return Result<ToolVO>.Success(ResultMsg.UpdateSuccess, vo);
         }
 
         public async Task<Result<string>> DeleteTool(long id)
@@ -89,7 +90,7 @@ namespace blog_server.Service.Impl
                 _dbContext.Set<Tool>().Remove(tool);
                 await _dbContext.SaveChangesAsync();
             }
-            return Result<string>.Success("DELETE_SUCCESS");
+            return Result<string>.Success(ResultMsg.DeleteSuccess);
         }
 
         #region 映射方法
@@ -116,6 +117,7 @@ namespace blog_server.Service.Impl
                 Id = source.Id > 0 ? source.Id : 0L,
                 Title = source.Title,
                 Content = source.Content,
+                Image = source.Image,
                 Href = source.Href,
                 Tags = source.Tags ?? new List<long>()
             };
@@ -127,6 +129,8 @@ namespace blog_server.Service.Impl
                 target.Title = dto.Title;
             if (!string.IsNullOrEmpty(dto.Content))
                 target.Content = dto.Content;
+            if (!string.IsNullOrEmpty(dto.Image))
+                target.Image = dto.Image;
             if (!string.IsNullOrEmpty(dto.Href))
                 target.Href = dto.Href;
             if (dto.Tags != null)

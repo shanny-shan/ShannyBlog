@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace blog_server.Controller
 {
     [ApiController]
-    [Route("/article")]
+    [Route("article")]
     [Tags("文章相关接口")]
     public class ArticleController : ControllerBase
     {
@@ -62,7 +62,7 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("type")]
         [ProducesResponseType(typeof(Result<List<ArticleVO>>), 200)]
-        public async Task<Result<List<ArticleVO>>> GetArticleByType(CategoryType type)
+        public async Task<Result<List<ArticleVO>>> GetArticleByType(string type)
         {
             try
             {

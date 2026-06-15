@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace blog_server.Controller
 {
     [ApiController]
-    [Route("/tool")]
+    [Route("tool")]
     [Tags("工具相关接口")]
     public class ToolController : ControllerBase
     {

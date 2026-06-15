@@ -1,13 +1,14 @@
 using blog_common.Config;
 using blog_common.Result;
 using blog_pojo.Vos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
 namespace blog_server.Controller
 {
     [ApiController]
-    [Route("/project")]
+    [Route("project")]
     [Tags("项目信息")]
     public class ProjectInfoController : ControllerBase
     {
@@ -24,6 +25,7 @@ namespace blog_server.Controller
         /// 获取项目信息
         /// </summary>
         [HttpGet("info")]
+        //[AllowAnonymous]
         [ProducesResponseType(typeof(Result<ProjectInfoVO>), 200)]
         public Result<ProjectInfoVO> Info()
         {

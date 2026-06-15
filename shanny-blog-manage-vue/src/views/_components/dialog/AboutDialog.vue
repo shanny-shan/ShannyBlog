@@ -20,7 +20,7 @@ const submitAbout = async (about) => {
     res = await aboutStore.addAbout(about)
   }
 
-  if (res?.data?.code == 'SUCCESS') {
+  if (res?.data?.code.toLowerCase() == 'success') {
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('about')
     await aboutStore.getAboutList()

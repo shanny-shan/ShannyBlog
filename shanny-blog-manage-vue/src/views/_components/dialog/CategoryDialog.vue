@@ -21,7 +21,7 @@ const submitCategory = async () => {
     res = await categoryStore.addCategory(categoryStore.categoryForm)
   }
 
-  if (res?.data?.code == 'SUCCESS') {
+  if (res?.data?.code.toLowerCase() == 'success') {
     toast.success(`${res.data.msg}`)
     adminStore.closeDialog('category')
     await categoryStore.getCategoryList()

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace blog_server.Controller
 {
     [ApiController]
-    [Route("/account")]
+    [Route("account")]
     [Tags("账户相关接口")]
     public class UserController : ControllerBase
     {
