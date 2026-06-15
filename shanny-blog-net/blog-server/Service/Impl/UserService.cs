@@ -1,37 +1,38 @@
+using blog_common.Config;
 using blog_common.Context;
 using blog_common.Enums;
 using blog_common.Result;
 using blog_common.Utils;
+using blog_db;
+using blog_db.Data;
 using blog_pojo.Dtos;
-using blog_pojo.Entities;
 using blog_pojo.Vos;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
-using blog_server.Mapper;
-using blog_common.Config;
 
 namespace blog_server.Service.Impl
 {
     public class UserService : IUserService
     {
-        private readonly UserMapper _userMapper;
+        private readonly _DbContext _dbContext;
         private readonly JwtConfig _jwtConfig;
 
-        public UserService(UserMapper userMapper, IOptions<JwtConfig> jwtConfig)
+        public UserService(_DbContext dbContext, IOptions<JwtConfig> jwtConfig)
         {
-            _userMapper = userMapper;
+            _dbContext = dbContext;
             _jwtConfig = jwtConfig.Value;
         }
 
-        public Result<string> Save(RegisterDTO registerDTO)
+        public async Task<Result<string>> Save(RegisterDTO registerDTO)
         {
-            var userByUserId = _userMapper.GetByUserId(registerDTO.UserId);
-            var userByMobile = _userMapper.GetByMobile(registerDTO.Mobile);
+            bool existUserId = await _dbContext.Set<User>().AnyAsync(u => u.UserId == registerDTO.UserId);
+            bool existMobile = await _dbContext.Set<User>().AnyAsync(u => u.Mobile == registerDTO.Mobile);
 
-            if (userByUserId != null)
+            if (existUserId)
                 return Result<string>.Error("USER_ID_EXISTED");
-            if (userByMobile != null)
+            if (existMobile)
                 return Result<string>.Error("MOBILE_EXISTED");
 
             User user = new User();
@@ -44,28 +45,33 @@ namespace blog_server.Service.Impl
             user.Status = UserStatus.Active;
             user.Type = UserType.User;
             user.LastLoginTime = DateTime.Now;
-
-            _userMapper.InsertUser(user);
+            user.CreateTime = DateTime.Now;
+            user.UpdateTime = DateTime.Now;
 
             UserDetails detail = new UserDetails();
             detail.Uuid = uuid;
             detail.Sex = UserSex.Unknown;
+            detail.CreateTime = DateTime.Now;
+            detail.UpdateTime = DateTime.Now;
 
             string src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
             Random rand = new Random();
             int num = rand.Next(1, 7);
             detail.Avatar = $"{src}{num}.jpg";
 
-            _userMapper.InsertUserDetail(detail);
+            _dbContext.Set<User>().Add(user);
+            _dbContext.Set<UserDetails>().Add(detail);
+            await _dbContext.SaveChangesAsync();
+
             return Result<string>.Success("REGISTER_SUCCESS");
         }
 
-        public Result<LoginVO> Login(LoginDTO loginDTO)
+        public async Task<Result<LoginVO>> Login(LoginDTO loginDTO)
         {
             string userId = loginDTO.UserId;
             string inputPwd = loginDTO.Password;
 
-            User user = _userMapper.GetByUserId(userId);
+            User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.UserId == userId);
             if (user == null)
                 return Result<LoginVO>.Error("ACCOUNT_NOT_FOUND");
 
@@ -84,19 +90,23 @@ namespace blog_server.Service.Impl
             };
 
             user.LastLoginTime = DateTime.Now;
-            _userMapper.UpdateUser(user);
+            user.UpdateTime = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
 
             return Result<LoginVO>.Success(vo);
         }
 
-        public Result<UserInfoVO> GetUserInfo()
+        public async Task<Result<UserInfoVO>> GetUserInfo()
         {
             string userId = BaseContext.GetCurrentId();
             if (string.IsNullOrEmpty(userId))
                 return Result<UserInfoVO>.Error("USERINFO_IS_NULL");
 
-            User user = _userMapper.GetByUserId(userId);
-            UserDetails detail = _userMapper.GetDetailByUuid(user.Uuid);
+            User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.UserId == userId);
+            if (user == null)
+                return Result<UserInfoVO>.Error("USERINFO_IS_NULL");
+
+            UserDetails? detail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == user.Uuid);
 
             UserInfoVO vo = new UserInfoVO
             {
@@ -113,14 +123,14 @@ namespace blog_server.Service.Impl
             return Result<UserInfoVO>.Success(vo);
         }
 
-        public Result<List<UserInfoVO>> GetUsers()
+        public async Task<Result<List<UserInfoVO>>> GetUsers()
         {
             string userId = BaseContext.GetCurrentId();
             if (string.IsNullOrEmpty(userId))
                 return Result<List<UserInfoVO>>.Error("LOGIN_ERROR");
 
-            List<User> userList = _userMapper.GetUsers();
-            List<UserDetails> detailList = _userMapper.GetUserDetails();
+            List<User> userList = await _dbContext.Set<User>().ToListAsync();
+            List<UserDetails> detailList = await _dbContext.Set<UserDetails>().ToListAsync();
             Dictionary<string, UserDetails> detailMap = detailList.ToDictionary(d => d.Uuid);
 
             List<UserInfoVO> voList = new();
@@ -143,34 +153,57 @@ namespace blog_server.Service.Impl
             return Result<List<UserInfoVO>>.Success(voList);
         }
 
-        public Result<UserInfoVO> UpdateUserInfo(UserInfoDTO userInfoDTO)
+        public async Task<Result<UserInfoVO>> UpdateUserInfo(UserInfoDTO userInfoDTO)
         {
-            if (string.IsNullOrEmpty(userInfoDTO.UserId))
+            if (string.IsNullOrEmpty(userInfoDTO.UserId) || string.IsNullOrEmpty(userInfoDTO.Uuid))
                 return Result<UserInfoVO>.Error("UPDATE_FAIL");
 
-            User user = new User();
-            MapUserInfoDtoToUser(userInfoDTO, user);
+            User? dbUser = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Uuid == userInfoDTO.Uuid);
+            UserDetails? dbDetail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == userInfoDTO.Uuid);
 
-            UserDetails detail = new UserDetails();
-            MapDetailDtoToDetail(userInfoDTO.UserDetails, detail);
+            if (dbUser == null || dbDetail == null)
+                return Result<UserInfoVO>.Error("UPDATE_FAIL");
 
-            _userMapper.UpdateUser(user);
-            _userMapper.UpdateUserDetail(detail);
+            MapUserInfoDtoToUser(userInfoDTO, dbUser);
+            MapDetailDtoToDetail(userInfoDTO.UserDetails, dbDetail);
+            dbUser.UpdateTime = DateTime.Now;
+            dbDetail.UpdateTime = DateTime.Now;
 
-            return Result<UserInfoVO>.Success();
+            await _dbContext.SaveChangesAsync();
+
+            UserInfoVO vo = new UserInfoVO
+            {
+                Uuid = dbUser.Uuid,
+                UserId = dbUser.UserId,
+                Mobile = dbUser.Mobile,
+                Status = dbUser.Status,
+                Type = dbUser.Type,
+                CreateTime = dbUser.CreateTime,
+                UpdateTime = dbUser.UpdateTime,
+                LastLoginTime = dbUser.LastLoginTime,
+                UserDetails = dbDetail
+            };
+            return Result<UserInfoVO>.Success(vo);
         }
 
-        public Result<string> DeleteUserByUuid(string uuid)
+        public async Task<Result<string>> DeleteUserByUuid(string uuid)
         {
             if (string.IsNullOrEmpty(uuid))
                 return Result<string>.Error("DELETE_FAIL");
 
-            _userMapper.DeleteUserByUuid(uuid);
-            _userMapper.DeleteInfoByUuid(uuid);
+            User? user = await _dbContext.Set<User>().FirstOrDefaultAsync(u => u.Uuid == uuid);
+            UserDetails? detail = await _dbContext.Set<UserDetails>().FirstOrDefaultAsync(d => d.Uuid == uuid);
+
+            if (user != null)
+                _dbContext.Set<User>().Remove(user);
+            if (detail != null)
+                _dbContext.Set<UserDetails>().Remove(detail);
+
+            await _dbContext.SaveChangesAsync();
             return Result<string>.Success("DELETE_SUCCESS");
         }
 
-        #region 工具私有方法
+        #region 私有工具映射
         private string ComputeMd5(string input)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input);
@@ -189,21 +222,25 @@ namespace blog_server.Service.Impl
 
         private void MapUserInfoDtoToUser(UserInfoDTO dto, User user)
         {
-            user.UserId = dto.UserId;
-            user.Mobile = dto.Mobile;
+            if (!string.IsNullOrEmpty(dto.UserId))
+                user.UserId = dto.UserId;
+            if (!string.IsNullOrEmpty(dto.Mobile))
+                user.Mobile = dto.Mobile;
             user.Status = dto.Status;
             user.Type = dto.Type;
-            user.Uuid = dto.Uuid;
         }
 
         private void MapDetailDtoToDetail(UserDetails dto, UserDetails detail)
         {
-            detail.Uuid = dto.Uuid;
-            detail.Avatar = dto.Avatar;
+            if (!string.IsNullOrEmpty(dto.Avatar))
+                detail.Avatar = dto.Avatar;
             detail.Sex = dto.Sex;
-            detail.Username = dto.Username;
-            detail.Birthday = dto.Birthday;
-            detail.Nickname = dto.Nickname;
+            if (!string.IsNullOrEmpty(dto.Username))
+                detail.Username = dto.Username;
+            if (!string.IsNullOrEmpty(dto.Nickname))
+                detail.Nickname = dto.Nickname;
+            if (dto.Birthday.HasValue)
+                detail.Birthday = dto.Birthday.Value;
         }
         #endregion
     }

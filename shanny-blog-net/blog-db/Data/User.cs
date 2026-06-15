@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace blog_pojo.Entities
+namespace blog_db.Data
 {
     [Table("users")]
     public class User

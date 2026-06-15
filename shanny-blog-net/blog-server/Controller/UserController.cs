@@ -25,14 +25,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("register")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> Register([FromBody] RegisterDTO registerDTO)
+        public async Task<Result<string>> Register([FromBody] RegisterDTO registerDTO)
         {
             try
             {
-                return _userService.Save(registerDTO);
+                return await _userService.Save(registerDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "用户注册异常");
                 return Result<string>.Error(e.Message);
             }
         }
@@ -42,14 +43,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("login")]
         [ProducesResponseType(typeof(Result<LoginVO>), 200)]
-        public Result<LoginVO> Login([FromBody] LoginDTO loginDTO)
+        public async Task<Result<LoginVO>> Login([FromBody] LoginDTO loginDTO)
         {
             try
             {
-                return _userService.Login(loginDTO);
+                return await _userService.Login(loginDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "用户登录异常");
                 return Result<LoginVO>.Error(e.Message);
             }
         }
@@ -59,14 +61,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("userinfo")]
         [ProducesResponseType(typeof(Result<UserInfoVO>), 200)]
-        public Result<UserInfoVO> GetUserInfo()
+        public async Task<Result<UserInfoVO>> GetUserInfo()
         {
             try
             {
-                return _userService.GetUserInfo();
+                return await _userService.GetUserInfo();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "获取当前用户信息异常");
                 return Result<UserInfoVO>.Error(e.Message);
             }
         }
@@ -76,14 +79,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("users")]
         [ProducesResponseType(typeof(Result<List<UserInfoVO>>), 200)]
-        public Result<List<UserInfoVO>> GetUsers()
+        public async Task<Result<List<UserInfoVO>>> GetUsers()
         {
             try
             {
-                return _userService.GetUsers();
+                return await _userService.GetUsers();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询全部用户异常");
                 return Result<List<UserInfoVO>>.Error(e.Message);
             }
         }
@@ -93,14 +97,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<UserInfoVO>), 200)]
-        public Result<UserInfoVO> UpdateUserInfo([FromBody] UserInfoDTO userInfoDTO)
+        public async Task<Result<UserInfoVO>> UpdateUserInfo([FromBody] UserInfoDTO userInfoDTO)
         {
             try
             {
-                return _userService.UpdateUserInfo(userInfoDTO);
+                return await _userService.UpdateUserInfo(userInfoDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改用户信息异常");
                 return Result<UserInfoVO>.Error(e.Message);
             }
         }
@@ -110,14 +115,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteUser(string uuid)
+        public async Task<Result<string>> DeleteUser(string uuid)
         {
             try
             {
-                return _userService.DeleteUserByUuid(uuid);
+                return await _userService.DeleteUserByUuid(uuid);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除用户异常");
                 return Result<string>.Error(e.Message);
             }
         }

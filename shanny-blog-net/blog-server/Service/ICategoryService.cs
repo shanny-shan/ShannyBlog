@@ -6,12 +6,9 @@ namespace blog_server.Service
 {
     public interface ICategoryService
     {
-        Result<List<CategoryVO>> GetCategories();
-
-        Result<CategoryVO> AddCategory(CategoryDTO categoryDTO);
-
-        Result<CategoryVO> UpdateCategory(CategoryDTO categoryDTO);
-
-        Result<string> DeleteCategoryById(long id);
+        Task<Result<List<CategoryVO>>> GetCategories();
+        Task<Result<CategoryVO>> AddCategory(CategoryDTO categoryDTO);
+        Task<Result<CategoryVO>> UpdateCategory(CategoryDTO categoryDTO);
+        Task<Result<string>> DeleteCategoryById(long id);
     }
 }

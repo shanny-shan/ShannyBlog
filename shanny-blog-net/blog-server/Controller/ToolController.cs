@@ -1,7 +1,7 @@
 using blog_common.Result;
 using blog_pojo.Dtos;
 using blog_pojo.Vos;
-using blog_server.Service.Impl;
+using blog_server.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace blog_server.Controller
@@ -11,10 +11,10 @@ namespace blog_server.Controller
     [Tags("工具相关接口")]
     public class ToolController : ControllerBase
     {
-        private readonly ToolService _toolService;
+        private readonly IToolService _toolService;
         private readonly ILogger<ToolController> _log;
 
-        public ToolController(ToolService toolService, ILogger<ToolController> log)
+        public ToolController(IToolService toolService, ILogger<ToolController> log)
         {
             _toolService = toolService;
             _log = log;
@@ -25,14 +25,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("all")]
         [ProducesResponseType(typeof(Result<List<ToolVO>>), 200)]
-        public Result<List<ToolVO>> GetTools()
+        public async Task<Result<List<ToolVO>>> GetTools()
         {
             try
             {
-                return _toolService.GetTools();
+                return await _toolService.GetTools();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询全部工具异常");
                 return Result<List<ToolVO>>.Error(e.Message);
             }
         }
@@ -42,14 +43,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("add")]
         [ProducesResponseType(typeof(Result<ToolVO>), 200)]
-        public Result<ToolVO> AddTool([FromBody] ToolDTO toolDTO)
+        public async Task<Result<ToolVO>> AddTool([FromBody] ToolDTO toolDTO)
         {
             try
             {
-                return _toolService.AddTool(toolDTO);
+                return await _toolService.AddTool(toolDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "新增工具异常");
                 return Result<ToolVO>.Error(e.Message);
             }
         }
@@ -59,14 +61,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<ToolVO>), 200)]
-        public Result<ToolVO> UpdateTool([FromBody] ToolDTO toolDTO)
+        public async Task<Result<ToolVO>> UpdateTool([FromBody] ToolDTO toolDTO)
         {
             try
             {
-                return _toolService.UpdateTool(toolDTO);
+                return await _toolService.UpdateTool(toolDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改工具异常");
                 return Result<ToolVO>.Error(e.Message);
             }
         }
@@ -76,14 +79,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteTool(long id)
+        public async Task<Result<string>> DeleteTool(long id)
         {
             try
             {
-                return _toolService.DeleteTool(id);
+                return await _toolService.DeleteTool(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除工具异常");
                 return Result<string>.Error(e.Message);
             }
         }

@@ -6,14 +6,10 @@ namespace blog_server.Service
 {
     public interface ITagService
     {
-        Result<List<TagVO>> GetTags();
-
-        Result<TagVO> AddTag(TagDTO tagDTO);
-
-        Result<TagVO> GetTagsById(long id);
-
-        Result<TagVO> UpdateTag(TagDTO tagDTO);
-
-        Result<string> DeleteTagById(long id);
+        Task<Result<List<TagVO>>> GetTags();
+        Task<Result<TagVO>> GetTagsById(long id);
+        Task<Result<TagVO>> AddTag(TagDTO tagDTO);
+        Task<Result<TagVO>> UpdateTag(TagDTO tagDTO);
+        Task<Result<string>> DeleteTagById(long id);
     }
 }

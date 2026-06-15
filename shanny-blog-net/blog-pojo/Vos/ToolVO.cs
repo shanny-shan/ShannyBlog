@@ -1,4 +1,4 @@
-﻿using blog_pojo.Entities;
+﻿using blog_db.Data;
 
 namespace blog_pojo.Vos
 {

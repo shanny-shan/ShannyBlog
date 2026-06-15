@@ -10,7 +10,7 @@ namespace blog_server.Controller
     [ApiController]
     [Route("/article")]
     [Tags("文章相关接口")]
-    public class ArticleController
+    public class ArticleController : ControllerBase
     {
         private readonly IArticleService _articleService;
         private readonly ILogger<ArticleController> _log;
@@ -22,86 +22,91 @@ namespace blog_server.Controller
         }
 
         /// <summary>
-        /// 文章获取
+        /// 文章获取-最新
         /// </summary>
         [HttpGet("recent")]
         [ProducesResponseType(typeof(Result<List<ArticleVO>>), 200)]
-        public Result<List<ArticleVO>> GetArticlesByRecent()
+        public async Task<Result<List<ArticleVO>>> GetArticlesByRecent()
         {
             try
             {
-                return _articleService.GetArticlesByRecent();
+                return await _articleService.GetArticlesByRecent();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询最新文章异常");
                 return Result<List<ArticleVO>>.Error(e.Message);
             }
         }
 
         /// <summary>
-        /// 文章获取
+        /// 文章获取-浏览量排行
         /// </summary>
         [HttpGet("views")]
         [ProducesResponseType(typeof(Result<List<ArticleVO>>), 200)]
-        public Result<List<ArticleVO>> GetArticlesByView()
+        public async Task<Result<List<ArticleVO>>> GetArticlesByView()
         {
             try
             {
-                return _articleService.GetArticlesByView();
+                return await _articleService.GetArticlesByView();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询高浏览文章异常");
                 return Result<List<ArticleVO>>.Error(e.Message);
             }
         }
 
         /// <summary>
-        /// 文章获取
+        /// 文章获取-按分类
         /// </summary>
         [HttpGet("type")]
         [ProducesResponseType(typeof(Result<List<ArticleVO>>), 200)]
-        public Result<List<ArticleVO>> GetArticleByType(CategoryType type)
+        public async Task<Result<List<ArticleVO>>> GetArticleByType(CategoryType type)
         {
             try
             {
-                return _articleService.GetArticlesByType(type);
+                return await _articleService.GetArticlesByType(type);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "按分类查询文章异常");
                 return Result<List<ArticleVO>>.Error(e.Message);
             }
         }
 
         /// <summary>
-        /// 文章获取
+        /// 文章获取-按标签
         /// </summary>
         [HttpGet("tag")]
         [ProducesResponseType(typeof(Result<List<ArticleVO>>), 200)]
-        public Result<List<ArticleVO>> GetArticleByTag(long tagId)
+        public async Task<Result<List<ArticleVO>>> GetArticleByTag(long tagId)
         {
             try
             {
-                return _articleService.GetArticleByTag(tagId);
+                return await _articleService.GetArticleByTag(tagId);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "按标签查询文章异常");
                 return Result<List<ArticleVO>>.Error(e.Message);
             }
         }
 
         /// <summary>
-        /// 文章获取
+        /// 文章获取-单条详情
         /// </summary>
         [HttpGet("id")]
         [ProducesResponseType(typeof(Result<ArticleVO>), 200)]
-        public Result<ArticleVO> GetArticleById(long id)
+        public async Task<Result<ArticleVO>> GetArticleById(long id)
         {
             try
             {
-                return _articleService.GetArticleById(id);
+                return await _articleService.GetArticleById(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询文章详情异常");
                 return Result<ArticleVO>.Error(e.Message);
             }
         }
@@ -111,14 +116,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("add")]
         [ProducesResponseType(typeof(Result<ArticleVO>), 200)]
-        public Result<ArticleVO> AddArticle([FromBody] ArticleDTO articleDTO)
+        public async Task<Result<ArticleVO>> AddArticle([FromBody] ArticleDTO articleDTO)
         {
             try
             {
-                return _articleService.AddArticle(articleDTO);
+                return await _articleService.AddArticle(articleDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "新增文章异常");
                 return Result<ArticleVO>.Error(e.Message);
             }
         }
@@ -128,14 +134,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<ArticleVO>), 200)]
-        public Result<ArticleVO> UpdateArticle([FromBody] ArticleDTO articleDTO)
+        public async Task<Result<ArticleVO>> UpdateArticle([FromBody] ArticleDTO articleDTO)
         {
             try
             {
-                return _articleService.UpdateArticle(articleDTO);
+                return await _articleService.UpdateArticle(articleDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改文章异常");
                 return Result<ArticleVO>.Error(e.Message);
             }
         }
@@ -145,14 +152,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteArticle(long id)
+        public async Task<Result<string>> DeleteArticle(long id)
         {
             try
             {
-                return _articleService.DeleteArticle(id);
+                return await _articleService.DeleteArticle(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除文章异常");
                 return Result<string>.Error(e.Message);
             }
         }

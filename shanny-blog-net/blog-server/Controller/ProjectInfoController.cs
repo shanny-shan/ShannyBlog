@@ -2,10 +2,10 @@ using blog_common.Config;
 using blog_common.Result;
 using blog_pojo.Vos;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace blog_server.Controller
 {
-
     [ApiController]
     [Route("/project")]
     [Tags("项目信息")]
@@ -27,15 +27,25 @@ namespace blog_server.Controller
         [ProducesResponseType(typeof(Result<ProjectInfoVO>), 200)]
         public Result<ProjectInfoVO> Info()
         {
-            var vo = new ProjectInfoVO
+            try
             {
-                Name = _appConfig.Name,
-                Description = _appConfig.Description,
-                Owner = _appConfig.Owner,
-                Version = _appConfig.Version,
-                BuildTime = _appConfig.BuildTime
-            };
-            return Result<ProjectInfoVO>.Success(vo);
+                var asmVer = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3);
+
+                var vo = new ProjectInfoVO
+                {
+                    Name = _appConfig.Name,
+                    Description = _appConfig.Description,
+                    Owner = _appConfig.Owner,
+                    Version = asmVer ?? "1.0.0",
+                    BuildTime = _appConfig.BuildTime,
+                };
+                return Result<ProjectInfoVO>.Success(vo);
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "读取项目配置信息异常");
+                return Result<ProjectInfoVO>.Error(e.Message);
+            }
         }
     }
 }

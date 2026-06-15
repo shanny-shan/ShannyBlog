@@ -1,12 +1,11 @@
 ﻿using blog_common.Enums;
-using blog_pojo.Converters;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace blog_pojo.Entities
+namespace blog_db.Data
 {
-    [Table("articles")]
-    public class Article
+    [Table("medias")]
+    public class Media
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,19 +17,16 @@ namespace blog_pojo.Entities
         [Column("title")]
         public string Title { get; set; } = string.Empty;
 
-        [Column("content", TypeName = "TEXT")]
-        [Required]
+        [MaxLength(300)]
+        [Column("content")]
         public string Content { get; set; } = string.Empty;
-
-        [Column("memo", TypeName = "TEXT")]
-        [Required]
-        public string Memo { get; set; } = string.Empty;
 
         [MaxLength(300)]
         [Column("image")]
         public string Image { get; set; } = string.Empty;
 
         [MaxLength(300)]
+        [Required]
         [Column("href")]
         public string Href { get; set; } = string.Empty;
 
@@ -39,18 +35,7 @@ namespace blog_pojo.Entities
 
         [Required]
         [Column("type")]
-        public CategoryType Type { get; set; }
-
-        [Column("categoryId")]
-        public long CategoryId { get; set; }
-
-        [Required]
-        [Column("timelines")]
-        public List<long> Timelines { get; set; } = new();
-
-        [Required]
-        [Column("views")]
-        public int Views { get; set; } = 0;
+        public MediaType Type { get; set; }
 
         [Required]
         [Column("published")]

@@ -1,25 +1,24 @@
 using blog_common.Result;
+using blog_db;
+using blog_db.Data;
 using blog_pojo.Dtos;
-using blog_pojo.Entities;
 using blog_pojo.Vos;
-using blog_server.Mapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace blog_server.Service.Impl
 {
     public class ToolService : IToolService
     {
-        private readonly ToolMapper _toolMapper;
-        private readonly TagMapper _tagMapper;
+        private readonly _DbContext _dbContext;
 
-        public ToolService(ToolMapper toolMapper, TagMapper tagMapper)
+        public ToolService(_DbContext dbContext)
         {
-            _toolMapper = toolMapper;
-            _tagMapper = tagMapper;
+            _dbContext = dbContext;
         }
 
-        public Result<List<ToolVO>> GetTools()
+        public async Task<Result<List<ToolVO>>> GetTools()
         {
-            List<Tool> toolList = _toolMapper.GetAll();
+            var toolList = await _dbContext.Set<Tool>().ToListAsync();
             List<ToolVO> voList = new List<ToolVO>();
 
             foreach (var tool in toolList)
@@ -27,16 +26,13 @@ namespace blog_server.Service.Impl
                 ToolVO vo = MapEntityToVo(tool);
                 vo.TagList = new List<Tag>();
 
-                if (tool.Tags != null && tool.Tags.Count > 0)
+                if (tool.Tags != null && tool.Tags.Any())
                 {
-                    foreach (long tagId in tool.Tags)
-                    {
-                        Tag tag = _tagMapper.GetById(tagId);
-                        if (tag != null)
-                        {
-                            vo.TagList.Add(tag);
-                        }
-                    }
+                    var tagIds = tool.Tags;
+                    var tagDataList = await _dbContext.Set<Tag>()
+                        .Where(t => tagIds.Contains(t.Id))
+                        .ToListAsync();
+                    vo.TagList = tagDataList;
                 }
                 voList.Add(vo);
             }
@@ -44,7 +40,7 @@ namespace blog_server.Service.Impl
             return Result<List<ToolVO>>.Success(voList);
         }
 
-        public Result<ToolVO> AddTool(ToolDTO toolDTO)
+        public async Task<Result<ToolVO>> AddTool(ToolDTO toolDTO)
         {
             Tool entity = MapDtoToEntity(toolDTO);
 
@@ -53,32 +49,50 @@ namespace blog_server.Service.Impl
             int randomNum = rand.Next(1, 7);
             entity.Image = $"{src}{randomNum}.jpg";
 
-            _toolMapper.InsertTool(entity);
-            ToolVO vo = MapEntityToVo(entity);
+            entity.CreateTime = DateTime.Now;
+            entity.UpdateTime = DateTime.Now;
+            entity.Published = false;
 
+            _dbContext.Set<Tool>().Add(entity);
+            await _dbContext.SaveChangesAsync();
+
+            ToolVO vo = MapEntityToVo(entity);
             return Result<ToolVO>.Success(vo);
         }
 
-        public Result<ToolVO> UpdateTool(ToolDTO toolDTO)
+        public async Task<Result<ToolVO>> UpdateTool(ToolDTO toolDTO)
         {
-            if (toolDTO.Id == null)
+            if (toolDTO.Id <= 0)
             {
                 return Result<ToolVO>.Error("UPDATE_FAIL");
             }
 
-            Tool entity = MapDtoToEntity(toolDTO);
-            _toolMapper.UpdateTool(entity);
-            ToolVO vo = MapEntityToVo(entity);
+            var dbTool = await _dbContext.Set<Tool>().FindAsync(toolDTO.Id);
+            if (dbTool == null)
+            {
+                return Result<ToolVO>.Error("UPDATE_FAIL");
+            }
 
+            MapDtoCoverEntity(toolDTO, dbTool);
+            dbTool.UpdateTime = DateTime.Now;
+            await _dbContext.SaveChangesAsync();
+
+            ToolVO vo = MapEntityToVo(dbTool);
             return Result<ToolVO>.Success(vo);
         }
 
-        public Result<string> DeleteTool(long id)
+        public async Task<Result<string>> DeleteTool(long id)
         {
-            _toolMapper.DeleteById(id);
+            var tool = await _dbContext.Set<Tool>().FindAsync(id);
+            if (tool != null)
+            {
+                _dbContext.Set<Tool>().Remove(tool);
+                await _dbContext.SaveChangesAsync();
+            }
             return Result<string>.Success("DELETE_SUCCESS");
         }
 
+        #region 映射方法
         private ToolVO MapEntityToVo(Tool source)
         {
             return new ToolVO
@@ -99,12 +113,25 @@ namespace blog_server.Service.Impl
         {
             return new Tool
             {
-                Id = source.Id,
+                Id = source.Id > 0 ? source.Id : 0L,
                 Title = source.Title,
                 Content = source.Content,
                 Href = source.Href,
-                Tags = source.Tags,
+                Tags = source.Tags ?? new List<long>()
             };
         }
+
+        private void MapDtoCoverEntity(ToolDTO dto, Tool target)
+        {
+            if (!string.IsNullOrEmpty(dto.Title))
+                target.Title = dto.Title;
+            if (!string.IsNullOrEmpty(dto.Content))
+                target.Content = dto.Content;
+            if (!string.IsNullOrEmpty(dto.Href))
+                target.Href = dto.Href;
+            if (dto.Tags != null)
+                target.Tags = dto.Tags;
+        }
+        #endregion
     }
 }

@@ -1,123 +1,135 @@
 using blog_common.Enums;
 using blog_common.Result;
+using blog_db;
+using blog_db.Data;
 using blog_pojo.Dtos;
-using blog_pojo.Entities;
 using blog_pojo.Vos;
-using blog_server.Mapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace blog_server.Service.Impl
 {
     public class ArticleService : IArticleService
     {
-        private readonly ArticleMapper _articleMapper;
-        private readonly TagMapper _tagMapper;
-        private readonly CategoryMapper _categoryMapper;
+        private readonly _DbContext _dbContext;
 
-        public ArticleService(ArticleMapper articleMapper, TagMapper tagMapper, CategoryMapper categoryMapper)
+        public ArticleService(_DbContext dbContext)
         {
-            _articleMapper = articleMapper;
-            _tagMapper = tagMapper;
-            _categoryMapper = categoryMapper;
+            _dbContext = dbContext;
         }
 
-        public Result<List<ArticleVO>> GetArticlesByRecent()
+        public async Task<Result<List<ArticleVO>>> GetArticlesByRecent()
         {
-            List<Article> articles = _articleMapper.GetByRecent();
-            if (articles == null || articles.Count == 0)
-            {
-                return Result<List<ArticleVO>>.Success(new List<ArticleVO>());
-            }
+            var articles = await _dbContext.Set<Article>()
+                .OrderByDescending(a => a.UpdateTime)
+                .Take(5)
+                .ToListAsync();
 
-            List<ArticleVO> voList = new();
-            foreach (var item in articles)
-            {
-                voList.Add(MapArticleToVO(item));
-            }
+            var voList = articles.Select(x => MapArticleToVO(x)).ToList();
+
             return Result<List<ArticleVO>>.Success(voList);
         }
 
-        public Result<List<ArticleVO>> GetArticlesByType(CategoryType type)
+        public async Task<Result<List<ArticleVO>>> GetArticlesByType(CategoryType type)
         {
-            List<Article> articles = _articleMapper.GetByType(type);
-            List<ArticleVO> voList = new();
-            foreach (var item in articles)
-            {
-                voList.Add(MapArticleToVO(item));
-            }
+            var articles = await _dbContext.Set<Article>()
+                .Where(a => a.Type == type)
+                .ToListAsync();
+
+            var voList = articles.Select(x => MapArticleToVO(x)).ToList();
+
             return Result<List<ArticleVO>>.Success(voList);
         }
 
-        public Result<List<ArticleVO>> GetArticleByTag(long tagId)
+        public async Task<Result<List<ArticleVO>>> GetArticleByTag(long tagId)
         {
-            List<Article> articles = _articleMapper.GetByTag(tagId);
-            List<ArticleVO> voList = new();
-            foreach (var item in articles)
-            {
-                voList.Add(MapArticleToVO(item));
-            }
+            // EF自带集合包含判断，不用JSON模糊匹配
+            var articles = await _dbContext.Set<Article>()
+                .Where(a => a.Tags.Contains(tagId))
+                .ToListAsync();
+
+            var voList = articles.Select(x => MapArticleToVO(x)).ToList();
+
             return Result<List<ArticleVO>>.Success(voList);
         }
 
-        public Result<ArticleVO> GetArticleById(long id)
+        public async Task<Result<ArticleVO>> GetArticleById(long id)
         {
-            Article article = _articleMapper.GetById(id);
-            article.Views += 1;
-            _articleMapper.UpdateArticleViews(article);
+            var article = await _dbContext.Set<Article>().FindAsync(id);
+            if (article == null)
+                return Result<ArticleVO>.Error("NOT_FOUND");
 
-            ArticleVO vo = MapArticleToVO(article, false);
+            // 阅读量+1
+            article.Views++;
+            await _dbContext.SaveChangesAsync();
+
+            var vo = MapArticleToVO(article, false);
             return Result<ArticleVO>.Success(vo);
         }
 
-        public Result<ArticleVO> AddArticle(ArticleDTO articleDTO)
+        public async Task<Result<ArticleVO>> AddArticle(ArticleDTO articleDTO)
         {
-            Article article = MapDtoToEntity(articleDTO);
+            var article = MapDtoToEntity(articleDTO);
 
+            // 随机封面图
             string src = "https://beijing-files.oss-cn-beijing.aliyuncs.com/shanny-blog/images/";
             Random rand = new Random();
             int num = rand.Next(1, 7);
             article.Image = $"{src}{num}.jpg";
             article.Href = $"{src}5.jpg";
 
-            _articleMapper.InsertArticle(article);
-            ArticleVO vo = MapArticleToVO(article, false);
+            article.CreateTime = DateTime.Now;
+            article.UpdateTime = DateTime.Now;
+            article.Views = 0;
+
+            _dbContext.Set<Article>().Add(article);
+            await _dbContext.SaveChangesAsync();
+
+            var vo = MapArticleToVO(article, false);
             return Result<ArticleVO>.Success(vo);
         }
 
-        public Result<ArticleVO> UpdateArticle(ArticleDTO articleDTO)
+        public async Task<Result<ArticleVO>> UpdateArticle(ArticleDTO articleDTO)
         {
-            if (articleDTO.Id == null)
-            {
+            if (articleDTO.Id <= 0)
                 return Result<ArticleVO>.Error("UPDATE_FAIL");
-            }
-            Article article = MapDtoToEntity(articleDTO);
-            _articleMapper.UpdateArticle(article);
-            ArticleVO vo = MapArticleToVO(article, false);
+
+            var dbArticle = await _dbContext.Set<Article>().FindAsync(articleDTO.Id);
+            if (dbArticle == null)
+                return Result<ArticleVO>.Error("UPDATE_FAIL");
+
+            MapDtoToEntity(articleDTO, dbArticle);
+            dbArticle.UpdateTime = DateTime.Now;
+
+            await _dbContext.SaveChangesAsync();
+
+            var vo = MapArticleToVO(dbArticle, false);
             return Result<ArticleVO>.Success(vo);
         }
 
-        public Result<string> DeleteArticle(long id)
+        public async Task<Result<string>> DeleteArticle(long id)
         {
-            _articleMapper.DeleteById(id);
+            var article = await _dbContext.Set<Article>().FindAsync(id);
+            if (article != null)
+            {
+                _dbContext.Set<Article>().Remove(article);
+                await _dbContext.SaveChangesAsync();
+            }
             return Result<string>.Success("DELETE_SUCCESS");
         }
 
-        public Result<List<ArticleVO>> GetArticlesByView()
+        public async Task<Result<List<ArticleVO>>> GetArticlesByView()
         {
-            List<Article> articles = _articleMapper.GetByView();
-            if (articles == null || articles.Count == 0)
-            {
-                return Result<List<ArticleVO>>.Success(new List<ArticleVO>());
-            }
+            var articles = await _dbContext.Set<Article>()
+                .OrderByDescending(a => a.Views)
+                .Take(5)
+                .ToListAsync();
 
-            List<ArticleVO> voList = new();
-            foreach (var item in articles)
-            {
-                voList.Add(MapArticleToVO(item));
-            }
+            var voList = articles.Select(x => MapArticleToVO(x)).ToList();
+
             return Result<List<ArticleVO>>.Success(voList);
         }
 
-        #region 映射工具方法
+        #region 映射方法（改造：查询Tag、Category走DbContext，不再调用Mapper）
         private ArticleVO MapArticleToVO(Article article, bool fillTagCategory = true)
         {
             ArticleVO vo = new ArticleVO();
@@ -133,40 +145,52 @@ namespace blog_server.Service.Impl
             if (!fillTagCategory)
                 return vo;
 
+            // 填充Tag列表
             vo.TagList = new List<Tag>();
-            if (article.Tags != null && article.Tags.Count > 0)
+            if (article.Tags != null && article.Tags.Any())
             {
-                foreach (long tid in article.Tags)
-                {
-                    Tag tag = _tagMapper.GetById(tid);
-                    if (tag != null)
-                        vo.TagList.Add(tag);
-                }
+                var tagIds = article.Tags;
+                var tagList = _dbContext.Set<Tag>().Where(t => tagIds.Contains(t.Id)).ToList();
+                vo.TagList = tagList;
             }
 
-            Category category = _categoryMapper.GetById(article.CategoryId);
-            if (category != null)
+            // 填充分类
+            if (article.CategoryId > 0)
             {
-                CategoryVO cateVo = new CategoryVO();
-                cateVo.Id = category.Id;
-                cateVo.Name = category.Name;
-                cateVo.Type = category.Type;
-                vo.Category = cateVo;
+                var category = _dbContext.Set<Category>().Find(article.CategoryId);
+                if (category != null)
+                {
+                    CategoryVO cateVo = new CategoryVO
+                    {
+                        Id = category.Id,
+                        Name = category.Name,
+                        Type = category.Type
+                    };
+                    vo.Category = cateVo;
+                }
             }
             return vo;
+        }
+
+        private void MapDtoToEntity(ArticleDTO dto, Article target)
+        {
+            if (dto.Title != null) target.Title = dto.Title;
+            if (dto.Content != null) target.Content = dto.Content;
+            if (dto.CategoryId > 0) target.CategoryId = dto.CategoryId;
+            if (dto.Tags != null) target.Tags = dto.Tags;
+            if (dto.Timelines != null) target.Timelines = dto.Timelines;
+            if (dto.Memo != null) target.Memo = dto.Memo;
+            if (dto.Published) target.Published = dto.Published;
+            if (dto.Type > 0) target.Type = dto.Type;
         }
 
         private Article MapDtoToEntity(ArticleDTO dto)
         {
             Article entity = new Article();
+            MapDtoToEntity(dto, entity);
             entity.Id = dto.Id;
-            entity.Title = dto.Title;
-            entity.Content = dto.Content;
-            entity.CategoryId = dto.CategoryId;
-            entity.Tags = dto.Tags;
-            entity.Timelines = dto.Timelines;
             return entity;
         }
-    }
         #endregion
+    }
 }

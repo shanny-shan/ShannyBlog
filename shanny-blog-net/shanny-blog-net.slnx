@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="blog-common/blog-common.csproj" Id="cebb869f-f491-4705-afe9-9e2bb966229c" />
+  <Project Path="blog-db/blog-db.csproj" Id="bf12510f-0b74-46b9-b67a-12a65c2c2f6a" />
   <Project Path="blog-pojo/blog-pojo.csproj" Id="dafaf627-3fa2-42e2-b86f-9b1cfa689fa6" />
   <Project Path="blog-server/blog-server.csproj" />
 </Solution>

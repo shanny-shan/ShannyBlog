@@ -1,70 +1,81 @@
 using blog_common.Result;
+using blog_db;
+using blog_db.Data;
 using blog_pojo.Dtos;
-using blog_pojo.Entities;
 using blog_pojo.Vos;
-using blog_server.Mapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace blog_server.Service.Impl
 {
     public class TagService : ITagService
     {
-        private readonly TagMapper _tagMapper;
+        private readonly _DbContext _dbContext;
 
-        public TagService(TagMapper tagMapper)
+        public TagService(_DbContext dbContext)
         {
-            _tagMapper = tagMapper;
+            _dbContext = dbContext;
         }
 
-        public Result<List<TagVO>> GetTags()
+        public async Task<Result<List<TagVO>>> GetTags()
         {
-            List<Tag> tagList = _tagMapper.GetAll();
-            List<TagVO> voList = new List<TagVO>();
-            foreach (var tag in tagList)
-            {
-                voList.Add(MapTagToVo(tag));
-            }
+            var tagList = await _dbContext.Set<Tag>().ToListAsync();
+            var voList = tagList.Select(x => MapTagToVo(x)).ToList();
             return Result<List<TagVO>>.Success(voList);
         }
 
-        public Result<TagVO> GetTagsById(long id)
+        public async Task<Result<TagVO>> GetTagsById(long id)
         {
-            Tag tag = _tagMapper.GetById(id);
+            var tag = await _dbContext.Set<Tag>().FindAsync(id);
+            if (tag == null)
+                return Result<TagVO>.Error("NOT_FOUND");
             TagVO vo = MapTagToVo(tag);
             return Result<TagVO>.Success(vo);
         }
 
-        public Result<TagVO> AddTag(TagDTO tagDTO)
+        public async Task<Result<TagVO>> AddTag(TagDTO tagDTO)
         {
             Tag tag = MapDtoToEntity(tagDTO);
-            _tagMapper.InsertTag(tag);
+            _dbContext.Set<Tag>().Add(tag);
+            await _dbContext.SaveChangesAsync();
             TagVO vo = MapTagToVo(tag);
             return Result<TagVO>.Success(vo);
         }
 
-        public Result<TagVO> UpdateTag(TagDTO tagDTO)
+        public async Task<Result<TagVO>> UpdateTag(TagDTO tagDTO)
         {
-            if (tagDTO.Id == null)
-            {
+            if (tagDTO.Id <= 0)
                 return Result<TagVO>.Error("UPDATE_FAIL");
-            }
-            Tag tag = MapDtoToEntity(tagDTO);
-            _tagMapper.UpdateTag(tag);
-            TagVO vo = MapTagToVo(tag);
+
+            var dbTag = await _dbContext.Set<Tag>().FindAsync(tagDTO.Id);
+            if (dbTag == null)
+                return Result<TagVO>.Error("UPDATE_FAIL");
+
+            MapDtoCoverEntity(tagDTO, dbTag);
+            await _dbContext.SaveChangesAsync();
+
+            TagVO vo = MapTagToVo(dbTag);
             return Result<TagVO>.Success(vo);
         }
 
-        public Result<string> DeleteTagById(long id)
+        public async Task<Result<string>> DeleteTagById(long id)
         {
-            _tagMapper.DeleteById(id);
+            var tag = await _dbContext.Set<Tag>().FindAsync(id);
+            if (tag != null)
+            {
+                _dbContext.Set<Tag>().Remove(tag);
+                await _dbContext.SaveChangesAsync();
+            }
             return Result<string>.Success("DELETE_SUCCESS");
         }
 
+        #region 映射方法
         private TagVO MapTagToVo(Tag source)
         {
             return new TagVO
             {
                 Id = source.Id,
-                Name = source.Name
+                Name = source.Name,
+                NameEn = source.NameEn
             };
         }
 
@@ -72,9 +83,19 @@ namespace blog_server.Service.Impl
         {
             return new Tag
             {
-                Id = source.Id,
-                Name = source.Name
+                Id = source.Id > 0 ? source.Id : 0L,
+                Name = source.Name,
+                NameEn = source.NameEn
             };
         }
+
+        private void MapDtoCoverEntity(TagDTO dto, Tag target)
+        {
+            if (!string.IsNullOrEmpty(dto.Name))
+                target.Name = dto.Name;
+            if (!string.IsNullOrEmpty(dto.NameEn))
+                target.NameEn = dto.NameEn;
+        }
+        #endregion
     }
 }

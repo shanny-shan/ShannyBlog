@@ -7,20 +7,20 @@ namespace blog_server.Service
 {
     public interface IArticleService
     {
-        Result<ArticleVO> AddArticle(ArticleDTO articleDTO);
+        Task<Result<ArticleVO>> AddArticle(ArticleDTO articleDTO);
 
-        Result<List<ArticleVO>> GetArticlesByRecent();
+        Task<Result<List<ArticleVO>>> GetArticlesByRecent();
 
-        Result<List<ArticleVO>> GetArticlesByType(CategoryType type);
+        Task<Result<List<ArticleVO>>> GetArticlesByType(CategoryType type);
 
-        Result<ArticleVO> GetArticleById(long id);
+        Task<Result<ArticleVO>> GetArticleById(long id);
 
-        Result<ArticleVO> UpdateArticle(ArticleDTO articleDTO);
+        Task<Result<ArticleVO>> UpdateArticle(ArticleDTO articleDTO);
 
-        Result<string> DeleteArticle(long id);
+        Task<Result<string>> DeleteArticle(long id);
 
-        Result<List<ArticleVO>> GetArticlesByView();
+        Task<Result<List<ArticleVO>>> GetArticlesByView();
 
-        Result<List<ArticleVO>> GetArticleByTag(long tagId);
+        Task<Result<List<ArticleVO>>> GetArticleByTag(long tagId);
     }
 }

@@ -1,63 +1,71 @@
 using blog_common.Result;
+using blog_db;
+using blog_db.Data;
 using blog_pojo.Dtos;
-using blog_pojo.Entities;
 using blog_pojo.Vos;
-using blog_server.Mapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace blog_server.Service.Impl
 {
     public class CategoryService : ICategoryService
     {
-        private readonly CategoryMapper _categoryMapper;
+        private readonly _DbContext _dbContext;
 
-        public CategoryService(CategoryMapper categoryMapper)
+        public CategoryService(_DbContext dbContext)
         {
-            _categoryMapper = categoryMapper;
+            _dbContext = dbContext;
         }
 
-        public Result<List<CategoryVO>> GetCategories()
+        public async Task<Result<List<CategoryVO>>> GetCategories()
         {
-            List<Category> list = _categoryMapper.GetAll();
-            List<CategoryVO> voList = new();
-            foreach (var item in list)
-            {
-                CategoryVO vo = MapEntityToVo(item);
-                voList.Add(vo);
-            }
+            var list = await _dbContext.Set<Category>().ToListAsync();
+            var voList = list.Select(x => MapEntityToVo(x)).ToList();
             return Result<List<CategoryVO>>.Success(voList);
         }
 
-        public Result<CategoryVO> AddCategory(CategoryDTO categoryDTO)
+        public async Task<Result<CategoryVO>> AddCategory(CategoryDTO categoryDTO)
         {
             Category entity = MapDtoToEntity(categoryDTO);
-            entity.Name = categoryDTO.Name;
-            entity.Sort = categoryDTO.Sort;
-            entity.NameEn = categoryDTO.NameEn;
-            entity.Type = categoryDTO.Type;
 
-            _categoryMapper.InsertCategory(entity);
+            _dbContext.Set<Category>().Add(entity);
+            await _dbContext.SaveChangesAsync();
+
             CategoryVO vo = MapEntityToVo(entity);
             return Result<CategoryVO>.Success(vo);
         }
 
-        public Result<CategoryVO> UpdateCategory(CategoryDTO categoryDTO)
+        public async Task<Result<CategoryVO>> UpdateCategory(CategoryDTO categoryDTO)
         {
-            if (categoryDTO.Id == null)
+            if (categoryDTO.Id <= 0)
             {
                 return Result<CategoryVO>.Error("UPDATE_FAIL");
             }
-            Category entity = MapDtoToEntity(categoryDTO);
-            _categoryMapper.UpdateCategory(entity);
-            CategoryVO vo = MapEntityToVo(entity);
+
+            var dbModel = await _dbContext.Set<Category>().FindAsync(categoryDTO.Id);
+            if (dbModel == null)
+            {
+                return Result<CategoryVO>.Error("UPDATE_FAIL");
+            }
+
+            MapDtoCoverEntity(categoryDTO, dbModel);
+            await _dbContext.SaveChangesAsync();
+
+            CategoryVO vo = MapEntityToVo(dbModel);
             return Result<CategoryVO>.Success(vo);
         }
 
-        public Result<string> DeleteCategoryById(long id)
+        public async Task<Result<string>> DeleteCategoryById(long id)
         {
-            _categoryMapper.DeleteById(id);
+            var model = await _dbContext.Set<Category>().FindAsync(id);
+            if (model != null)
+            {
+                _dbContext.Set<Category>().Remove(model);
+                await _dbContext.SaveChangesAsync();
+            }
             return Result<string>.Success("DELETE_SUCCESS");
         }
 
+        #region 映射方法
         private CategoryVO MapEntityToVo(Category source)
         {
             return new CategoryVO
@@ -74,12 +82,27 @@ namespace blog_server.Service.Impl
         {
             return new Category
             {
-                Id = source.Id,
+                Id = source.Id > 0 ? source.Id : 0L,
                 Name = source.Name,
                 NameEn = source.NameEn,
                 Sort = source.Sort,
                 Type = source.Type
             };
         }
+
+        private void MapDtoCoverEntity(CategoryDTO dto, Category target)
+        {
+            if (!string.IsNullOrEmpty(dto.Name))
+                target.Name = dto.Name;
+
+            if (dto.Sort > 0)
+                target.Sort = dto.Sort;
+
+            if (!string.IsNullOrEmpty(dto.NameEn))
+                target.NameEn = dto.NameEn;
+
+            target.Type = dto.Type;
+        }
+        #endregion
     }
 }

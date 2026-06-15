@@ -6,16 +6,11 @@ namespace blog_server.Service
 {
     public interface IUserService
     {
-        Result<string> Save(RegisterDTO registerDTO);
-
-        Result<LoginVO> Login(LoginDTO loginDTO);
-
-        Result<UserInfoVO> GetUserInfo();
-
-        Result<List<UserInfoVO>> GetUsers();
-
-        Result<UserInfoVO> UpdateUserInfo(UserInfoDTO userInfoDTO);
-
-        Result<string> DeleteUserByUuid(string uuid);
+        Task<Result<string>> Save(RegisterDTO registerDTO);
+        Task<Result<LoginVO>> Login(LoginDTO loginDTO);
+        Task<Result<UserInfoVO>> GetUserInfo();
+        Task<Result<List<UserInfoVO>>> GetUsers();
+        Task<Result<UserInfoVO>> UpdateUserInfo(UserInfoDTO userInfoDTO);
+        Task<Result<string>> DeleteUserByUuid(string uuid);
     }
 }

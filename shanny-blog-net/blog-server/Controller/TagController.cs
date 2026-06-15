@@ -25,14 +25,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("all")]
         [ProducesResponseType(typeof(Result<List<TagVO>>), 200)]
-        public Result<List<TagVO>> GetTags()
+        public async Task<Result<List<TagVO>>> GetTags()
         {
             try
             {
-                return _tagService.GetTags();
+                return await _tagService.GetTags();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询全部标签异常");
                 return Result<List<TagVO>>.Error(e.Message);
             }
         }
@@ -42,14 +43,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("id")]
         [ProducesResponseType(typeof(Result<TagVO>), 200)]
-        public Result<TagVO> GetTagsById(long id)
+        public async Task<Result<TagVO>> GetTagsById(long id)
         {
             try
             {
-                return _tagService.GetTagsById(id);
+                return await _tagService.GetTagsById(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "根据Id查询标签异常");
                 return Result<TagVO>.Error(e.Message);
             }
         }
@@ -59,14 +61,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("add")]
         [ProducesResponseType(typeof(Result<TagVO>), 200)]
-        public Result<TagVO> AddTag([FromBody] TagDTO tagDTO)
+        public async Task<Result<TagVO>> AddTag([FromBody] TagDTO tagDTO)
         {
             try
             {
-                return _tagService.AddTag(tagDTO);
+                return await _tagService.AddTag(tagDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "新增标签异常");
                 return Result<TagVO>.Error(e.Message);
             }
         }
@@ -76,14 +79,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<TagVO>), 200)]
-        public Result<TagVO> UpdateTag([FromBody] TagDTO tagDTO)
+        public async Task<Result<TagVO>> UpdateTag([FromBody] TagDTO tagDTO)
         {
             try
             {
-                return _tagService.UpdateTag(tagDTO);
+                return await _tagService.UpdateTag(tagDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改标签异常");
                 return Result<TagVO>.Error(e.Message);
             }
         }
@@ -93,14 +97,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteTag(long id)
+        public async Task<Result<string>> DeleteTag(long id)
         {
             try
             {
-                return _tagService.DeleteTagById(id);
+                return await _tagService.DeleteTagById(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除标签异常");
                 return Result<string>.Error(e.Message);
             }
         }

@@ -3,7 +3,7 @@ using blog_common.Constant;
 using blog_common.Context;
 using blog_common.Utils;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Security.Claims;
+using Microsoft.Extensions.Options;
 
 namespace blog_server.Annotatin
 {
@@ -12,9 +12,9 @@ namespace blog_server.Annotatin
         private readonly JwtConfig _jwtConfig;
         private readonly ILogger<JwtTokenUserInterceptor> _log;
 
-        public JwtTokenUserInterceptor(JwtConfig jwtConfig, ILogger<JwtTokenUserInterceptor> log)
+        public JwtTokenUserInterceptor(IOptions<JwtConfig> jwtOptions, ILogger<JwtTokenUserInterceptor> log)
         {
-            _jwtConfig = jwtConfig;
+            _jwtConfig = jwtOptions.Value;
             _log = log;
         }
 

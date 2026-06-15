@@ -6,12 +6,9 @@ namespace blog_server.Service
 {
     public interface IToolService
     {
-        Result<List<ToolVO>> GetTools();
-
-        Result<ToolVO> AddTool(ToolDTO toolDTO);
-
-        Result<ToolVO> UpdateTool(ToolDTO toolDTO);
-
-        Result<string> DeleteTool(long id);
+        Task<Result<List<ToolVO>>> GetTools();
+        Task<Result<ToolVO>> AddTool(ToolDTO toolDTO);
+        Task<Result<ToolVO>> UpdateTool(ToolDTO toolDTO);
+        Task<Result<string>> DeleteTool(long id);
     }
 }

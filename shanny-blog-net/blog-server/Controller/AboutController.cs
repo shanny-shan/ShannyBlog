@@ -1,7 +1,7 @@
 using blog_common.Result;
 using blog_pojo.Dtos;
 using blog_pojo.Vos;
-using blog_server.Service.Impl;
+using blog_server.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace blog_server.Controller
@@ -11,10 +11,11 @@ namespace blog_server.Controller
     [Tags("菜单相关接口")]
     public class AboutController : ControllerBase
     {
-        private readonly AboutService _aboutService;
+        // 注入接口IAboutService
+        private readonly IAboutService _aboutService;
         private readonly ILogger<AboutController> _log;
 
-        public AboutController(AboutService aboutService, ILogger<AboutController> log)
+        public AboutController(IAboutService aboutService, ILogger<AboutController> log)
         {
             _aboutService = aboutService;
             _log = log;
@@ -26,14 +27,15 @@ namespace blog_server.Controller
         /// <returns></returns>
         [HttpGet("all")]
         [ProducesResponseType(typeof(Result<List<AboutVO>>), 200)]
-        public Result<List<AboutVO>> GetAboutMe()
+        public async Task<Result<List<AboutVO>>> GetAboutMe()
         {
             try
             {
-                return _aboutService.GetAboutMe();
+                return await _aboutService.GetAboutMe();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询全部作者信息异常");
                 return Result<List<AboutVO>>.Error(e.Message);
             }
         }
@@ -43,14 +45,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("show")]
         [ProducesResponseType(typeof(Result<AboutVO>), 200)]
-        public Result<AboutVO> GetAboutMeByShow()
+        public async Task<Result<AboutVO>> GetAboutMeByShow()
         {
             try
             {
-                return _aboutService.GetAboutMeByShow();
+                return await _aboutService.GetAboutMeByShow();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询展示作者信息异常");
                 return Result<AboutVO>.Error(e.Message);
             }
         }
@@ -60,14 +63,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("add")]
         [ProducesResponseType(typeof(Result<AboutVO>), 200)]
-        public Result<AboutVO> AddAboutMe([FromBody] AboutDTO aboutDTO)
+        public async Task<Result<AboutVO>> AddAboutMe([FromBody] AboutDTO aboutDTO)
         {
             try
             {
-                return _aboutService.AddAbout(aboutDTO);
+                return await _aboutService.AddAbout(aboutDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "新增作者信息异常");
                 return Result<AboutVO>.Error(e.Message);
             }
         }
@@ -77,14 +81,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<AboutVO>), 200)]
-        public Result<AboutVO> UpdateAboutMe([FromBody] AboutDTO aboutDTO)
+        public async Task<Result<AboutVO>> UpdateAboutMe([FromBody] AboutDTO aboutDTO)
         {
             try
             {
-                return _aboutService.UpdateAbout(aboutDTO);
+                return await _aboutService.UpdateAbout(aboutDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改作者信息异常");
                 return Result<AboutVO>.Error(e.Message);
             }
         }
@@ -94,14 +99,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteAboutMe(long id)
+        public async Task<Result<string>> DeleteAboutMe(long id)
         {
             try
             {
-                return _aboutService.DeleteAboutById(id);
+                return await _aboutService.DeleteAboutById(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除作者信息异常");
                 return Result<string>.Error(e.Message);
             }
         }

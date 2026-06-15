@@ -6,14 +6,10 @@ namespace blog_server.Service
 {
     public interface IAboutService
     {
-        Result<List<AboutVO>> GetAboutMe();
-
-        Result<AboutVO> GetAboutMeByShow();
-
-        Result<AboutVO> AddAbout(AboutDTO aboutDTO);
-
-        Result<AboutVO> UpdateAbout(AboutDTO aboutDTO);
-
-        Result<string> DeleteAboutById(long id);
+        Task<Result<List<AboutVO>>> GetAboutMe();
+        Task<Result<AboutVO>> GetAboutMeByShow();
+        Task<Result<AboutVO>> AddAbout(AboutDTO aboutDTO);
+        Task<Result<AboutVO>> UpdateAbout(AboutDTO aboutDTO);
+        Task<Result<string>> DeleteAboutById(long id);
     }
 }

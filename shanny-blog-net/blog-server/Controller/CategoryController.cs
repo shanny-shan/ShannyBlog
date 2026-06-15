@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace blog_server.Controller
 {
-
     [ApiController]
     [Route("/category")]
     [Tags("菜单相关接口")]
@@ -26,14 +25,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpGet("all")]
         [ProducesResponseType(typeof(Result<List<CategoryVO>>), 200)]
-        public Result<List<CategoryVO>> GetCategories()
+        public async Task<Result<List<CategoryVO>>> GetCategories()
         {
             try
             {
-                return _categoryService.GetCategories();
+                return await _categoryService.GetCategories();
             }
             catch (Exception e)
             {
+                _log.LogError(e, "查询全部分类异常");
                 return Result<List<CategoryVO>>.Error(e.Message);
             }
         }
@@ -43,14 +43,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("add")]
         [ProducesResponseType(typeof(Result<CategoryVO>), 200)]
-        public Result<CategoryVO> AddCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<Result<CategoryVO>> AddCategory([FromBody] CategoryDTO categoryDTO)
         {
             try
             {
-                return _categoryService.AddCategory(categoryDTO);
+                return await _categoryService.AddCategory(categoryDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "新增分类异常");
                 return Result<CategoryVO>.Error(e.Message);
             }
         }
@@ -60,14 +61,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("update")]
         [ProducesResponseType(typeof(Result<CategoryVO>), 200)]
-        public Result<CategoryVO> UpdateCategory([FromBody] CategoryDTO categoryDTO)
+        public async Task<Result<CategoryVO>> UpdateCategory([FromBody] CategoryDTO categoryDTO)
         {
             try
             {
-                return _categoryService.UpdateCategory(categoryDTO);
+                return await _categoryService.UpdateCategory(categoryDTO);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "修改分类异常");
                 return Result<CategoryVO>.Error(e.Message);
             }
         }
@@ -77,14 +79,15 @@ namespace blog_server.Controller
         /// </summary>
         [HttpPost("delete")]
         [ProducesResponseType(typeof(Result<string>), 200)]
-        public Result<string> DeleteCategory(long id)
+        public async Task<Result<string>> DeleteCategory(long id)
         {
             try
             {
-                return _categoryService.DeleteCategoryById(id);
+                return await _categoryService.DeleteCategoryById(id);
             }
             catch (Exception e)
             {
+                _log.LogError(e, "删除分类异常");
                 return Result<string>.Error(e.Message);
             }
         }
