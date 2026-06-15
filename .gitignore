@@ -12,3 +12,7 @@
 /shanny-blog-net/blog-common/obj/Debug/net10.0/refint
 /shanny-blog-net/blog-common/obj/Debug/net10.0/refint/blog-common.dll
 /shanny-blog-net/blog-pojo/bin/Debug/net10.0
+/shanny-blog-net/blog-common/obj
+/shanny-blog-net/blog-pojo/obj
+/shanny-blog-net/blog-server/bin/Debug/net10.0
+/shanny-blog-net/blog-server/obj
