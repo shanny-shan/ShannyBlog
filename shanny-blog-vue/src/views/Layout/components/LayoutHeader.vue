@@ -1,9 +1,10 @@
 <script setup>
 import ThemeToggle from '@/views/_components/header/ThemeToggle.vue'
 import DrawerComponent from '@/views/_components/common/DrawerComponent.vue'
-import { useScrollStore } from '@/stores'
+import { useScrollStore, useSiteStore } from '@/stores'
 import { menuItems } from '@/config/menuItem'
 const scrollStore = useScrollStore()
+const siteStore = useSiteStore()
 const goManage = () => {
   window.open('https://www.shanny.work/manage', '_blank')
 }
@@ -34,13 +35,16 @@ const goManage = () => {
       <!-- bar -->
       <div class="hidden md:flex justify-center items-center w-3/5 font-medium">
         <ul class="flex justify-center items-center w-full">
-          <template v-for="(item, index) in menuItems()" :key="index">
+          <template v-for="(item, index) in menuItems()" :key="item.id">
             <li
               v-if="!item.children"
-              :class="index == 0 ? '' : 'ml-5'"
-              class="hover:underline"
+              :class="[
+                index === 0 ? '' : 'ml-5',
+                'hover:underline',
+                item.id === siteStore.curHref ? 'underline' : '',
+              ]"
             >
-              <a :href="item.path">{{ item.title }}</a>
+              <RouterLink :to="item.path">{{ item.title }}</RouterLink>
             </li>
             <li v-else class="ml-5">
               <div class="dropdown dropdown-hover">
@@ -59,13 +63,16 @@ const goManage = () => {
                   tabindex="0"
                   class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm"
                 >
-                  <li v-for="(child, iChild) in item.children" :key="iChild">
-                    <a
-                      :href="child.path"
-                      class="hover-bg-primary active-bg-primary"
+                  <li v-for="(child, index) in item.children" :key="item.id">
+                    <RouterLink
+                      :to="child.path"
+                      class="hover-bg-primary"
+                      :class="[
+                        child.id === siteStore.curHref ? 'menu-active' : '',
+                      ]"
                     >
                       {{ child.title }}
-                    </a>
+                    </RouterLink>
                   </li>
                 </ul>
               </div>

@@ -1,4 +1,6 @@
 <script setup>
+import { useSiteStore } from '@/stores'
+const siteStore = useSiteStore()
 defineProps({
   id: {
     type: String,
@@ -11,7 +13,12 @@ defineProps({
 </script>
 <template>
   <div class="drawer">
-    <input :id="id" type="checkbox" class="drawer-toggle" />
+    <input
+      :id="id"
+      type="checkbox"
+      class="drawer-toggle"
+      v-model="siteStore.drawerOpen"
+    />
     <div class="drawer-content">
       <label :for="id" class="btn btn-square btn-ghost">
         <svg
@@ -35,25 +42,36 @@ defineProps({
         :for="id"
         aria-label="close sidebar"
         class="drawer-overlay"
+        @click="
+          () => {
+            siteStore.closeDrawer
+          }
+        "
       ></label>
-      <ul class="menu bg-base-100 w-70">
-        <template v-for="(item, index) in items" :key="index">
+      <ul class="menu bg-base-100 w-70 h-full">
+        <template v-for="item in items" :key="item.id">
           <li v-if="!item.children">
             <RouterLink
               :to="item.path"
-              class="active-bg-primary hover-bg-primary"
-              >{{ item.title }}</RouterLink
+              class="md:hover-bg-primary"
+              :class="siteStore.curHref == item.id ? 'menu-active' : ''"
+              @click="siteStore.closeDrawer"
             >
+              {{ item.title }}
+            </RouterLink>
           </li>
           <li v-else>
             <h2 class="menu-title">{{ item.title }}</h2>
             <ul>
-              <li v-for="(child, cIndex) in item.children" :key="cIndex">
+              <li v-for="child in item.children" :key="child.id">
                 <RouterLink
                   :to="child.path"
-                  class="active-bg-primary hover-bg-primary"
-                  >{{ child.title }}</RouterLink
+                  class="md:hover-bg-primary"
+                  :class="siteStore.curHref == child.id ? 'menu-active' : ''"
+                  @click="siteStore.closeDrawer"
                 >
+                  {{ child.title }}
+                </RouterLink>
               </li>
             </ul>
           </li>
@@ -62,4 +80,5 @@ defineProps({
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped></style>

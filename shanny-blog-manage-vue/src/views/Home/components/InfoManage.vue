@@ -69,7 +69,7 @@ onMounted(async () => {
         Add User
       </button>
     </div> -->
-    <div class="overflow-x-auto mt-2">
+    <div class="overflow-x-auto mt-10">
       <table class="table">
         <!-- head -->
         <thead>

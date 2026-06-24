@@ -38,6 +38,10 @@
   .icon-website {
     color: #8665f0;
   }
+  .menu-active {
+    background-color: #ff6481;
+    color: #ffffff;
+  }
 }
 [data-theme='dark'] {
   .icon-steam {
@@ -48,5 +52,9 @@
   }
   .icon-website {
     color: #8665f0;
+  }
+  .menu-active {
+    background-color: #605dff;
+    color: #ffffff;
   }
 }

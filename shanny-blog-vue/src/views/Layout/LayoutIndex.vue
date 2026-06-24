@@ -2,8 +2,7 @@
 import { onMounted, onUnmounted } from 'vue'
 import LayoutHeader from './components/LayoutHeader.vue'
 import LayoutFooter from './components/LayoutFooter.vue'
-import { useThemeStore } from '@/stores/modules/theme'
-import { useScrollStore } from '@/stores/modules/scroll'
+import { useThemeStore, useScrollStore } from '@/stores/'
 const scrollStore = useScrollStore()
 const themeStore = useThemeStore()
 onMounted(() => {

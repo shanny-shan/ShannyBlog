@@ -19,30 +19,37 @@ const routes = [
       {
         path: '',
         component: Home,
+        meta: { id: 'home' },
       },
       {
         path: '/article/note',
         component: Note,
+        meta: { id: 'note' },
       },
       {
         path: '/article/note/:id',
         component: NoteDetail,
+        meta: { id: 'note' },
       },
       {
         path: '/article/project',
         component: Project,
+        meta: { id: 'project' },
       },
       {
         path: '/article/project/:id',
         component: ProjectDetail,
+        meta: { id: 'project' },
       },
       {
         path: '/tool',
         component: Tool,
+        meta: { id: 'tool' },
       },
       {
         path: '/tag/:tagId/:tagName',
         component: Tag,
+        meta: { id: 'tag' },
       },
       // {
       //   path: '/media/:type',
@@ -62,6 +69,16 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+})
+router.beforeEach(async (to, from, next) => {
+  const storeModule = await import('@/stores')
+  const useSiteStore = storeModule.useSiteStore
+  const siteStore = useSiteStore()
+
+  if (to.meta.id) {
+    siteStore.curHref = to.meta.id
+  }
+  next()
 })
 
 export default router

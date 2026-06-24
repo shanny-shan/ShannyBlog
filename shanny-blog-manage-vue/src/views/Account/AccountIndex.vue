@@ -59,7 +59,7 @@ const goWebSite = () => {
 </script>
 <template>
   <div class="flex justify-center items-center w-full h-screen">
-    <div class="card card-border bg-base-200 w-96">
+    <div class="card card-border bg-base-200 w-90 md:w-96">
       <button
         class="btn btn-ghost tooltip absolute top-2 left-2"
         data-tip="GO WebSite"

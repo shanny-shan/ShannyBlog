@@ -16,7 +16,7 @@
   --color-base-content: #363853;
   --color-primary: #ff6481; /* pink */
   --color-primary-content: #fff;
-  --color-neutral: #4d6385;
+  --color-neutral: #ff6481;
   --color-neutral-50: #eeeeee;
   --color-accent: #ffbac7;
 }
@@ -38,6 +38,10 @@
   .icon-website {
     color: #8665f0;
   }
+  .active-menu {
+    background-color: #ff6481 !important;
+    color: #ffffff;
+  }
 }
 [data-theme='dark'] {
   .icon-steam {
@@ -48,5 +52,9 @@
   }
   .icon-website {
     color: #8665f0;
+  }
+  .active-menu {
+    background-color: #ff6481;
+    color: #ffffff;
   }
 }
