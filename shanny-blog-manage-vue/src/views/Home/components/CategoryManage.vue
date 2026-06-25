@@ -1,59 +1,16 @@
 <script setup>
 import categoryDialog from '@/views/_components/dialog/CategoryDialog.vue'
-import { onMounted, ref, computed } from 'vue'
-import { useAdminStore, useCategoryStore } from '@/stores'
-import { useToast } from 'vue-toastification'
-import { swal } from '@/utils/sweetalert'
+import { onMounted } from 'vue'
+import { useAdminStore, useCategoryStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
-const toast = useToast()
 const adminStore = useAdminStore()
 const categoryStore = useCategoryStore()
+const pageStore = usePageStore()
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
-
-const editCategory = (item) => {
-  adminStore.openDialog('category')
-  categoryStore.categoryForm = { ...item }
-  adminStore.isEdit = true
-}
-const deleteCategory = (item) => {
-  swal(
-    '',
-    '',
-    `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的类型吗？`,
-    'question',
-    true,
-    true,
-  ).then(async (result) => {
-    if (result.isConfirmed) {
-      const res = await categoryStore.deleteCategory(item.id)
-      if (res.data.code.toLowerCase() === 'success') {
-        toast.success(`${res.data.msg}`)
-        await categoryStore.getCategoryList()
-      } else {
-        toast.error(`${res.data.msg}`)
-      }
-    }
-  })
-}
-
-const totalPages = computed(() => {
-  return Math.ceil(categoryStore.categoryList.length / itemsPerPage.value)
-})
-
-// 计算当前页显示的条目
-const items = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return categoryStore.categoryList.slice(startIndex, endIndex)
-})
-// 处理页码变化事件
-const handlePageChange = (page) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+const { pageList, totalPages } = pageStore.getPageData(
+  () => categoryStore.categoryList,
+)
 
 onMounted(async () => {
   await categoryStore.getCategoryList()
@@ -86,7 +43,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -100,13 +57,13 @@ onMounted(async () => {
               <div class="flex gap-2">
                 <button
                   class="btn btn-ghost btn-xs"
-                  @click="editCategory(item)"
+                  @click="categoryStore.openEditCategory(item)"
                 >
                   Edit
                 </button>
                 <button
                   class="btn btn-ghost btn-xs"
-                  @click="deleteCategory(item)"
+                  @click="categoryStore.deleteCategory(item)"
                 >
                   Delete
                 </button>
@@ -118,10 +75,10 @@ onMounted(async () => {
     </div>
     <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>

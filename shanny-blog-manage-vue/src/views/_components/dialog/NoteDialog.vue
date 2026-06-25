@@ -1,75 +1,22 @@
 <script setup>
 import EditComponent from '../common/EditComponent.vue'
 
-import { onMounted, ref } from 'vue'
-import { useToast } from 'vue-toastification'
+import { onMounted } from 'vue'
 import {
   useAdminStore,
   useTagStore,
   useCategoryStore,
   useArticleStore,
-  useSiteStore,
 } from '@/stores'
 
-const toast = useToast()
 const adminStore = useAdminStore()
 const tagStore = useTagStore()
-const categoryStore = useCategoryStore()
 const articleStore = useArticleStore()
-const siteStore = useSiteStore()
-const curCategories = ref([])
-
-const closeDialog = () => {
-  adminStore.closeDialog('note')
-  getCategoryId()
-}
-
-const submitNote = async () => {
-  siteStore.loading = true
-  articleStore.articleForm.type = 'ARTICLE_NOTE'
-
-  let res = null
-
-  if (adminStore.isEdit) {
-    res = await articleStore.editArticle(articleStore.articleForm)
-  } else {
-    res = await articleStore.addArticle(articleStore.articleForm)
-  }
-  if (res != null) {
-    if (res.data.code.toLowerCase() === 'success') {
-      toast.success(`${res.data.msg}`)
-      closeDialog()
-      await articleStore.getNoteList()
-    } else {
-      toast.error(`${res.data.msg}`)
-    }
-  }
-
-  siteStore.loading = false
-}
-
-const inputImage = (event) => {
-  articleStore.articleForm.image = event.target.files[0]
-}
-
-const getCategoryId = async () => {
-  const categoryResult = await categoryStore.getCategories()
-  if (categoryResult.data.code.toLowerCase() === 'success') {
-    curCategories.value = categoryResult.data.data.filter(
-      (item) => item.type == 'ARTICLE_NOTE',
-    )
-    if (curCategories.value.length > 0) {
-      articleStore.articleForm.categoryId = curCategories.value[0].id
-    }
-  }
-}
+const categoryStore = useCategoryStore()
 
 onMounted(async () => {
-  const tagResult = await tagStore.getTagAll()
-  if (tagResult.data.code.toLowerCase() === 'success') {
-    tagStore.tags = tagResult.data.data
-  }
-  getCategoryId()
+  tagStore.getTagAll()
+  categoryStore.getCategoryId('ARTICLE_NOTE')
 })
 </script>
 <template>
@@ -78,13 +25,13 @@ onMounted(async () => {
       <form method="dialog">
         <button
           class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          @click="closeDialog()"
+          @click="articleStore.closeDialog('note', 'ARTICLE_NOTE')"
         >
           ✕
         </button>
       </form>
       <form
-        @submit.prevent="submitNote"
+        @submit.prevent="articleStore.submitArticle('ARTICLE_NOTE')"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Note</legend>
@@ -115,7 +62,7 @@ onMounted(async () => {
                 v-model="articleStore.articleForm.categoryId"
               >
                 <option
-                  v-for="item in curCategories"
+                  v-for="item in categoryStore.curCategories"
                   :key="item.id"
                   :value="item.id"
                 >
@@ -158,7 +105,10 @@ onMounted(async () => {
         </div>
         <div class="mt-1 flex items-center justify-between gap-2">
           <button type="submit" class="btn btn-primary w-1/2">Submit</button>
-          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+          <button
+            class="btn btn-soft w-1/2"
+            @click="articleStore.closeDialog('note', 'ARTICLE_NOTE')"
+          >
             Cancel
           </button>
         </div>

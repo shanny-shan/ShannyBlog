@@ -1,62 +1,19 @@
 <script setup>
 import ProjectDialog from '@/views/_components/dialog/ProjectDialog.vue'
 import { onMounted, ref, computed } from 'vue'
-import { useToast } from 'vue-toastification'
-import { useAdminStore, useArticleStore } from '@/stores'
-import { swal } from '@/utils/sweetalert'
+import { useAdminStore, useArticleStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
-const toast = useToast()
 const adminStore = useAdminStore()
 const articleStore = useArticleStore()
+const pageStore = usePageStore()
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
-
-const editProject = (item) => {
-  adminStore.openDialog('project')
-  articleStore.articleForm = { ...item }
-  adminStore.isEdit = true
-}
-const deleteProject = (item) => {
-  swal(
-    '',
-    '',
-    `确定删除标题为<span class="text-primary font-bold">${item.title}</span>的项目吗？`,
-    'question',
-    true,
-    true,
-  ).then(async (result) => {
-    if (result.isConfirmed) {
-      const res = await articleStore.deleteArticle(item.id)
-      if (res.data.code.toLowerCase() === 'success') {
-        toast.success(`${res.data.msg}`)
-        await articleStore.getProjectList()
-      } else {
-        toast.error(`${res.data.msg}`)
-      }
-    }
-  })
-}
-
-const totalPages = computed(() => {
-  return Math.ceil(articleStore.projectList.length / itemsPerPage.value)
-})
-
-// 计算当前页显示的条目
-const items = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return articleStore.projectList.slice(startIndex, endIndex)
-})
-// 处理页码变化事件
-const handlePageChange = (page) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+const { pageList, totalPages } = pageStore.getPageData(
+  () => articleStore.projectList,
+)
 
 onMounted(async () => {
-  await articleStore.getProjectList()
+  await articleStore.getArticleList('ARTICLE_PROJECT')
 })
 </script>
 <template>
@@ -86,7 +43,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -129,12 +86,15 @@ onMounted(async () => {
             <td>{{ item.updateTime?.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs" @click="editProject(item)">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="articleStore.openEditArticle(item, 'project')"
+                >
                   Edit
                 </button>
                 <button
                   class="btn btn-ghost btn-xs"
-                  @click="deleteProject(item)"
+                  @click="articleStore.deleteArticle(item, 'ARTICLE_PROJECT')"
                 >
                   Delete
                 </button>
@@ -146,10 +106,10 @@ onMounted(async () => {
     </div>
     <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>

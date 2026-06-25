@@ -1,36 +1,7 @@
 <script setup>
-import { ref } from 'vue'
-import { useToast } from 'vue-toastification'
-import { useAdminStore, useSiteStore, useCategoryStore } from '@/stores'
-
+import { useAdminStore, useCategoryStore } from '@/stores'
 const adminStore = useAdminStore()
-const siteStore = useSiteStore()
 const categoryStore = useCategoryStore()
-const toast = useToast()
-
-const closeDialog = () => {
-  adminStore.closeDialog('category')
-}
-
-const submitCategory = async () => {
-  siteStore.loading = true
-  let res = null
-  if (adminStore.isEdit) {
-    res = await categoryStore.editCategory(categoryStore.categoryForm)
-  } else {
-    res = await categoryStore.addCategory(categoryStore.categoryForm)
-  }
-
-  if (res?.data?.code.toLowerCase() == 'success') {
-    toast.success(`${res.data.msg}`)
-    adminStore.closeDialog('category')
-    await categoryStore.getCategoryList()
-  } else {
-    toast.error(`${res.data.msg}`)
-  }
-
-  siteStore.loading = false
-}
 </script>
 <template>
   <dialog class="modal h-full" :open="adminStore.categoryDialog">
@@ -44,7 +15,7 @@ const submitCategory = async () => {
         </button>
       </form>
       <form
-        @submit.prevent="submitCategory"
+        @submit.prevent="categoryStore.submitCategory"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Category</legend>
@@ -96,7 +67,10 @@ const submitCategory = async () => {
 
         <div class="mt-1 flex items-center justify-between gap-2">
           <button type="submit" class="btn btn-primary w-1/2">Submit</button>
-          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+          <button
+            class="btn btn-soft w-1/2"
+            @click="adminStore.closeDialog('category')"
+          >
             Cancel
           </button>
         </div>

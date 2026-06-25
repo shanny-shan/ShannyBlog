@@ -1,35 +1,7 @@
 <script setup>
-import { useToast } from 'vue-toastification'
-import { useAdminStore, useSiteStore, useTagStore } from '@/stores'
-
-const toast = useToast()
+import { useAdminStore, useTagStore } from '@/stores'
 const adminStore = useAdminStore()
-const siteStore = useSiteStore()
 const tagStore = useTagStore()
-
-const closeDialog = () => {
-  adminStore.closeDialog('tag')
-}
-
-const submitTag = async () => {
-  siteStore.loading = true
-
-  let res = null
-  if (adminStore.isEdit) {
-    res = await tagStore.editTag(tagStore.tagForm)
-  } else {
-    res = await tagStore.addTag(tagStore.tagForm)
-  }
-  if (res.data.code.toLowerCase() === 'success') {
-    toast.success(`${res.data.msg}`)
-    adminStore.closeDialog('tag')
-    tagStore.getTagList()
-  } else {
-    toast.error(`${res.data.msg}`)
-  }
-
-  siteStore.loading = false
-}
 </script>
 <template>
   <dialog class="modal h-full" :open="adminStore.tagDialog">
@@ -43,7 +15,7 @@ const submitTag = async () => {
         </button>
       </form>
       <form
-        @submit.prevent="submitTag"
+        @submit.prevent="tagStore.submitTag"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Tag</legend>
@@ -73,7 +45,10 @@ const submitTag = async () => {
 
         <div class="mt-1 flex items-center justify-between gap-2">
           <button type="submit" class="btn btn-primary w-1/2">Submit</button>
-          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+          <button
+            class="btn btn-soft w-1/2"
+            @click="adminStore.closeDialog('tag')"
+          >
             Cancel
           </button>
         </div>

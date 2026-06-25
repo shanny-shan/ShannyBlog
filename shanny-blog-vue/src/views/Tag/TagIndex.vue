@@ -1,52 +1,26 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useScrollStore, useArticleStore, useSiteStore } from '@/stores'
-import { RouterLink, useRoute } from 'vue-router'
+import { onMounted, onUnmounted } from 'vue'
+import { useScrollStore, usePageStore, useArticleStore } from '@/stores'
+import { RouterLink } from 'vue-router'
 import CardImgComponent from '@/views/_components/common/CardImgComponent.vue'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
+import { useRoute } from 'vue-router'
+
 const scrollStore = useScrollStore()
+const pageStore = usePageStore()
 const articleStore = useArticleStore()
-const siteStore = useSiteStore()
 
 const route = useRoute()
 const tagId = route.params.tagId
 const tagName = route.params.tagName
 
-const tagList = ref([])
-const currentPage = ref(1)
-const itemsPerPage = ref(4)
+const { pageList, totalPages } = pageStore.getPageData(
+  () => articleStore.tagList,
+)
 
-const getTagList = async () => {
-  siteStore.loading = true
-  const res = await articleStore.getArticleByTags(tagId)
-  if (res?.data?.code.toLowerCase() === 'success') {
-    tagList.value = res.data.data
-    siteStore.loading = false
-  }
-}
-
-// pagination-------------------------------------------------------------------------------------
-// 计算总页数
-const totalPages = computed(() => {
-  return Math.ceil(tagList.value.length / itemsPerPage.value)
-})
-
-// 计算当前页显示的条目
-const items = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return tagList.value.slice(startIndex, endIndex)
-})
-// 处理页码变化事件
-const handlePageChange = (page) => {
-  currentPage.value = page
-  // 可以在这里添加滚动到页面顶部的逻辑
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-onMounted(() => {
+onMounted(async () => {
   scrollStore.enableScrollListener()
-  getTagList()
+  await articleStore.getTagArticleList(tagId)
 })
 onUnmounted(() => {
   scrollStore.disableScrollListener()
@@ -61,7 +35,7 @@ onUnmounted(() => {
     <div
       class="flex flex-col md:flex-row md:flex-wrap md:justify-start items-center w-full mt-2 md:mt-10"
     >
-      <div v-for="item in items" :key="item.id" class="w-full md:w-1/4 p-2">
+      <div v-for="item in pageList" :key="item.id" class="w-full md:w-1/4 p-2">
         <RouterLink
           :to="`/article/${item.type == 'ARTICLE_NOTE' ? 'note' : 'project'}/${item.id}`"
         >
@@ -71,10 +45,10 @@ onUnmounted(() => {
     </div>
     <div class="mt-2 md:mt-10" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>

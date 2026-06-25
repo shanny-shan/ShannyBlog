@@ -1,9 +1,22 @@
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useSiteStore = defineStore('site', () => {
-  const loading = ref(false)
   const drawerOpen = ref(false)
+
+  const loading = ref(false)
+  const loadCount = ref(0)
+  const handleLoadComplete = () => {
+    loadCount.value++
+    if (loadCount.value === 4) {
+      loading.value = false
+    }
+  }
+  const resetLoadCount = () => {
+    loadCount.value = 0
+    loading.value = true
+  }
+
   const curHref = ref('home')
   const openDrawer = () => {
     drawerOpen.value = true
@@ -14,6 +27,7 @@ export const useSiteStore = defineStore('site', () => {
   const toggleDrawer = () => {
     drawerOpen.value = !drawerOpen.value
   }
+
   return {
     loading,
     drawerOpen,
@@ -21,5 +35,7 @@ export const useSiteStore = defineStore('site', () => {
     openDrawer,
     closeDrawer,
     toggleDrawer,
+    handleLoadComplete,
+    resetLoadCount,
   }
 })

@@ -4,6 +4,7 @@ import { getTags, insertTag } from '@/apis/tag'
 
 export const useTagStore = defineStore('tag', () => {
   const tags = ref([])
+
   const tagForm = ref({
     name: '标签1',
     nameEn: 'tag1',
@@ -15,8 +16,12 @@ export const useTagStore = defineStore('tag', () => {
     }
   }
   const getTagList = async () => {
-    return await getTags()
+    const res = await getTags()
+    if (res.data.code.toLowerCase() === 'success') {
+      tags.value = res.data.data
+    }
   }
+
   const addTag = async (tag) => {
     return await insertTag(tag)
   }

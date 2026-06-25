@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getAbout, insertAbout } from '@/apis/about'
+import { useSiteStore } from '@/stores'
 
 export const useAboutStore = defineStore('about', () => {
+  const siteStore = useSiteStore()
+
   const authors = ref([])
   const authorInfo = ref({})
   const aboutForm = ref({
@@ -32,11 +35,16 @@ export const useAboutStore = defineStore('about', () => {
       other: '',
     }
   }
-  const getAboutMe = async () => {
-    return await getAbout()
-  }
+
   const addAbout = async (about) => {
     return await insertAbout(about)
+  }
+
+  const getAboutMe = async () => {
+    const res = await getAbout()
+    if (res.data.code.toLowerCase() === 'success') {
+      authorInfo.value = res.data.data
+    }
   }
   return {
     authors,

@@ -1,35 +1,7 @@
 <script setup>
-import { useToast } from 'vue-toastification'
-import { useAdminStore, useSiteStore, useAboutStore } from '@/stores'
-
-const toast = useToast()
+import { useAdminStore, useAboutStore } from '@/stores'
 const adminStore = useAdminStore()
-const siteStore = useSiteStore()
 const aboutStore = useAboutStore()
-
-const closeDialog = () => {
-  adminStore.closeDialog('about')
-}
-
-const submitAbout = async (about) => {
-  siteStore.loading = true
-  let res = null
-  if (adminStore.isEdit) {
-    res = await aboutStore.editAbout(about)
-  } else {
-    res = await aboutStore.addAbout(about)
-  }
-
-  if (res?.data?.code.toLowerCase() == 'success') {
-    toast.success(`${res.data.msg}`)
-    adminStore.closeDialog('about')
-    await aboutStore.getAboutList()
-  } else {
-    toast.error(`${res.data.msg}`)
-  }
-
-  siteStore.loading = false
-}
 </script>
 <template>
   <dialog class="modal h-full" :open="adminStore.aboutDialog">
@@ -128,11 +100,14 @@ const submitAbout = async (about) => {
         <div class="mt-1 flex items-center justify-between gap-2">
           <button
             class="btn btn-primary w-1/2"
-            @click="submitAbout(aboutStore.aboutForm)"
+            @click="aboutStore.submitAbout(aboutStore.aboutForm)"
           >
             Submit
           </button>
-          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+          <button
+            class="btn btn-soft w-1/2"
+            @click="adminStore.closeDialog('about')"
+          >
             Cancel
           </button>
         </div>

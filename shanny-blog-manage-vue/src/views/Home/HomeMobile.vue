@@ -11,24 +11,8 @@ import InfoManage from './components/InfoManage.vue'
 import AboutManage from './components/AboutManage.vue'
 import CategoryManage from './components/CategoryManage.vue'
 import { useAccountStore, useSiteStore } from '@/stores'
-import { swal } from '@/utils/sweetalert'
 const accountStore = useAccountStore()
 const siteStore = useSiteStore()
-const active = ref('note')
-const logout = () => {
-  swal('', '确定退出登陆吗？', '', 'question', true, true).then((result) => {
-    if (result.isConfirmed) {
-      accountStore.logout()
-    }
-  })
-}
-const goWebSite = () => {
-  window.open('https://www.shanny.work', '_blank')
-}
-const changeHeader = (e) => {
-  active.value = e
-  siteStore.drawerOpen = false
-}
 </script>
 <template>
   <div class="drawer">
@@ -59,34 +43,34 @@ const changeHeader = (e) => {
       </label>
 
       <div class="card bg-base-200 w-full min-h-full p-5">
-        <div v-if="active == 'note'">
+        <div v-if="siteStore.active == 'note'">
           <NoteManage />
         </div>
-        <div v-else-if="active == 'project'">
+        <div v-else-if="siteStore.active == 'project'">
           <ProjectManage />
         </div>
-        <div v-else-if="active == 'tool'">
+        <div v-else-if="siteStore.active == 'tool'">
           <ToolManage />
         </div>
-        <div v-else-if="active == 'media'">
+        <div v-else-if="siteStore.active == 'media'">
           <MediaManage />
         </div>
-        <div v-else-if="active == 'bug'">
+        <div v-else-if="siteStore.active == 'bug'">
           <BugManage />
         </div>
-        <div v-else-if="active == 'board'">
+        <div v-else-if="siteStore.active == 'board'">
           <BoardManage />
         </div>
-        <div v-else-if="active == 'tag'">
+        <div v-else-if="siteStore.active == 'tag'">
           <TagManage />
         </div>
-        <div v-else-if="active == 'info'">
+        <div v-else-if="siteStore.active == 'info'">
           <InfoManage />
         </div>
-        <div v-else-if="active == 'about'">
+        <div v-else-if="siteStore.active == 'about'">
           <AboutManage />
         </div>
-        <div v-else-if="active == 'category'">
+        <div v-else-if="siteStore.active == 'category'">
           <CategoryManage />
         </div>
       </div>
@@ -103,7 +87,7 @@ const changeHeader = (e) => {
         class="is-drawer-close:w-50 is-drawer-open:w-50 bg-base-200 flex flex-col items-start min-h-full"
       >
         <ul class="menu w-full grow">
-          <li @click="goWebSite()">
+          <li @click="siteStore.goWebSite()">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right text-red"
               data-tip="WebSite"
@@ -121,20 +105,20 @@ const changeHeader = (e) => {
               <span class="is-drawer-close:hidden ml-1">Article</span>
             </h2>
             <ul>
-              <li @click="changeHeader('note')">
+              <li @click="siteStore.changeHeaderM('note')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'note' }"
+                  :class="{ 'active-menu': siteStore.active == 'note' }"
                   data-tip="Note"
                 >
                   <font-awesome-icon icon="fa-solid fa-note-sticky" />
                   <span class="is-drawer-close:hidden">Note</span>
                 </button>
               </li>
-              <li @click="changeHeader('project')">
+              <li @click="siteStore.changeHeaderM('project')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'project' }"
+                  :class="{ 'active-menu': siteStore.active == 'project' }"
                   data-tip="Project"
                 >
                   <font-awesome-icon icon="fa-solid fa-bars-progress" />
@@ -143,10 +127,10 @@ const changeHeader = (e) => {
               </li>
             </ul>
           </li>
-          <li @click="changeHeader('tool')">
+          <li @click="siteStore.changeHeaderM('tool')">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-              :class="{ 'active-menu': active == 'tool' }"
+              :class="{ 'active-menu': siteStore.active == 'tool' }"
               data-tip="Tool"
             >
               <font-awesome-icon icon="fa-solid fa-screwdriver-wrench" />
@@ -162,40 +146,40 @@ const changeHeader = (e) => {
               <span class="is-drawer-close:hidden ml-1">Others</span>
             </h2>
             <ul>
-              <li @click="changeHeader('info')">
+              <li @click="siteStore.changeHeaderM('info')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'info' }"
+                  :class="{ 'active-menu': siteStore.active == 'info' }"
                   data-tip="UserInfo"
                 >
                   <font-awesome-icon icon="fa-solid fa-user" />
                   <span class="is-drawer-close:hidden">UserInfo</span>
                 </button>
               </li>
-              <li @click="changeHeader('about')">
+              <li @click="siteStore.changeHeaderM('about')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'about' }"
+                  :class="{ 'active-menu': siteStore.active == 'about' }"
                   data-tip="About"
                 >
                   <font-awesome-icon icon="fa-solid fa-circle-info" />
                   <span class="is-drawer-close:hidden">About</span>
                 </button>
               </li>
-              <li @click="changeHeader('category')">
+              <li @click="siteStore.changeHeaderM('category')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'category' }"
+                  :class="{ 'active-menu': siteStore.active == 'category' }"
                   data-tip="Category"
                 >
                   <font-awesome-icon icon="fa-solid fa-layer-group" />
                   <span class="is-drawer-close:hidden">Category</span>
                 </button>
               </li>
-              <li @click="changeHeader('tag')">
+              <li @click="siteStore.changeHeaderM('tag')">
                 <button
                   class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  :class="{ 'active-menu': active == 'tag' }"
+                  :class="{ 'active-menu': siteStore.active == 'tag' }"
                   data-tip="Tag"
                 >
                   <font-awesome-icon icon="fa-solid fa-tags" />
@@ -204,7 +188,7 @@ const changeHeader = (e) => {
               </li>
             </ul>
           </li>
-          <li @click="logout()">
+          <li @click="accountStore.logout()">
             <button
               class="is-drawer-close:tooltip is-drawer-close:tooltip-right text-red"
               data-tip="Logout"

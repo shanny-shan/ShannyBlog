@@ -1,71 +1,12 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useAdminStore, useAccountStore, useSiteStore } from '@/stores'
-import { useToast } from 'vue-toastification'
+import { onMounted } from 'vue'
+import { useAdminStore, useAccountStore } from '@/stores'
 
-const toast = useToast()
 const adminStore = useAdminStore()
 const accountStore = useAccountStore()
-const siteStore = useSiteStore()
-
-const sexOptions = ref({
-  UNKNOWN: '未知',
-  MAN: '男',
-  FEMALE: '女',
-})
-const statusOptions = ref({
-  ACTIVE: '启用',
-  LOCKED: '锁定',
-  DELETED: '删除',
-})
-const DEFAULT_TEXT = ref('请选择日期')
-
-const selectedDate = ref(DEFAULT_TEXT.value)
-const calendarRef = ref(null)
-const dropdownOpen = ref(false)
-
-const handleDateChange = (e) => {
-  const date = e.target.value
-  selectedDate.value = date
-  accountStore.userForm.userDetails.birthday = date
-  dropdownOpen.value = false
-}
-
-const setDate = () => {
-  const birthday = accountStore.userForm.userDetails.birthday
-  if (birthday) {
-    selectedDate.value = birthday
-    if (calendarRef.value) {
-      calendarRef.value.value = birthday
-    }
-  } else {
-    selectedDate.value = DEFAULT_TEXT.value
-  }
-}
-
-const closeDialog = () => {
-  adminStore.closeDialog('info')
-}
-
-const submitInfo = async () => {
-  siteStore.loading = true
-
-  if (adminStore.isEdit) {
-    const res = await accountStore.editUserInfo(accountStore.userForm)
-    if (res.data.code.toLowerCase() === 'success') {
-      toast.success(`${res.data.msg}`)
-      closeDialog()
-      await accountStore.getAllUsers()
-    } else {
-      toast.error(`${res.data.msg}`)
-    }
-  }
-
-  siteStore.loading = false
-}
 
 onMounted(() => {
-  setDate()
+  accountStore.setDate()
 })
 </script>
 <template>
@@ -130,7 +71,7 @@ onMounted(() => {
           v-model="accountStore.userForm.userDetails.sex"
         >
           <option
-            v-for="[value, label] in Object.entries(sexOptions)"
+            v-for="[value, label] in Object.entries(accountStore.sexOptions)"
             :key="value"
             :value="value"
           >
@@ -147,10 +88,16 @@ onMounted(() => {
         />
 
         <div class="mt-1 flex items-center justify-between gap-2">
-          <button class="btn btn-primary w-1/2" @click="submitInfo()">
+          <button
+            class="btn btn-primary w-1/2"
+            @click="accountStore.submitInfo()"
+          >
             Submit
           </button>
-          <button class="btn btn-soft w-1/2" @click="closeDialog()">
+          <button
+            class="btn btn-soft w-1/2"
+            @click="adminStore.closeDialog('info')"
+          >
             Cancel
           </button>
         </div>

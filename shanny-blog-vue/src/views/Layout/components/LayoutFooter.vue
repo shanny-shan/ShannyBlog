@@ -1,18 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useProjectInfoStore } from '@/stores/modules/project'
+import { useWebInfoStore } from '@/stores'
 const year = new Date().getFullYear()
 const month = new Date().getMonth() + 1
-const projectInfoStore = useProjectInfoStore()
-const projectInfo = ref({})
-const getProjectInfo = async () => {
-  const res = await projectInfoStore.getProjectInfos()
-  if (res.data.code.toLowerCase() === 'success') {
-    projectInfo.value = res.data.data
-  }
-}
-onMounted(() => {
-  getProjectInfo()
+const webInfoStore = useWebInfoStore()
+
+onMounted(async () => {
+  await webInfoStore.getWebInfos()
 })
 </script>
 <template>
@@ -53,7 +47,7 @@ onMounted(() => {
         <p class="text-xs md:text-base">
           © 2025.9–{{ year }}.{{ month }}
           <!-- {{ projectInfo.owner || 'Shanny' }} · -->
-          {{ projectInfo.name || 'ShannyBlog' }}
+          {{ webInfoStore.webInfo.name || 'ShannyBlog' }}
           <!-- · v{{
             projectInfo.version || '0.0.0'
           }} -->

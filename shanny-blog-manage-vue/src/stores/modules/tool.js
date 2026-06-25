@@ -1,10 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { deleteToolById, getTools, insertTool, updateTool } from '@/apis/tool'
-import { useSiteStore } from '@/stores'
+import { useAdminStore, useSiteStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
 export const useToolStore = defineStore('tool', () => {
+  const toast = useToast()
   const siteStore = useSiteStore()
+  const adminStore = useAdminStore()
 
   const tools = ref([])
   const toolList = ref([])
@@ -35,14 +39,51 @@ export const useToolStore = defineStore('tool', () => {
     }
   }
 
-  const addTool = async (tool) => {
-    return await insertTool(tool)
+  const openEditTool = (item) => {
+    adminStore.openDialog('tool')
+    toolForm.value = { ...item }
+    adminStore.isEdit = true
   }
-  const editTool = async (tool) => {
-    return await updateTool(tool)
+
+  const deleteTool = (item) => {
+    swal(
+      '',
+      '',
+      `确定删除标题为<span class="text-primary font-bold">${item.title}</span>的工具吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteToolById(item.id)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          await getToolList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
   }
-  const deleteTool = async (id) => {
-    return await deleteToolById(id)
+
+  const submitTool = async () => {
+    siteStore.loading = true
+
+    let res = null
+    if (adminStore.isEdit) {
+      res = await updateTool(toolForm.value)
+    } else {
+      res = await insertTool(toolForm.value)
+    }
+
+    if (res.data.code.toLowerCase() === 'success') {
+      toast.success(`${res.data.msg}`)
+      adminStore.closeDialog('tool')
+      await getToolList()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+    siteStore.loading = false
   }
 
   return {
@@ -51,8 +92,8 @@ export const useToolStore = defineStore('tool', () => {
     toolForm,
     resetToolForm,
     getToolList,
-    addTool,
-    editTool,
+    submitTool,
+    openEditTool,
     deleteTool,
   }
 })

@@ -6,10 +6,14 @@ import {
   insertAbout,
   updateAbout,
 } from '@/apis/about'
-import { useSiteStore } from '@/stores'
+import { useSiteStore, useAdminStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
 export const useAboutStore = defineStore('about', () => {
+  const toast = useToast()
   const siteStore = useSiteStore()
+  const adminStore = useAdminStore()
 
   const authors = ref([])
   const aboutList = ref([])
@@ -49,14 +53,50 @@ export const useAboutStore = defineStore('about', () => {
     }
   }
 
-  const addAbout = async (about) => {
-    return await insertAbout(about)
+  const openEditAbout = (item) => {
+    adminStore.openDialog('about')
+    aboutForm.value = { ...item }
+    adminStore.isEdit = true
   }
-  const editAbout = async (about) => {
-    return await updateAbout(about)
+  const deleteAbout = (item) => {
+    swal(
+      '',
+      '',
+      `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的个人信息吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteAboutById(item.id)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          await getAboutList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
   }
-  const deleteAbout = async (id) => {
-    return await deleteAboutById(id)
+
+  const submitAbout = async (about) => {
+    siteStore.loading = true
+    let res = null
+    if (adminStore.isEdit) {
+      res = await updateAbout(about)
+    } else {
+      res = await insertAbout(about)
+    }
+
+    if (res?.data?.code.toLowerCase() == 'success') {
+      toast.success(`${res.data.msg}`)
+      adminStore.closeDialog('about')
+      await getAboutList()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+
+    siteStore.loading = false
   }
 
   return {
@@ -65,8 +105,8 @@ export const useAboutStore = defineStore('about', () => {
     authorInfo,
     aboutForm,
     resetAboutForm,
-    addAbout,
-    editAbout,
+    submitAbout,
+    openEditAbout,
     deleteAbout,
     getAboutList,
   }

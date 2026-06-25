@@ -1,62 +1,13 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import InfoDialog from '@/views/_components/dialog/InfoDialog.vue'
-import { useAdminStore, useAccountStore } from '@/stores'
-import { useToast } from 'vue-toastification'
-import { swal } from '@/utils/sweetalert'
+import { useAccountStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
-const toast = useToast()
 const accountStore = useAccountStore()
-const adminStore = useAdminStore()
+const pageStore = usePageStore()
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
-
-const editInfo = (item) => {
-  adminStore.openDialog('info')
-  accountStore.userForm = {
-    ...item,
-    userDetails: { ...item.userDetails },
-  }
-  adminStore.isEdit = true
-}
-const deleteInfo = (item) => {
-  swal(
-    '',
-    '',
-    `确定删除名为<span class="text-primary font-bold">${item.userId}</span>的账户吗？`,
-    'question',
-    true,
-    true,
-  ).then(async (result) => {
-    if (result.isConfirmed) {
-      const res = await accountStore.deleteUser(item.uuid)
-      if (res.data.code.toLowerCase() === 'success') {
-        toast.success(`${res.data.msg}`)
-        await accountStore.getAllUsers()
-      } else {
-        toast.error(`${res.data.msg}`)
-      }
-    }
-  })
-}
-
-const totalPages = computed(() => {
-  return Math.ceil(accountStore.users.length / itemsPerPage.value)
-})
-
-// 计算当前页显示的条目
-const items = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return accountStore.users.slice(startIndex, endIndex)
-})
-// 处理页码变化事件
-const handlePageChange = (page) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+const { pageList, totalPages } = pageStore.getPageData(() => accountStore.users)
 
 onMounted(async () => {
   await accountStore.getAllUsers()
@@ -90,7 +41,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -98,14 +49,14 @@ onMounted(async () => {
             </th>
             <td>
               <div class="flex items-center gap-3">
-                <div class="avatar">
+                <!-- <div class="avatar">
                   <div class="mask mask-squircle h-12 w-12">
                     <img
                       src="@/assets/images/avatar.jpg"
                       alt="Avatar Tailwind CSS Component"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div>
                   <div class="font-bold">{{ item.userId }}</div>
                   <div class="text-sm opacity-50">{{ item.status }}</div>
@@ -120,10 +71,16 @@ onMounted(async () => {
             <td>{{ item.lastLoginTime.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs" @click="editInfo(item)">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="accountStore.openEditInfo(item)"
+                >
                   Edit
                 </button>
-                <button class="btn btn-ghost btn-xs" @click="deleteInfo(item)">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="accountStore.deleteInfo(item)"
+                >
                   Delete
                 </button>
               </div>
@@ -134,10 +91,10 @@ onMounted(async () => {
     </div>
     <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>

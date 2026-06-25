@@ -1,48 +1,13 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useToast } from 'vue-toastification'
-import {
-  useAdminStore,
-  useTagStore,
-  useToolStore,
-  useSiteStore,
-} from '@/stores'
+import { onMounted } from 'vue'
+import { useAdminStore, useTagStore, useToolStore } from '@/stores'
 
-const toast = useToast()
 const adminStore = useAdminStore()
 const tagStore = useTagStore()
 const toolStore = useToolStore()
-const siteStore = useSiteStore()
-
-const submitTool = async () => {
-  siteStore.loading = true
-
-  let res = null
-  if (adminStore.isEdit) {
-    res = await toolStore.editTool(toolStore.toolForm)
-  } else {
-    res = await toolStore.addTool(toolStore.toolForm)
-  }
-
-  if (res.data.code.toLowerCase() === 'success') {
-    toast.success(`${res.data.msg}`)
-    adminStore.closeDialog('tool')
-    await toolStore.getToolList()
-  } else {
-    toast.error(`${res.data.msg}`)
-  }
-  siteStore.loading = false
-}
-
-const inputImage = (event) => {
-  toolStore.toolForm.image = event.target.files[0]
-}
 
 onMounted(async () => {
-  const tagResult = await tagStore.getTagAll()
-  if (tagResult.data.code.toLowerCase() === 'success') {
-    tagStore.tags = tagResult.data.data
-  }
+  tagStore.getTagAll()
 })
 </script>
 <template>
@@ -57,7 +22,7 @@ onMounted(async () => {
         </button>
       </form>
       <form
-        @submit.prevent="submitTool"
+        @submit.prevent="toolStore.submitTool"
         class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full flex flex-col"
       >
         <legend class="fieldset-legend">Add Tool</legend>

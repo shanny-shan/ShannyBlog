@@ -1,9 +1,9 @@
 import request from '@/utils/request'
-const getProjectInfo = () => {
+const getWebInfo = () => {
   return request({
     url: '/project/info',
     method: 'Get',
   })
 }
 
-export { getProjectInfo }
+export { getWebInfo }

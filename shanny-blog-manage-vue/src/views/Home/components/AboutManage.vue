@@ -1,59 +1,15 @@
 <script setup>
 import AboutDialog from '@/views/_components/dialog/AboutDialog.vue'
-import { onMounted, ref, computed } from 'vue'
-import { useAdminStore, useAboutStore } from '@/stores'
-import { useToast } from 'vue-toastification'
-import { swal } from '@/utils/sweetalert'
+import { onMounted } from 'vue'
+import { useAdminStore, useAboutStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
-
-const toast = useToast()
 const adminStore = useAdminStore()
 const aboutStore = useAboutStore()
+const pageStore = usePageStore()
 
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
-
-const editAbout = (item) => {
-  adminStore.openDialog('about')
-  aboutStore.aboutForm = { ...item }
-  adminStore.isEdit = true
-}
-const deleteAbout = (item) => {
-  swal(
-    '',
-    '',
-    `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的个人信息吗？`,
-    'question',
-    true,
-    true,
-  ).then(async (result) => {
-    if (result.isConfirmed) {
-      const res = await aboutStore.deleteAbout(item.id)
-      if (res.data.code.toLowerCase() === 'success') {
-        toast.success(`${res.data.msg}`)
-        await aboutStore.getAboutList()
-      } else {
-        toast.error(`${res.data.msg}`)
-      }
-    }
-  })
-}
-
-const totalPages = computed(() => {
-  return Math.ceil(aboutStore.aboutList.length / itemsPerPage.value)
-})
-
-// 计算当前页显示的条目
-const items = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return aboutStore.aboutList.slice(startIndex, endIndex)
-})
-// 处理页码变化事件
-const handlePageChange = (page) => {
-  currentPage.value = page
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+const { pageList, totalPages } = pageStore.getPageData(
+  () => aboutStore.aboutList,
+)
 
 onMounted(async () => {
   await aboutStore.getAboutList()
@@ -89,7 +45,7 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in items" :key="item.id">
+          <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
                 <input type="checkbox" class="checkbox" />
@@ -117,10 +73,16 @@ onMounted(async () => {
             <td>{{ item.updateTime.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
-                <button class="btn btn-ghost btn-xs" @click="editAbout(item)">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="aboutStore.openEditAbout(item)"
+                >
                   Edit
                 </button>
-                <button class="btn btn-ghost btn-xs" @click="deleteAbout(item)">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="aboutStore.deleteAbout(item)"
+                >
                   Delete
                 </button>
               </div>
@@ -131,10 +93,10 @@ onMounted(async () => {
     </div>
     <div class="mt-2 md:mt-10 flex justify-center" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>

@@ -7,11 +7,18 @@ import {
   deleteCategoryById,
 } from '@/apis/category'
 
-import { useSiteStore } from '@/stores'
+import { useSiteStore, useArticleStore, useAdminStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
 export const useCategoryStore = defineStore('category', () => {
+  const toast = useToast()
   const siteStore = useSiteStore()
+  const articleStore = useArticleStore()
+  const adminStore = useAdminStore()
+  const categorStore = useCategoryStore
 
+  const curCategories = ref([])
   const categories = ref([])
   const categoryList = ref([])
   const categoryForm = ref({
@@ -39,10 +46,6 @@ export const useCategoryStore = defineStore('category', () => {
       sort: 0,
     }
   }
-  const getCategories = async () => {
-    return await getCategory()
-  }
-
   const getCategoryList = async () => {
     siteStore.loading = true
     const res = await getCategory()
@@ -52,25 +55,73 @@ export const useCategoryStore = defineStore('category', () => {
     }
   }
 
-  const addCategory = async (category) => {
-    return await insertCategory(category)
+  const openEditCategory = (item) => {
+    adminStore.openDialog('category')
+    categoryForm.value = { ...item }
+    adminStore.isEdit = true
   }
-  const editCategory = async (category) => {
-    return await updateCategory(category)
+  const deleteCategory = (item) => {
+    swal(
+      '',
+      '',
+      `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的类型吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteCategoryById(tem.id)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          await getCategoryList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
   }
-  const deleteCategory = async (id) => {
-    return await deleteCategoryById(id)
+
+  const submitCategory = async () => {
+    siteStore.loading = true
+    let res = null
+    if (adminStore.isEdit) {
+      res = await updateCategory(categoryForm.value)
+    } else {
+      res = await insertCategory(categoryForm.value)
+    }
+
+    if (res?.data?.code.toLowerCase() == 'success') {
+      toast.success(`${res.data.msg}`)
+      adminStore.closeDialog('category')
+      await getCategoryList()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+
+    siteStore.loading = false
+  }
+  const getCategoryId = async (categorey) => {
+    const categoryResult = await getCategory()
+    if (categoryResult.data.code.toLowerCase() === 'success') {
+      curCategories.value = categoryResult.data.data.filter(
+        (item) => item.type == categorey,
+      )
+      if (curCategories.value.length > 0) {
+        articleStore.articleForm.categoryId = curCategories.value[0].id
+      }
+    }
   }
   return {
+    curCategories,
     categories,
     categoryList,
     categoryForm,
     categoryType,
     resetCategoryForm,
-    getCategories,
     getCategoryList,
-    addCategory,
-    editCategory,
+    submitCategory,
+    openEditCategory,
     deleteCategory,
+    getCategoryId,
   }
 })

@@ -8,10 +8,14 @@ import {
   deleteTagById,
 } from '@/apis/tag'
 
-import { useSiteStore } from '@/stores'
+import { useAdminStore, useSiteStore } from '@/stores'
+import { useToast } from 'vue-toastification'
+import { swal } from '@/utils/sweetalert'
 
 export const useTagStore = defineStore('tag', () => {
+  const toast = useToast()
   const siteStore = useSiteStore()
+  const adminStore = useAdminStore()
 
   const tags = ref([])
   const tagList = ref([])
@@ -35,20 +39,61 @@ export const useTagStore = defineStore('tag', () => {
     }
   }
   const getTagAll = async () => {
-    return await getTags()
+    const tagResult = await getTags()
+    if (tagResult.data.code.toLowerCase() === 'success') {
+      tags.value = tagResult.data.data
+    }
   }
   const getTagByIdList = async () => {
     return await getTagsById()
   }
-  const addTag = async (tag) => {
-    return await insertTag(tag)
+  const openEditTag = (item) => {
+    adminStore.openDialog('tag')
+    tagForm.value = { ...item }
+    adminStore.isEdit = true
   }
-  const editTag = async (tag) => {
-    return await updateTag(tag)
+
+  const deleteTag = (item) => {
+    swal(
+      '',
+      '',
+      `确定删除名称为<span class="text-primary font-bold">${item.name}</span>的标签吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteTagById(item.id)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          await getTagList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
   }
-  const deleteTag = async (id) => {
-    return await deleteTagById(id)
+
+  const submitTag = async () => {
+    siteStore.loading = true
+
+    let res = null
+    if (adminStore.isEdit) {
+      res = await updateTag(tagForm.value)
+    } else {
+      res = await insertTag(tagForm.value)
+    }
+    if (res.data.code.toLowerCase() === 'success') {
+      toast.success(`${res.data.msg}`)
+      adminStore.closeDialog('tag')
+      await getTagList()
+    } else {
+      toast.error(`${res.data.msg}`)
+    }
+
+    siteStore.loading = false
   }
+
   return {
     tags,
     tagList,
@@ -57,8 +102,8 @@ export const useTagStore = defineStore('tag', () => {
     getTagList,
     getTagAll,
     getTagByIdList,
-    addTag,
-    editTag,
+    openEditTag,
     deleteTag,
+    submitTag,
   }
 })

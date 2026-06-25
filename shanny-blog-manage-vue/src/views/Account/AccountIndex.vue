@@ -1,50 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useAccountStore } from '@/stores/modules/account'
-import { useToast } from 'vue-toastification'
+
 import { useSiteStore } from '@/stores/modules/site'
-const toast = useToast()
-const accountType = ref('login')
+
 const accountStore = useAccountStore()
 const siteStore = useSiteStore()
-const login = async () => {
-  const { userId, password } = accountStore.loginForm
-  siteStore.loading = true
-
-  const res = await accountStore.getLogin(userId, password)
-  if (res.data.code.toLowerCase() == 'success') {
-    toast.success(`Wecome ${userId}!`)
-    localStorage.setItem('jwtToken', res.data.data.token)
-    setTimeout(() => {
-      window.location.href = '/manage/'
-    }, 2000)
-  } else {
-    toast.error(res.data.msg)
-    siteStore.loading = false
-  }
-}
-const register = async () => {
-  const { userId, mobile, password, confirmPassword } =
-    accountStore.registerForm
-
-  if (password !== confirmPassword) {
-    toast.error('两次输入的密码不一致')
-    return
-  }
-
-  siteStore.loading = true
-
-  const res = await accountStore.getRegister(userId, mobile, password)
-  if (res.data.code.toLowerCase() == 'success') {
-    toast.success(res.data.msg)
-    accountStore.loginForm.userId = userId
-    accountStore.loginForm.password = password
-    login()
-  } else {
-    toast.error(res.data.msg)
-    siteStore.loading = false
-  }
-}
 
 onMounted(async () => {
   if (accountStore.isLoggedIn()) {
@@ -53,9 +14,6 @@ onMounted(async () => {
     accountStore.userInfo = {}
   }
 })
-const goWebSite = () => {
-  window.open('https://www.shanny.work', '_blank')
-}
 </script>
 <template>
   <div class="flex justify-center items-center w-full h-screen">
@@ -63,7 +21,7 @@ const goWebSite = () => {
       <button
         class="btn btn-ghost tooltip absolute top-2 left-2"
         data-tip="GO WebSite"
-        @click="goWebSite()"
+        @click="siteStore.goWebSite()"
       >
         <font-awesome-icon icon="fa-regular fa-circle-left" />
       </button>
@@ -71,15 +29,21 @@ const goWebSite = () => {
         <div class="flex flex-row w-full justify-center items-center gap-2">
           <button
             class="btn"
-            :class="accountType == 'login' ? 'btn-primary' : 'btn-ghost'"
-            @click="accountType = 'login'"
+            :class="
+              accountStore.accountType == 'login' ? 'btn-primary' : 'btn-ghost'
+            "
+            @click="accountStore.accountType = 'login'"
           >
             Login
           </button>
           <button
             class="btn"
-            :class="accountType == 'register' ? 'btn-primary' : 'btn-ghost'"
-            @click="accountType = 'register'"
+            :class="
+              accountStore.accountType == 'register'
+                ? 'btn-primary'
+                : 'btn-ghost'
+            "
+            @click="accountStore.accountType = 'register'"
           >
             Register
           </button>
@@ -89,10 +53,13 @@ const goWebSite = () => {
           class="fieldset bg-base-100 border-primary shadow-sm rounded-box w-full max-w-full border p-4 h-full max-h-full"
         >
           <legend class="fieldset-legend">
-            {{ accountType == 'login' ? 'Login' : 'Register' }}
+            {{ accountStore.accountType == 'login' ? 'Login' : 'Register' }}
           </legend>
 
-          <form @submit.prevent="login" v-if="accountType == 'login'">
+          <form
+            @submit.prevent="accountStore.login"
+            v-if="accountStore.accountType == 'login'"
+          >
             <label class="label w-full">UserId</label>
             <input
               type="text"
@@ -126,7 +93,7 @@ const goWebSite = () => {
               </div> -->
             </div>
           </form>
-          <form @submit.prevent="register" v-else>
+          <form @submit.prevent="accountStore.register" v-else>
             <fieldset class="fieldset">
               <label class="label w-full">UserId</label>
               <input
