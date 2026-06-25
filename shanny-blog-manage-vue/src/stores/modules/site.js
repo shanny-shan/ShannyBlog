@@ -1,7 +1,10 @@
 import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
+import { usePageStore } from '@/stores'
 
 export const useSiteStore = defineStore('site', () => {
+  const pageStore = usePageStore()
+
   const loading = ref(false)
   const drawerOpen = ref(false)
   const isMobile = ref(false)
@@ -18,6 +21,7 @@ export const useSiteStore = defineStore('site', () => {
   }
   const changeHeader = (e) => {
     active.value = e
+    pageStore.selectedIds = []
   }
   const changeHeaderM = (e) => {
     changeHeader(e)

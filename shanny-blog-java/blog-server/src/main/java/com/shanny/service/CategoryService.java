@@ -18,4 +18,6 @@ public interface CategoryService {
     Result<CategoryVO> updateCategory(CategoryDTO categoryDTO);
 
     Result<String> deleteCategoryById(Long id);
+
+    Result<String> deleteCategoris(List<Long> ids);
 }

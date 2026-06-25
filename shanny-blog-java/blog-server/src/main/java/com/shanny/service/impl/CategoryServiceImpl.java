@@ -97,4 +97,13 @@ public class CategoryServiceImpl implements CategoryService {
         categoryMapper.deleteById(id);
         return Result.success(DELETE_SUCCESS);
     }
+
+    @Override
+    public Result<String> deleteCategoris(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        categoryMapper.deleteByIds(ids);
+        return Result.success(DELETE_SUCCESS);
+    }
 }

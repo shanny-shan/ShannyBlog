@@ -6,9 +6,10 @@ import {
   getTagsById,
   updateTag,
   deleteTagById,
+  deleteTagsById,
 } from '@/apis/tag'
 
-import { useAdminStore, useSiteStore } from '@/stores'
+import { useAdminStore, usePageStore, useSiteStore } from '@/stores'
 import { useToast } from 'vue-toastification'
 import { swal } from '@/utils/sweetalert'
 
@@ -16,6 +17,7 @@ export const useTagStore = defineStore('tag', () => {
   const toast = useToast()
   const siteStore = useSiteStore()
   const adminStore = useAdminStore()
+  const pageStore = usePageStore()
 
   const tags = ref([])
   const tagList = ref([])
@@ -74,6 +76,28 @@ export const useTagStore = defineStore('tag', () => {
     })
   }
 
+  const deleteTags = () => {
+    swal(
+      '',
+      '',
+      `确定删除<span class="text-primary font-bold">${pageStore.selectedIds.length}</span>条标签吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteTagsById(pageStore.selectedIds)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          pageStore.selectedIds = []
+          await getTagList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
+  }
+
   const submitTag = async () => {
     siteStore.loading = true
 
@@ -104,6 +128,7 @@ export const useTagStore = defineStore('tag', () => {
     getTagByIdList,
     openEditTag,
     deleteTag,
+    deleteTags,
     submitTag,
   }
 })

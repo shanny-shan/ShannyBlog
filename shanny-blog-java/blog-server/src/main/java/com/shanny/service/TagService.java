@@ -16,4 +16,6 @@ public interface TagService {
     Result<TagVO> updateTag(TagDTO tagDTO);
 
     Result<String> deleteTagById(Long id);
+
+    Result<String> deleteTags(List<Long> ids);
 }

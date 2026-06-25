@@ -50,6 +50,15 @@ const deleteUserByUuid = (uuid) => {
     },
   })
 }
+const deleteUsersByUuid = (uuids) => {
+  return request({
+    url: '/account/deleteAll',
+    method: 'Post',
+    data: {
+      uuids,
+    },
+  })
+}
 
 export {
   registerUser,
@@ -58,4 +67,5 @@ export {
   getUsers,
   updateUserInfo,
   deleteUserByUuid,
+  deleteUsersByUuid,
 }

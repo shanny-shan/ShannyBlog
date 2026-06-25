@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/tag")
@@ -73,6 +74,17 @@ public class TagController {
     public Result<String> deleteTag(Long id) {
         try {
             return tagService.deleteTagById(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteAll")
+    @Operation(summary = "标签批量删除")
+    public Result<String> deleteTags(@RequestBody Map<String, List<Long>> params) {
+        List<Long> ids = params.get("ids");
+        try {
+            return tagService.deleteTags(ids);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

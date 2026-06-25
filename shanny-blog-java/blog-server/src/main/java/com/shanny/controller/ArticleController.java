@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -105,6 +106,17 @@ public class ArticleController {
     public Result<String> deleteArticle(Long id) {
         try {
             return articleService.deleteArticle(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteAll")
+    @Operation(summary = "文章批量删除")
+    public Result<String> deleteArticles(@RequestBody Map<String, List<Long>> params) {
+        List<Long> ids = params.get("ids");
+        try {
+            return articleService.deleteArticles(ids);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

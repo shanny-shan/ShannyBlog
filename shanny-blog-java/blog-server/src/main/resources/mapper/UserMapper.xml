@@ -33,4 +33,18 @@
         </set>
         where uuid = #{uuid}
     </update>
+    <delete id="deleteUsersByUuid" parameterType="com.shanny.entity.User">
+        Delete from shanny_blog.users
+        where uuid in
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
+    <delete id="deleteInfosByUuid" parameterType="com.shanny.entity.UserDetails">
+        Delete from shanny_blog.user_details
+        where uuid in
+        <foreach collection="uuids" item="uuid" open="(" separator="," close=")">
+            #{uuid}
+        </foreach>
+    </delete>
 </mapper>

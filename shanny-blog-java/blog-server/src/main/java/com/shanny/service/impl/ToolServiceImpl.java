@@ -98,4 +98,13 @@ public class ToolServiceImpl implements ToolService {
         toolMapper.deleteById(id);
         return Result.success(DELETE_SUCCESS);
     }
+
+    @Override
+    public Result<String> deleteTools(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        toolMapper.deleteByIds(ids);
+        return Result.success(DELETE_SUCCESS);
+    }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import categoryDialog from '@/views/_components/dialog/CategoryDialog.vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useAdminStore, useCategoryStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
@@ -12,6 +12,15 @@ const { pageList, totalPages } = pageStore.getPageData(
   () => categoryStore.categoryList,
 )
 
+const isSelectedAll = computed({
+  get() {
+    return pageStore.isAllRowsChecked(pageList)
+  },
+  set() {
+    pageStore.toggleAllRows(pageList)
+  },
+})
+
 onMounted(async () => {
   await categoryStore.getCategoryList()
 })
@@ -19,6 +28,13 @@ onMounted(async () => {
 <template>
   <div>
     <div class="flex justify-end gap-2">
+      <button
+        class="btn btn-warning"
+        :disabled="pageStore.selectedIds.length === 0"
+        @click="categoryStore.deleteCategoris()"
+      >
+        Delete
+      </button>
       <button
         class="btn btn-primary"
         @click="adminStore.openDialog('category')"
@@ -32,7 +48,11 @@ onMounted(async () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  v-model="isSelectedAll"
+                />
               </label>
             </th>
             <th>Name</th>
@@ -46,7 +66,12 @@ onMounted(async () => {
           <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  :value="item.id"
+                  v-model="pageStore.selectedIds"
+                />
               </label>
             </th>
             <td>{{ item.name }}</td>

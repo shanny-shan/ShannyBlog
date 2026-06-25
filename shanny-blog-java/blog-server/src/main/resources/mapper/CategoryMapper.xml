@@ -15,4 +15,11 @@
         </set>
         where id = #{id}
     </update>
+    <delete id="deleteByIds" parameterType="com.shanny.entity.Category">
+        Delete from shanny_blog.categories
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

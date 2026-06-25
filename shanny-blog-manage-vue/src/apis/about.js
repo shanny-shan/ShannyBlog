@@ -32,4 +32,14 @@ const deleteAboutById = (id) => {
   })
 }
 
-export { getAbout, insertAbout, updateAbout, deleteAboutById }
+const deleteAboutsById = (ids) => {
+  return request({
+    url: '/about/deleteAll',
+    method: 'Post',
+    data: {
+      ids,
+    },
+  })
+}
+
+export { getAbout, insertAbout, updateAbout, deleteAboutById, deleteAboutsById }

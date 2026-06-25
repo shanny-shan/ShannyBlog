@@ -7,9 +7,10 @@ import {
   getUsers,
   updateUserInfo,
   deleteUserByUuid,
+  deleteUsersByUuid,
 } from '@/apis/user'
 import router from '@/router'
-import { useSiteStore, useAdminStore } from '@/stores'
+import { useSiteStore, useAdminStore, usePageStore } from '@/stores'
 import { swal } from '@/utils/sweetalert'
 import { useToast } from 'vue-toastification'
 
@@ -17,6 +18,7 @@ export const useAccountStore = defineStore('account', () => {
   const toast = useToast()
   const siteStore = useSiteStore()
   const adminStore = useAdminStore()
+  const pageStore = usePageStore()
 
   const users = ref([])
   const userInfo = ref({})
@@ -172,6 +174,28 @@ export const useAccountStore = defineStore('account', () => {
     })
   }
 
+  const deleteUsers = () => {
+    swal(
+      '',
+      '',
+      `确定删除<span class="text-primary font-bold">${pageStore.selectedIds.length}</span>名用户吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteUsersByUuid(pageStore.selectedIds)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          pageStore.selectedIds = []
+          await getAllUsers()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
+  }
+
   const handleDateChange = (e) => {
     const date = e.target.value
     selectedDate.value = date
@@ -244,5 +268,6 @@ export const useAccountStore = defineStore('account', () => {
 
     openEditInfo,
     deleteUser,
+    deleteUsers,
   }
 })

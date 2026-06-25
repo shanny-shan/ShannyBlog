@@ -83,4 +83,13 @@ public class TagServiceImpl implements TagService {
         tagMapper.deleteById(id);
         return Result.success(DELETE_SUCCESS);
     }
+
+    @Override
+    public Result<String> deleteTags(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        tagMapper.deleteByIds(ids);
+        return Result.success(DELETE_SUCCESS);
+    }
 }

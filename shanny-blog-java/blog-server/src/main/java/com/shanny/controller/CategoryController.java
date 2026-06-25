@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/category")
@@ -66,4 +67,14 @@ public class CategoryController {
         }
     }
 
+    @PostMapping("/deleteAll")
+    @Operation(summary = "类别批量删除")
+    public Result<String> deleteCategoris(@RequestBody Map<String, List<Long>> params) {
+        List<Long> ids = params.get("ids");
+        try {
+            return categoryService.deleteCategoris(ids);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

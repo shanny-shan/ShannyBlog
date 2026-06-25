@@ -9,17 +9,33 @@ const pageStore = usePageStore()
 
 const { pageList, totalPages } = pageStore.getPageData(() => accountStore.users)
 
+const isSelectedAll = computed({
+  get() {
+    return pageStore.isAllRowsChecked(pageList, 'uuid')
+  },
+  set() {
+    pageStore.toggleAllRows(pageList, 'uuid')
+  },
+})
+
 onMounted(async () => {
   await accountStore.getAllUsers()
 })
 </script>
 <template>
   <div>
-    <!-- <div class="flex justify-end gap-2">
-      <button class="btn btn-primary" @click="adminStore.openDialog('info')">
-        Add User
+    <div class="flex justify-end">
+      <button
+        class="btn btn-warning"
+        :disabled="pageStore.selectedIds.length === 0"
+        @click="accountStore.deleteUsers()"
+      >
+        Delete
       </button>
-    </div> -->
+      <!-- <button class="btn btn-primary" @click="adminStore.openDialog('info')">
+        Add User
+      </button> -->
+    </div>
     <div class="overflow-x-auto mt-10">
       <table class="table">
         <!-- head -->
@@ -27,7 +43,11 @@ onMounted(async () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  v-model="isSelectedAll"
+                />
               </label>
             </th>
             <th>UserId</th>
@@ -41,10 +61,15 @@ onMounted(async () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in pageList" :key="item.id">
+          <tr v-for="item in pageList" :key="item.uuid">
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  :value="item.uuid"
+                  v-model="pageStore.selectedIds"
+                />
               </label>
             </th>
             <td>
@@ -65,10 +90,10 @@ onMounted(async () => {
             </td>
             <td>{{ item.userDetails?.nickname }}</td>
             <td>{{ item.userDetails?.username }}</td>
-            <td>{{ item.userDetails?.birthday.substring(0, 10) }}</td>
+            <td>{{ item.userDetails?.birthday?.substring(0, 10) }}</td>
             <td>{{ item.userDetails?.sex }}</td>
             <td>{{ item.mobile }}</td>
-            <td>{{ item.lastLoginTime.substring(0, 10) }}</td>
+            <td>{{ item.lastLoginTime?.substring(0, 10) }}</td>
             <th>
               <div class="flex gap-2">
                 <button

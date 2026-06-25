@@ -21,4 +21,6 @@ public interface UserService {
     Result<UserInfoVO> updateUserInfo(UserInfoDTO userInfoDTO);
 
     Result<String> deleteUserByUuid(String uuid);
+
+    Result<String> deleteUsersByUuid(List<String> uuids);
 }

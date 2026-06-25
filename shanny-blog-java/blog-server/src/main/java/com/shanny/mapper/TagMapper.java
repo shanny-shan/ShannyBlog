@@ -22,4 +22,6 @@ public interface TagMapper {
 
     @Delete("delete from shanny_blog.tags where id = #{id}")
     void deleteById(Long id);
+
+    void deleteByIds(List<Long> ids);
 }

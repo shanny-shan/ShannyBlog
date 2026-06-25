@@ -43,4 +43,8 @@ public interface UserMapper {
 
     @Delete("delete from shanny_blog.user_details where uuid = #{uuid}")
     void deleteInfoByUuid(String uuid);
+
+    void deleteUsersByUuid(List<String> uuids);
+
+    void deleteInfosByUuid(List<String> uuids);
 }

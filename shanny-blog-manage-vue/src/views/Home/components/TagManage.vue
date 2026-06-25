@@ -1,6 +1,6 @@
 <script setup>
 import TagDialog from '@/views/_components/dialog/TagDialog.vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useAdminStore, useTagStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
@@ -10,6 +10,15 @@ const pageStore = usePageStore()
 
 const { pageList, totalPages } = pageStore.getPageData(() => tagStore.tagList)
 
+const isSelectedAll = computed({
+  get() {
+    return pageStore.isAllRowsChecked(pageList)
+  },
+  set() {
+    pageStore.toggleAllRows(pageList)
+  },
+})
+
 onMounted(async () => {
   await tagStore.getTagList()
 })
@@ -17,6 +26,13 @@ onMounted(async () => {
 <template>
   <div>
     <div class="flex justify-end gap-2">
+      <button
+        class="btn btn-warning"
+        :disabled="pageStore.selectedIds.length === 0"
+        @click="tagStore.deleteTags()"
+      >
+        Delete
+      </button>
       <button class="btn btn-primary" @click="adminStore.openDialog('tag')">
         Add tag
       </button>
@@ -27,7 +43,11 @@ onMounted(async () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  v-model="isSelectedAll"
+                />
               </label>
             </th>
             <th>Name</th>
@@ -39,7 +59,12 @@ onMounted(async () => {
           <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  :value="item.id"
+                  v-model="pageStore.selectedIds"
+                />
               </label>
             </th>
             <td>{{ item.name }}</td>

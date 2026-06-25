@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/about")
@@ -71,6 +72,17 @@ public class AboutController {
     public Result<String> deleteAboutMe(Long id) {
         try {
             return aboutService.deleteAboutById(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteAll")
+    @Operation(summary = "作者信息批量删除")
+    public Result<String> deleteAbouts(@RequestBody Map<String, List<Long>> params) {
+        List<Long> ids = params.get("ids");
+        try {
+            return aboutService.deleteAbouts(ids);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

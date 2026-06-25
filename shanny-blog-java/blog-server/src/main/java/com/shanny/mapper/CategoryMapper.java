@@ -25,4 +25,6 @@ public interface CategoryMapper {
 
     @Delete("delete from shanny_blog.categories where id = #{id}")
     void deleteById(Long id);
+
+    void deleteByIds(List<Long> ids);
 }

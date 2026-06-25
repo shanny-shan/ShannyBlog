@@ -1,6 +1,6 @@
 <script setup>
 import ToolDialog from '@/views/_components/dialog/ToolDialog.vue'
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useAdminStore, useToolStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
@@ -10,13 +10,29 @@ const pageStore = usePageStore()
 
 const { pageList, totalPages } = pageStore.getPageData(() => toolStore.toolList)
 
+const isSelectedAll = computed({
+  get() {
+    return pageStore.isAllRowsChecked(pageList)
+  },
+  set() {
+    pageStore.toggleAllRows(pageList)
+  },
+})
+
 onMounted(async () => {
   await toolStore.getToolList()
 })
 </script>
 <template>
   <div>
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-2">
+      <button
+        class="btn btn-warning"
+        :disabled="pageStore.selectedIds.length === 0"
+        @click="toolStore.deleteTools()"
+      >
+        Delete
+      </button>
       <button class="btn btn-primary" @click="adminStore.openDialog('tool')">
         Add Tool
       </button>
@@ -27,7 +43,11 @@ onMounted(async () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  v-model="isSelectedAll"
+                />
               </label>
             </th>
             <th>Title</th>
@@ -44,7 +64,12 @@ onMounted(async () => {
           <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  :value="item.id"
+                  v-model="pageStore.selectedIds"
+                />
               </label>
             </th>
             <td>

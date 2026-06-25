@@ -8,6 +8,7 @@ import com.shanny.entity.Category;
 import com.shanny.enums.AutoFillEnum;
 import com.shanny.enums.CategoryEnum;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -38,4 +39,6 @@ public interface ArticleMapper {
 
     @Select("SELECT * FROM shanny_blog.articles WHERE JSON_CONTAINS(tags, CAST(#{tagId} AS JSON))")
     List<Article> getByTag(Long tagId);
+
+    void deleteByIds(List<Long> ids);
 }

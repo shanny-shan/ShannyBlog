@@ -1,6 +1,6 @@
 <script setup>
 import NoteDialog from '@/views/_components/dialog/NoteDialog.vue'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAdminStore, useArticleStore, usePageStore } from '@/stores'
 import PaginationComponent from '@/views/_components/common/PaginationComponent.vue'
 
@@ -12,13 +12,29 @@ const { pageList, totalPages } = pageStore.getPageData(
   () => articleStore.noteList,
 )
 
+const isSelectedAll = computed({
+  get() {
+    return pageStore.isAllRowsChecked(pageList)
+  },
+  set() {
+    pageStore.toggleAllRows(pageList)
+  },
+})
+
 onMounted(async () => {
   await articleStore.getArticleList('ARTICLE_NOTE')
 })
 </script>
 <template>
   <div>
-    <div class="flex justify-end">
+    <div class="flex justify-end gap-2">
+      <button
+        class="btn btn-warning"
+        :disabled="pageStore.selectedIds.length === 0"
+        @click="articleStore.deleteArticles('ARTICLE_NOTE')"
+      >
+        Delete
+      </button>
       <button class="btn btn-primary" @click="adminStore.openDialog('note')">
         Add Note
       </button>
@@ -29,7 +45,11 @@ onMounted(async () => {
           <tr>
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  v-model="isSelectedAll"
+                />
               </label>
             </th>
             <th>Title</th>
@@ -45,7 +65,12 @@ onMounted(async () => {
           <tr v-for="item in pageList" :key="item.id">
             <th>
               <label>
-                <input type="checkbox" class="checkbox" />
+                <input
+                  type="checkbox"
+                  class="checkbox"
+                  :value="item.id"
+                  v-model="pageStore.selectedIds"
+                />
               </label>
             </th>
             <td>

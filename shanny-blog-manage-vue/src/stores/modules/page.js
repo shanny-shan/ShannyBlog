@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 export const usePageStore = defineStore('page', () => {
   const currentPage = ref(1)
   const itemsPerPage = ref(5)
+  const selectedIds = ref([])
 
   const getPageData = (listFun) => {
     const totalPages = computed(() =>
@@ -21,11 +22,59 @@ export const usePageStore = defineStore('page', () => {
 
   const handlePageChange = (page) => {
     currentPage.value = page
+    selectedIds.value = []
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const resetPage = () => {
     currentPage.value = 1
+  }
+
+  const toggleAllRows = (list, key = 'id') => {
+    const rows = list.value
+    if (key == 'id') {
+      const allChecked = rows.every((item) =>
+        selectedIds.value.includes(item.id),
+      )
+      if (allChecked) {
+        rows.forEach((item) => {
+          const i = selectedIds.value.indexOf(item.id)
+          if (i > -1) selectedIds.value.splice(i, 1)
+        })
+      } else {
+        rows.forEach((item) => {
+          if (!selectedIds.value.includes(item.id)) {
+            selectedIds.value.push(item.id)
+          }
+        })
+      }
+    } else if (key == 'uuid') {
+      const allChecked = rows.every((item) =>
+        selectedIds.value.includes(item.uuid),
+      )
+      if (allChecked) {
+        rows.forEach((item) => {
+          const i = selectedIds.value.indexOf(item.uuid)
+          if (i > -1) selectedIds.value.splice(i, 1)
+        })
+      } else {
+        rows.forEach((item) => {
+          if (!selectedIds.value.includes(item.uuid)) {
+            selectedIds.value.push(item.uuid)
+          }
+        })
+      }
+    }
+  }
+
+  const isAllRowsChecked = (list, key = 'id') => {
+    const rows = list.value
+    if (!rows.length) return false
+    if (key == 'id') {
+      return rows.every((item) => selectedIds.value.includes(item.id))
+    } else if (key == 'uuid') {
+      return rows.every((item) => selectedIds.value.includes(item.uuid))
+    }
   }
 
   return {
@@ -34,5 +83,9 @@ export const usePageStore = defineStore('page', () => {
     getPageData,
     handlePageChange,
     resetPage,
+
+    selectedIds,
+    toggleAllRows,
+    isAllRowsChecked,
   }
 })

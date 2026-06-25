@@ -29,5 +29,14 @@ const deleteToolById = (id) => {
     },
   })
 }
+const deleteToolsById = (ids) => {
+  return request({
+    url: '/tool/deleteAll',
+    method: 'Post',
+    data: {
+      ids,
+    },
+  })
+}
 
-export { getTools, insertTool, updateTool, deleteToolById }
+export { getTools, insertTool, updateTool, deleteToolById, deleteToolsById }

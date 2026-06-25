@@ -39,5 +39,21 @@ const deleteTagById = (id) => {
     },
   })
 }
+const deleteTagsById = (ids) => {
+  return request({
+    url: '/tag/deleteAll',
+    method: 'Post',
+    data: {
+      ids,
+    },
+  })
+}
 
-export { getTags, getTagsById, insertTag, updateTag, deleteTagById }
+export {
+  getTags,
+  getTagsById,
+  insertTag,
+  updateTag,
+  deleteTagById,
+  deleteTagsById,
+}

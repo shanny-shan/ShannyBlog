@@ -101,4 +101,13 @@ public class AboutServiceImpl implements AboutService {
         aboutMapper.deleteById(id);
         return Result.success(DELETE_SUCCESS);
     }
+
+    @Override
+    public Result<String> deleteAbouts(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        aboutMapper.deleteByIds(ids);
+        return Result.success(DELETE_SUCCESS);
+    }
 }

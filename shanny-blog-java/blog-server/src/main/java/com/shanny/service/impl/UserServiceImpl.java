@@ -191,4 +191,14 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteInfoByUuid(uuid);
         return Result.success(DELETE_SUCCESS);
     }
+
+    @Override
+    public Result<String> deleteUsersByUuid(List<String> uuids) {
+        if (uuids == null || uuids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        userMapper.deleteUsersByUuid(uuids);
+        userMapper.deleteInfosByUuid(uuids);
+        return Result.success(DELETE_SUCCESS);
+    }
 }

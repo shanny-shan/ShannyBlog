@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/account")
@@ -88,4 +89,14 @@ public class UserController {
         }
     }
 
+    @PostMapping("/deleteAll")
+    @Operation(summary = "用户批量删除")
+    public Result<String> deleteTools(@RequestBody Map<String, List<String>> params) {
+        List<String> uuids = params.get("uuids");
+        try {
+            return userService.deleteUsersByUuid(uuids);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

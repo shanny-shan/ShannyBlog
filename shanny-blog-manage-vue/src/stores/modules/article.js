@@ -5,8 +5,14 @@ import {
   insertArticle,
   updateArticle,
   deleteArticleById,
+  deleteArticlesById,
 } from '@/apis/article'
-import { useAdminStore, useCategoryStore, useSiteStore } from '@/stores'
+import {
+  useAdminStore,
+  useCategoryStore,
+  usePageStore,
+  useSiteStore,
+} from '@/stores'
 import { useToast } from 'vue-toastification'
 import { swal } from '@/utils/sweetalert'
 
@@ -15,6 +21,7 @@ export const useArticleStore = defineStore('article', () => {
   const siteStore = useSiteStore()
   const categoryStore = useCategoryStore()
   const adminStore = useAdminStore()
+  const pageStore = usePageStore()
 
   const articles = ref([])
   const noteList = ref([])
@@ -86,6 +93,27 @@ export const useArticleStore = defineStore('article', () => {
       }
     })
   }
+  const deleteArticles = (category) => {
+    swal(
+      '',
+      '',
+      `确定删除<span class="text-primary font-bold">${pageStore.selectedIds.length}</span>条笔记吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteArticlesById(pageStore.selectedIds)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          pageStore.selectedIds = []
+          await getArticleList(category)
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
+  }
 
   const submitArticle = async (categorey) => {
     siteStore.loading = true
@@ -129,6 +157,7 @@ export const useArticleStore = defineStore('article', () => {
     submitArticle,
     openEditArticle,
     deleteArticle,
+    deleteArticles,
     closeDialog,
   }
 })

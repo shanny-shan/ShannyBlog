@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/tool")
@@ -63,6 +64,17 @@ public class ToolController {
     public Result<String> deleteTool(Long id) {
         try {
             return toolService.deleteTool(id);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/deleteAll")
+    @Operation(summary = "工具批量删除")
+    public Result<String> deleteTools(@RequestBody Map<String, List<Long>> params) {
+        List<Long> ids = params.get("ids");
+        try {
+            return toolService.deleteTools(ids);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

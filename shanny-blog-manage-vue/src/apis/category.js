@@ -30,5 +30,20 @@ const deleteCategoryById = (id) => {
     },
   })
 }
+const deleteCategoriesById = (ids) => {
+  return request({
+    url: '/category/deleteAll',
+    method: 'Post',
+    data: {
+      ids,
+    },
+  })
+}
 
-export { getCategory, insertCategory, updateCategory, deleteCategoryById }
+export {
+  getCategory,
+  insertCategory,
+  updateCategory,
+  deleteCategoryById,
+  deleteCategoriesById,
+}

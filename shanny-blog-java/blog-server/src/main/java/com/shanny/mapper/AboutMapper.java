@@ -23,4 +23,6 @@ public interface AboutMapper {
 
     @Delete("delete from shanny_blog.abouts where id = #{id}")
     void deleteById(Long id);
+
+    void deleteByIds(List<Long> ids);
 }

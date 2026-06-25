@@ -5,9 +5,15 @@ import {
   insertCategory,
   updateCategory,
   deleteCategoryById,
+  deleteCategoriesById,
 } from '@/apis/category'
 
-import { useSiteStore, useArticleStore, useAdminStore } from '@/stores'
+import {
+  useSiteStore,
+  useArticleStore,
+  useAdminStore,
+  usePageStore,
+} from '@/stores'
 import { useToast } from 'vue-toastification'
 import { swal } from '@/utils/sweetalert'
 
@@ -16,7 +22,7 @@ export const useCategoryStore = defineStore('category', () => {
   const siteStore = useSiteStore()
   const articleStore = useArticleStore()
   const adminStore = useAdminStore()
-  const categorStore = useCategoryStore
+  const pageStore = usePageStore()
 
   const curCategories = ref([])
   const categories = ref([])
@@ -81,6 +87,28 @@ export const useCategoryStore = defineStore('category', () => {
     })
   }
 
+  const deleteCategoris = () => {
+    swal(
+      '',
+      '',
+      `确定删除<span class="text-primary font-bold">${pageStore.selectedIds.length}</span>个类别吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteCategoriesById(pageStore.selectedIds)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          pageStore.selectedIds = []
+          await getCategoryList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
+  }
+
   const submitCategory = async () => {
     siteStore.loading = true
     let res = null
@@ -122,6 +150,7 @@ export const useCategoryStore = defineStore('category', () => {
     submitCategory,
     openEditCategory,
     deleteCategory,
+    deleteCategoris,
     getCategoryId,
   }
 })

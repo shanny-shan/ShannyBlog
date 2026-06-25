@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { deleteToolById, getTools, insertTool, updateTool } from '@/apis/tool'
-import { useAdminStore, useSiteStore } from '@/stores'
+import {
+  deleteToolById,
+  deleteToolsById,
+  getTools,
+  insertTool,
+  updateTool,
+} from '@/apis/tool'
+import { useAdminStore, usePageStore, useSiteStore } from '@/stores'
 import { useToast } from 'vue-toastification'
 import { swal } from '@/utils/sweetalert'
 
@@ -9,6 +15,7 @@ export const useToolStore = defineStore('tool', () => {
   const toast = useToast()
   const siteStore = useSiteStore()
   const adminStore = useAdminStore()
+  const pageStore = usePageStore()
 
   const tools = ref([])
   const toolList = ref([])
@@ -66,6 +73,28 @@ export const useToolStore = defineStore('tool', () => {
     })
   }
 
+  const deleteTools = () => {
+    swal(
+      '',
+      '',
+      `确定删除<span class="text-primary font-bold">${pageStore.selectedIds.length}</span>个工具吗？`,
+      'question',
+      true,
+      true,
+    ).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await deleteToolsById(pageStore.selectedIds)
+        if (res.data.code.toLowerCase() === 'success') {
+          toast.success(`${res.data.msg}`)
+          pageStore.selectedIds = []
+          await getToolList()
+        } else {
+          toast.error(`${res.data.msg}`)
+        }
+      }
+    })
+  }
+
   const submitTool = async () => {
     siteStore.loading = true
 
@@ -95,5 +124,6 @@ export const useToolStore = defineStore('tool', () => {
     submitTool,
     openEditTool,
     deleteTool,
+    deleteTools,
   }
 })

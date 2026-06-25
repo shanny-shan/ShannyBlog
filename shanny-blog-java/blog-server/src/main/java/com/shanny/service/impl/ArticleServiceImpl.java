@@ -122,6 +122,8 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(SELECT_SUCCESS, articleVOList);
     }
 
+
+
     @Override
     public Result<ArticleVO> getArticleById(Long id) {
         Article article = articleMapper.getById(id);
@@ -179,6 +181,15 @@ public class ArticleServiceImpl implements ArticleService {
             return Result.error(DELETE_FAIL);
         }
         articleMapper.deleteById(id);
+        return Result.success(DELETE_SUCCESS);
+    }
+
+    @Override
+    public Result<String> deleteArticles(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Result.error(DELETE_FAIL);
+        }
+        articleMapper.deleteByIds(ids);
         return Result.success(DELETE_SUCCESS);
     }
 

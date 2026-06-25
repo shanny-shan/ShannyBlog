@@ -18,4 +18,6 @@ public interface AboutService {
     Result<AboutVO> updateAbout(AboutDTO aboutDTO);
 
     Result<String> deleteAboutById(Long id);
+
+    Result<String> deleteAbouts(List<Long> ids);
 }
