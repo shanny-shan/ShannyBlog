@@ -22,6 +22,7 @@ export const useSiteStore = defineStore('site', () => {
   const changeHeader = (e) => {
     active.value = e
     pageStore.selectedIds = []
+    pageStore.handlePageChange(1)
   }
   const changeHeaderM = (e) => {
     changeHeader(e)

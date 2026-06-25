@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 
 const getArticleByType = (type) => {
-  console.log(type)
   return request({
     url: '/article/type',
     method: 'Get',
