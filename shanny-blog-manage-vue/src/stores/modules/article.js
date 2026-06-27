@@ -129,6 +129,12 @@ export const useArticleStore = defineStore('article', () => {
     siteStore.loading = true
     articleForm.value.type = categorey
 
+    if (articleForm.value.content.trim() == '') {
+      toast.error('文章内容不能为空！')
+      siteStore.loading = false
+      return
+    }
+
     let res = null
 
     if (adminStore.isEdit) {

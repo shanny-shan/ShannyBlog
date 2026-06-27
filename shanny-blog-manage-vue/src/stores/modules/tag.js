@@ -22,8 +22,8 @@ export const useTagStore = defineStore('tag', () => {
   const tags = ref([])
   const tagList = ref([])
   const tagForm = ref({
-    name: '标签1',
-    nameEn: 'tag1',
+    name: '',
+    nameEn: '',
   })
   const resetTagForm = () => {
     tagForm.value = {
