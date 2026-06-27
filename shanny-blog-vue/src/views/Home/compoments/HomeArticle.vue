@@ -1,18 +1,19 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import ArticleComponent from '@/views/_components/home/ArticleComponent.vue'
 import TitleComponent from '@/views/_components/home/TitleComponent.vue'
-import { useArticleStore, useSiteStore } from '@/stores'
+import { useArticleStore } from '@/stores'
 import { getTypePath } from '@/config/enum'
 
 const articleStore = useArticleStore()
-const siteStore = useSiteStore()
+
+const emit = defineEmits(['load-complete'])
 
 onMounted(async () => {
   try {
     await articleStore.getViewList()
   } finally {
-    siteStore.handleLoadComplete()
+    emit('load-complete')
   }
 })
 </script>

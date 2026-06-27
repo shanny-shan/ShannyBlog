@@ -26,6 +26,14 @@ export const usePageStore = defineStore('page', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const lastPage = (list) => {
+    const { pageList } = getPageData(() => list)
+    if (pageList.value.length == 0 && currentPage.value > 1) {
+      currentPage.value--
+      handlePageChange(currentPage.value)
+    }
+  }
+
   const resetPage = () => {
     currentPage.value = 1
   }
@@ -83,6 +91,7 @@ export const usePageStore = defineStore('page', () => {
     getPageData,
     handlePageChange,
     resetPage,
+    lastPage,
 
     selectedIds,
     toggleAllRows,

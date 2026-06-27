@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { useCategoryStore } from './category'
 import { useAboutStore } from './about'
 import { useTagStore } from './tag'
+
 export const useAdminStore = defineStore('admin', () => {
   const categoryStore = useCategoryStore()
   const aboutStore = useAboutStore()

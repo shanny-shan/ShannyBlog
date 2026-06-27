@@ -87,6 +87,11 @@ export const useArticleStore = defineStore('article', () => {
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getArticleList(categorey)
+          if (categorey == 'ARTICLE_PROJECT') {
+            pageStore.lastPage(projectList.value)
+          } else {
+            pageStore.lastPage(noteList.value)
+          }
         } else {
           toast.error(`${res.data.msg}`)
         }
@@ -108,6 +113,11 @@ export const useArticleStore = defineStore('article', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getArticleList(category)
+          if (categorey == 'ARTICLE_PROJECT') {
+            pageStore.lastPage(projectList.value)
+          } else {
+            pageStore.lastPage(noteList.value)
+          }
         } else {
           toast.error(`${res.data.msg}`)
         }

@@ -80,6 +80,7 @@ export const useCategoryStore = defineStore('category', () => {
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getCategoryList()
+          pageStore.lastPage(categoryList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }
@@ -102,6 +103,7 @@ export const useCategoryStore = defineStore('category', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getCategoryList()
+          pageStore.lastPage(categoryList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }

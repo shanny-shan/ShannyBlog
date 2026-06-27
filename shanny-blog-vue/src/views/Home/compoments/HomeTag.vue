@@ -1,17 +1,18 @@
 <script setup>
 import TitleComponent from '@/views/_components/home/TitleComponent.vue'
-import { useTagStore, useLanguageStore, useSiteStore } from '@/stores'
+import { useTagStore, useLanguageStore } from '@/stores'
 import { onMounted } from 'vue'
 
 const tagStore = useTagStore()
 const languageStore = useLanguageStore()
-const siteStore = useSiteStore()
+
+const emit = defineEmits(['load-complete'])
 
 onMounted(async () => {
   try {
     await tagStore.getTagList()
   } finally {
-    siteStore.handleLoadComplete()
+    emit('load-complete')
   }
 })
 </script>

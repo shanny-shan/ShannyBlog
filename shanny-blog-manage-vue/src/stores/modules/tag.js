@@ -69,6 +69,7 @@ export const useTagStore = defineStore('tag', () => {
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getTagList()
+          pageStore.lastPage(tagList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }
@@ -91,6 +92,7 @@ export const useTagStore = defineStore('tag', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getTagList()
+          pageStore.lastPage(tagList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }

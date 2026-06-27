@@ -14,6 +14,7 @@ const { pageList, totalPages } = pageStore.getPageData(
 )
 
 onMounted(async () => {
+  pageStore.handlePageChange(1)
   scrollStore.enableScrollListener()
   await articleStore.getArticleByTypes('ARTICLE_NOTE')
 })
@@ -32,7 +33,7 @@ onUnmounted(() => {
     >
       <div v-for="item in pageList" :key="item.id" class="w-full md:w-1/4 p-2">
         <RouterLink :to="`/article/note/${item.id}`">
-          <CardImgComponent :item="item" :index="index" />
+          <CardImgComponent :item="item" />
         </RouterLink>
       </div>
     </div>

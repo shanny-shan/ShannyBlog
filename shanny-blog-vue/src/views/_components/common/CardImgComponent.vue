@@ -2,9 +2,6 @@
 import { formatDateTime } from '@/utils/time'
 import defaultImage from '@/assets/images/loading.gif'
 defineProps({
-  index: {
-    type: Number,
-  },
   item: {
     type: Object,
     default: () => {},

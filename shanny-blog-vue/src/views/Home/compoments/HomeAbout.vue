@@ -2,15 +2,16 @@
 import { onMounted } from 'vue'
 import defaultImage from '@/assets/images/loading.gif'
 import TitleComponent from '@/views/_components/home/TitleComponent.vue'
-import { useAboutStore, useSiteStore } from '@/stores'
+import { useAboutStore } from '@/stores'
 const aboutStore = useAboutStore()
-const siteStore = useSiteStore()
+
+const emit = defineEmits(['load-complete'])
 
 onMounted(async () => {
   try {
     await aboutStore.getAboutMe()
   } finally {
-    siteStore.handleLoadComplete()
+    emit('load-complete')
   }
 })
 </script>

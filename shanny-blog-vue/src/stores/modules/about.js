@@ -1,11 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { getAbout, insertAbout } from '@/apis/about'
-import { useSiteStore } from '@/stores'
 
 export const useAboutStore = defineStore('about', () => {
-  const siteStore = useSiteStore()
-
   const authors = ref([])
   const authorInfo = ref({})
   const aboutForm = ref({

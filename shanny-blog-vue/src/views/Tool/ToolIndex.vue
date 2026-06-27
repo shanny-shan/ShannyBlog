@@ -10,6 +10,7 @@ const pageStore = usePageStore()
 const { pageList, totalPages } = pageStore.getPageData(() => toolStore.toolList)
 
 onMounted(async () => {
+  pageStore.handlePageChange(1)
   scrollStore.enableScrollListener()
   await toolStore.getToolList()
 })

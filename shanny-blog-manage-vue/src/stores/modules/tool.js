@@ -66,6 +66,7 @@ export const useToolStore = defineStore('tool', () => {
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getToolList()
+          pageStore.lastPage(toolList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }
@@ -88,6 +89,7 @@ export const useToolStore = defineStore('tool', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getToolList()
+          pageStore.lastPage(toolList.value)
         } else {
           toast.error(`${res.data.msg}`)
         }

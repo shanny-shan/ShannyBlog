@@ -50,8 +50,8 @@ VMdEditor.use(createAlignPlugin())
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 const toastOptions = {
-  position: 'top-right',
-  timeout: 1500,
+  position: 'bottom-right',
+  timeout: 5000,
   pauseOnFocusLoss: true,
   pauseOnHover: true,
   draggable: true,

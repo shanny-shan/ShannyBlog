@@ -167,6 +167,7 @@ export const useAccountStore = defineStore('account', () => {
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getAllUsers()
+          pageStore.lastPage(users.value)
         } else {
           toast.error(`${res.data.msg}`)
         }
@@ -189,6 +190,7 @@ export const useAccountStore = defineStore('account', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getAllUsers()
+          pageStore.lastPage(users.value)
         } else {
           toast.error(`${res.data.msg}`)
         }
