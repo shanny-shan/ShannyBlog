@@ -52,6 +52,7 @@ export const useArticleStore = defineStore('article', () => {
       } else {
         noteList.value = res.data.data
       }
+      console.log('res.data.data', res.data.data)
       siteStore.loading = false
     }
   }

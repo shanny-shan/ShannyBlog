@@ -39,10 +39,10 @@ onUnmounted(() => {
     </div>
     <div class="mt-2 md:mt-10" v-if="totalPages > 1">
       <PaginationComponent
-        :current-page="currentPage"
+        :current-page="pageStore.currentPage"
         :total-pages="totalPages"
         :page-range="5"
-        @page-change="handlePageChange"
+        @page-change="pageStore.handlePageChange"
       />
     </div>
   </div>
