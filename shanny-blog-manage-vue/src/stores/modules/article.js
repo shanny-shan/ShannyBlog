@@ -53,11 +53,11 @@ export const useArticleStore = defineStore('article', () => {
     }
   }
 
-  const getArticleList = async (categorey) => {
+  const getArticleList = async (category) => {
     siteStore.loading = true
-    const res = await getArticleByType(categorey)
+    const res = await getArticleByType(category)
     if (res.data.code.toLowerCase() === 'success') {
-      if (categorey == 'ARTICLE_PROJECT') {
+      if (category == 'ARTICLE_PROJECT') {
         projectList.value = res.data.data || []
       } else {
         noteList.value = res.data.data || []
@@ -73,7 +73,7 @@ export const useArticleStore = defineStore('article', () => {
     adminStore.isEdit = true
   }
 
-  const deleteArticle = (item, categorey) => {
+  const deleteArticle = (item, category) => {
     swal(
       '',
       '',
@@ -86,8 +86,8 @@ export const useArticleStore = defineStore('article', () => {
         const res = await deleteArticleById(item.id)
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
-          await getArticleList(categorey)
-          if (categorey == 'ARTICLE_PROJECT') {
+          await getArticleList(category)
+          if (category == 'ARTICLE_PROJECT') {
             pageStore.lastPage(projectList.value)
           } else {
             pageStore.lastPage(noteList.value)
@@ -113,7 +113,7 @@ export const useArticleStore = defineStore('article', () => {
           toast.success(`${res.data.msg}`)
           pageStore.selectedIds = []
           await getArticleList(category)
-          if (categorey == 'ARTICLE_PROJECT') {
+          if (category == 'ARTICLE_PROJECT') {
             pageStore.lastPage(projectList.value)
           } else {
             pageStore.lastPage(noteList.value)
@@ -125,9 +125,9 @@ export const useArticleStore = defineStore('article', () => {
     })
   }
 
-  const submitArticle = async (categorey) => {
+  const submitArticle = async (category) => {
     siteStore.loading = true
-    articleForm.value.type = categorey
+    articleForm.value.type = category
 
     if (articleForm.value.content.trim() == '') {
       toast.error('文章内容不能为空！')
@@ -145,12 +145,12 @@ export const useArticleStore = defineStore('article', () => {
     if (res != null) {
       if (res.data.code.toLowerCase() === 'success') {
         toast.success(`${res.data.msg}`)
-        if (categorey == 'ARTICLE_PROJECT') {
-          closeDialog('project', categorey)
+        if (category == 'ARTICLE_PROJECT') {
+          closeDialog('project', category)
         } else {
-          closeDialog('note', categorey)
+          closeDialog('note', category)
         }
-        await getArticleList(categorey)
+        await getArticleList(category)
       } else {
         toast.error(`${res.data.msg}`)
       }
@@ -158,9 +158,9 @@ export const useArticleStore = defineStore('article', () => {
 
     siteStore.loading = false
   }
-  const closeDialog = (type, categorey) => {
+  const closeDialog = (type, category) => {
     adminStore.closeDialog(type)
-    categoryStore.getCategoryId(categorey)
+    categoryStore.getCategoryId(category)
   }
 
   return {

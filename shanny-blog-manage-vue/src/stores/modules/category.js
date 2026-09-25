@@ -76,7 +76,7 @@ export const useCategoryStore = defineStore('category', () => {
       true,
     ).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await deleteCategoryById(tem.id)
+        const res = await deleteCategoryById(item.id)
         if (res.data.code.toLowerCase() === 'success') {
           toast.success(`${res.data.msg}`)
           await getCategoryList()
@@ -130,11 +130,11 @@ export const useCategoryStore = defineStore('category', () => {
 
     siteStore.loading = false
   }
-  const getCategoryId = async (categorey) => {
+  const getCategoryId = async (category) => {
     const categoryResult = await getCategory()
     if (categoryResult.data.code.toLowerCase() === 'success') {
       curCategories.value = categoryResult.data.data.filter(
-        (item) => item.type == categorey,
+        (item) => item.type == category,
       )
       if (curCategories.value.length > 0) {
         articleStore.articleForm.categoryId = curCategories.value[0].id
